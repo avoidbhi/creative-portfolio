@@ -1,0 +1,5 @@
+# local research / reference material — never publish (105 MB of decks, frames, backups)
+research/
+__pycache__/
+*.pyc
+.DS_Store

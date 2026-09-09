@@ -1,0 +1,6 @@
+# keep media binary, keep the big standalone build from being "diffed"
+*.mp4 binary
+*.webm binary
+*.webp binary
+*.jpg binary
+*.woff2 binary
