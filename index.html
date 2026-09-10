@@ -66,7 +66,9 @@ html {
 }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body { margin: 0; min-height: 100svh; }
-.bg { position: fixed; inset: 0; z-index: -1; background: var(--bg-gradient); pointer-events: none; }   /* the single background */
+.bg { position: fixed; inset: 0; z-index: -1; background: var(--bg-gradient); pointer-events: none; contain: strict; }   /* the single background */
+.bg__fluid { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 1; transition: opacity .8s var(--ease-out); }   /* fluid.js paints the dye here, transparent over the gradient; cursor-only, sleeps when clear */
+.bg__fluid.is-gone { opacity: 0; }
 html.has-cursor body { cursor: none; }
 html.has-cursor a, html.has-cursor button { cursor: none; }
 html.has-cursor input, html.has-cursor textarea { cursor: text; }
@@ -447,6 +449,11 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__links a:hover { color: var(--paper); border-color: var(--paper); }
 .stage:not(.is-3d) .stage__modes, .stage:not(.is-3d) .stage__k, .stage:not(.is-3d) .stage__line { display: none; }
 html.js:not(.no-scene) .stage:not(.is-3d) .stage__space { visibility: hidden; }   /* main.js adds .no-scene at load if the scene never booted; html.reveal-all also uncovers it */
+/* while the scripts are still streaming in (the standalone file is 4.6 MB; they sit at its end), a JS page must not flash the
+   big stacked no-JS headline and then snap to the small centred one: hold the headline invisible and the stage at its final
+   height from the first paint. Fail-safes: html.no-scene / html.reveal-all (scene never booted) show the stacked layout again. */
+html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) { min-height: 100svh; }
+html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opacity: 0; }
 .stage:not(.is-3d) .stage__foot { grid-template-columns: 1fr auto; }
 .orbit-link a { color: var(--red); text-transform: none; letter-spacing: 0; font-size: .82rem; border-bottom: 1px solid transparent; transition: border-color .25s; }
 .orbit-link a:hover { border-color: currentColor; }
@@ -458,12 +465,13 @@ html.js:not(.no-scene) .stage:not(.is-3d) .stage__space { visibility: hidden; } 
 .stage.is-3d .stage__hud, .stage.is-3d .stage__foot { opacity: 0; transition: opacity 1s var(--ease-out) 1.4s; }
 .stage.is-live .stage__hud, .stage.is-live .stage__foot { opacity: 1; }
 .stage.is-3d .stage__title {
-  position: absolute; left: 50%; top: var(--cy, 50%); transform: translate(-50%, -50%); margin: 0; width: min(92vw, 13ch);
+  position: absolute; left: 50%; top: var(--cy, 50%); transform: translate(-50%, -50%) scale(var(--title-fit, 1)); margin: 0; width: min(92vw, 13ch);
   font-size: clamp(1.7rem, 3.4vw, 3.5rem); pointer-events: none; will-change: opacity;   /* opacity is written by the scene loop (no CSS transition — they'd fight) */
+  /* --title-fit: motion.js measures the headline against the hole of the inner ring on every resize and scales it to clear the cards (16:9 laptops need ≈ .8) */
 }
 .stage.is-3d .stage__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 3.2rem; margin: 0; pointer-events: none; align-items: end; }   /* sits above the fixed chapter label / progress strip */
 .stage.is-3d .stage__foot a, .stage.is-3d .stage__line { pointer-events: auto; }
-.stage.is-3d .stage__space { position: absolute; inset: 0; transform-style: preserve-3d; user-select: none; -webkit-user-select: none; pointer-events: none; will-change: transform, opacity; }   /* the camera: one transform, written by the scene loop */   /* its own (transparent) plane must never catch a click meant for a card behind it (z < 0) */
+.stage.is-3d .stage__space { position: absolute; inset: 0; transform-style: preserve-3d; user-select: none; -webkit-user-select: none; pointer-events: none; will-change: transform; }   /* the camera: one transform, written by the scene loop. v8.3: `will-change: opacity` was removed here — Chrome (and Firefox) treat it as a grouping property that flattens a preserve-3d context, so every card's translateZ was being ignored: no depth on the drum, no hover lift, an opened piece stuck at its base size. The camera's opacity is never animated, so the hint was pure loss. */   /* its own (transparent) plane must never catch a click meant for a card behind it (z < 0) */
 .stage.is-3d .stage__ring { position: absolute; left: 50%; top: var(--cy, 50%); width: 0; height: 0; display: block; margin: 0; transform-style: preserve-3d; }
 .stage.is-3d .stage__card {
   --cw: clamp(120px, 15vw, 220px); --ch: calc(var(--cw) * var(--ar, 1.25));
@@ -633,6 +641,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .js .edit__after, .js .redpen__after { opacity: 1; transform: none; transition: none; }
   .edit__note, .redpen__note { opacity: 1; transform: none; transition: none; }
   .grain, .stamp__svg { animation: none; }
+  .bg__fluid { display: none; }
   .tilt__inner, .notif, .index, .index__list li, .hud__chapter span { transition: none; }
   .card__circle path { stroke-dashoffset: 0; transition: none; }
 }
@@ -1700,25 +1709,40 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   const DRUM_RATE = 360 / 18;                                             // the drum: one turn ≈ 18 s (every piece passes the front once in ~90 s) — near cards travel right and sink, like a screw
 
   /* ── geometry: measured on resize only (no layout reads inside the loop) ── */
-  let W = 0, H = 0, CY = 0, cw = [], ch = [], roomTop = 0, roomBottom = 0, stageTop = 0, mobile = false;
+  let W = 0, H = 0, CY = 0, cw = [], ch = [], roomTop = 0, roomBottom = 0, stageTop = 0, mobile = false, stacked = false;   // stacked: the headline sits above the rings (CSS @media (max-width: 600px) — inclusive, so ≤ 600)
   const ring = { rOut: 0, sOut: 0, rIn: 0, sIn: 0, base: new Array(n).fill(0), inner: 0, outer: 0 };
   const drum = { Rx: 0, Rz: 0, zoff: 0.2, s: 0.95, sc: new Array(n).fill(1), jy: new Array(n).fill(0), jr: new Array(n).fill(1), dy: 0, step: 0, total: 0, mid: 0, top: 0, bottom: 0, fade: 90 };
   const grid = cards.map(() => ({ x: 0, y: 0, s: 1 }));
   function measure() {
-    W = stage.clientWidth; H = stage.clientHeight; mobile = W < 700;
+    W = stage.clientWidth; H = stage.clientHeight; mobile = W < 700; stacked = W <= 600;
     cw = cards.map((c) => c.offsetWidth); ch = cards.map((c) => c.offsetHeight);
-    const above = W < 600 ? title.offsetTop + title.offsetHeight + 10 : hud.offsetTop + hud.offsetHeight + 12;
-    const below = W < 600 ? 118 : 108;
+    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : hud.offsetTop + hud.offsetHeight + 12;
+    const below = stacked ? 118 : 108;
     CY = above + (H - above - below) / 2;                                 // the scene's centre, in stage px
     roomTop = above - CY; roomBottom = H - below - CY;                    // the room, relative to that centre
     stage.style.setProperty('--cy', CY.toFixed(1) + 'px');
     stageTop = AK.docTop(stage);
     solveRing(); solveDrum(); solveGrid();
+    fitTitle();
+  }
+  /* the headline lives in the hole of the inner ring. Its CSS size follows the viewport WIDTH (3.4vw); the hole follows
+     the room HEIGHT — on 16:9 laptops the words outgrow the hole and the inner cards sweep across them. So: measure the
+     headline at its CSS size (once per resize, mobile excluded — there it sits above the rings) and scale it down until
+     its corners clear the hole, with the same headroom the cards keep. One CSS variable; the loop still only writes opacity. */
+  function fitTitle() {
+    stage.style.removeProperty('--title-fit');
+    if (stacked) return;
+    const r = title.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const half = Math.hypot(r.width, r.height) / 2;                        // the farthest glyph from the centre, at scale 1
+    const hole = ring.inner - 8;                                           // ring.inner already keeps 6 px from the innermost card edge
+    const fit = clamp(hole / half, 0.55, 1);
+    if (fit < 0.995) stage.style.setProperty('--title-fit', fit.toFixed(3));
   }
   const sumW = (idx) => idx.reduce((a, i) => a + cw[i], 0);
   const maxH = (idx) => Math.max(...idx.map((i) => ch[i]));
   function solveRing() {
-    const R = Math.min(W / 2 - (W < 600 ? 4 : 10), (roomBottom - roomTop) / 2, 600);
+    const R = Math.min(W / 2 - (stacked ? 4 : 10), (roomBottom - roomTop) / 2, 600);
     const FILL = 0.86;
     const scaleFor = (idx, r, sMax) => Math.min(sMax, 2 * Math.PI * r * FILL / sumW(idx));
     let rOut = R * 0.9, sOut = 0.6;
@@ -1733,22 +1757,113 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     // a screw: n cards on a helix around a vertical axis. Turning the drum also carries the cards along the axis
     // (a helix rotated = a helix translated), so the whole collection flows through the room and wraps where
     // nobody can see it — the helix is ~3× taller than the room. Near side big and bright, far side small and dim.
-    // Desktop: the drum is a wide, shallow ellipse (Rx ≈ 38 % of the stage, Rz ≈ 45 % of that) so the near arc
-    // spreads across the screen instead of stacking in a 260 px column, and every card is scaled to ONE common
-    // area (a 16:9 plate and a 9:16 film take the same room) so neighbours neither collide nor leave gaps.
+    // Desktop: the drum is a wide, shallow ellipse (Rz ≈ 55 % of Rx) so the near arc spreads across the middle of
+    // the screen instead of stacking in a column, and every card is scaled to ONE common area (a 16:9 plate and a
+    // 9:16 film take the same room). v8.3: the spacing PACKS ITSELF (see drumPack) — as close as this card set
+    // allows on this screen, on both axes, with no two lit cards ever touching, and it re-solves for any new set of work.
     const room = roomBottom - roomTop, midY = (roomTop + roomBottom) / 2;
-    const Rx = mobile ? W * 0.44 : W * 0.38;
-    const Rz = mobile ? Rx : Rx * 0.45;
     const perTurn = mobile ? 5 : 6.5;                                                 // cards per turn: a fractional count keeps successive turns from lining up in columns
-    const dy = clamp(room / (mobile ? 16 : 15), 36, 64);                              // rise per card → ~15 cards inside the room, ≈2.3 turns visible
     const aRef = cards.map((_, i) => cw[i] * ch[i]).sort((a, b) => a - b)[n >> 1];    // the reference area: the median card (a 4:5 static)
-    const s = mobile ? 1.15 : clamp(room / 1080 * 1.25, 0.6, 0.85);                  // common size, from the room height: the front card ≈ 40 % of the room tall, like the reference
+    const kFront = P / (P - (1 - 0.2) * W * 0.44);                                   // phone: how much the perspective magnifies the front card (its z = (1 − zoff)·R)
+    const s = mobile ? 1.15 / kFront : clamp(room / 1080 * 1.25, 0.6, 0.85);         // common size, from the room height: the front card ≈ 40 % of the room tall, like the reference; the phone keeps its approved front-card size now that depth is real
+    const hRef = ch.slice().sort((a, b) => a - b)[n >> 1] * s;                          // the median card's height at the common size
+    const h1s = [], h2s = [];
     for (let i = 0; i < n; i++) {
-      drum.sc[i] = mobile ? s : s * Math.sqrt(aRef / (cw[i] * ch[i]));
-      const h1 = ((i * 2654435761) >>> 0) % 1000 / 1000, h2 = ((i * 40503 + 7) * 2246822519 >>> 0) % 1000 / 1000;   // deterministic per-card offsets (a desk, not a lattice)
-      drum.jy[i] = mobile ? 0 : (h1 - 0.5) * 0.6 * dy; drum.jr[i] = mobile ? 1 : 1 + (h2 - 0.5) * 0.12;
+      drum.sc[i] = mobile ? s : Math.min(s * Math.sqrt(aRef / (cw[i] * ch[i])), hRef / ch[i]);   // …but no card taller than the median one: a 9:16 film at equal area is ⅓ taller and was setting the vertical pitch for everyone
+      h1s[i] = ((i * 2654435761) >>> 0) % 1000 / 1000; h2s[i] = ((i * 40503 + 7) * 2246822519 >>> 0) % 1000 / 1000;   // deterministic per-card offsets (a desk, not a lattice)
+      drum.jr[i] = mobile ? 1 : 1 + (h2s[i] - 0.5) * 0.12;
     }
-    Object.assign(drum, { Rx, Rz, zoff: mobile ? 0.2 : 0.35, s, dy, step: 360 / perTurn, total: n * dy, mid: midY, top: roomTop, bottom: roomBottom, fade: mobile ? 60 : 90 });
+    const apply = (Rx, dy) => {
+      for (let i = 0; i < n; i++) drum.jy[i] = mobile ? 0 : (h1s[i] - 0.5) * 0.3 * dy;
+      Object.assign(drum, { Rx, Rz: mobile ? Rx : Rx * 0.55, zoff: mobile ? 0.2 : 0.35, s, dy, step: 360 / perTurn, total: n * dy, mid: midY, top: roomTop, bottom: roomBottom, fade: mobile ? 60 : 90 });
+    };
+    if (mobile) {                                                                     // the round phone drum (approved as is): same radius, size and turn; only its pitch is checked
+      const Rx = W * 0.44, dy0 = clamp(room / 16, 36, 64); let dy = dy0;
+      apply(Rx, dy);
+      while (dy < room / 8 && drumTouches()) { dy = Math.min(room / 8, dy * 1.05); apply(Rx, dy); }   // now that the cards really come forward (v8.3), the front ones are a fifth bigger — open the pitch just enough
+      return;
+    }
+    drumPack(apply, room);
+  }
+  /* ── the drum's spacing solver (v8.3) ──
+     For each vertical pitch, tight → loose (one card every room/18 … room/12 px), find the narrowest drum (Rx from
+     14 % to 36 % of the width, 1 % steps) whose lit cards never touch at any angle, then keep the pitch whose lit
+     neighbours sit closest on average. Every test projects the cards' corners exactly as the browser will — card
+     transform (translate, rotateY, scale), the camera (−5° from above, ±3.6° of scroll lean, ±6° of cursor pan),
+     perspective P about the stage centre. Rules: a pair with a LIT card (opacity ≥ .7, the near arc) keeps `gap` px
+     at rest and never intersects under the lean — unless the one behind is a half-lit shoulder card (< .75) tucked
+     behind an opaque one (real depth order, so it is simply occluded, like a stack of prints); two shoulder cards
+     (< .7) and the dark far side are free. ~30–50 ms, once per resize (nothing runs in the frame loop). */
+  const DRUM_GAP = 12, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first
+  const boxes = [];                                                                    // scratch: projected boxes of the lit cards at one phase
+  function drumPack(apply, room) {
+    const RxMin = W * 0.14, RxMax = Math.min(W * 0.36, room * 0.9);
+    let best = null;
+    for (let div = 18; div >= 12; div--) {
+      const dy = room / div;
+      for (let Rx = RxMin; Rx <= RxMax + 0.01; Rx = Math.min(RxMax, Rx + W * 0.01)) {
+        apply(Rx, dy);
+        if (drumTouches()) { if (Rx >= RxMax) break; continue; }
+        const nn = drumGap();
+        if (!best || nn < best.nn) best = { Rx, dy, nn };
+        break;
+      }
+    }
+    if (best) apply(best.Rx, best.dy); else apply(RxMax, room / 12);                 // nothing packs (a very odd room): the loosest drum
+  }
+  function drumProject(ph, tilt, pan) {                                              // the lit cards' screen boxes (stage-centre origin) at phase `ph` slots
+    const ca = Math.cos(tilt * DEG), sa = Math.sin(tilt * DEG), cb = Math.cos(pan * DEG), sb = Math.sin(pan * DEG);
+    let m = 0;
+    for (let i = 0; i < n; i++) {
+      const u = (i + ph) % n, rad = u * drum.step * DEG, c = Math.cos(rad), sn = Math.sin(rad);
+      if (c < -0.1) continue;                                                         // the far half never lights up
+      const x = sn * drum.Rx * drum.jr[i], y = drum.mid + (u - n / 2) * drum.dy + drum.jy[i], z = (c - drum.zoff) * drum.Rz * drum.jr[i], s = drum.sc[i];
+      const k0 = P / (P - z), yS = H / 2 + (CY + y - H / 2) * k0, hs = ch[i] * s * k0 / 2;
+      const o = (0.1 + 0.9 * smooth01((c + 0.5) / 1.2)) * smooth01(u / 2) * smooth01((n - u) / 2) * smooth01((yS - (CY + drum.top - 0.3 * hs)) / (1.3 * hs)) * smooth01(((CY + drum.bottom + 0.3 * hs) - yS) / (1.3 * hs));   // = poseDrum's opacity
+      if (o < 0.5) continue;
+      const ry = Math.atan2(drum.Rz * sn, drum.Rx * c), cr = Math.cos(ry), sr = Math.sin(ry);
+      let L = Infinity, R = -Infinity, T = Infinity, B = -Infinity;
+      for (let q = 0; q < 4; q++) {
+        const lx = (q & 1 ? 1 : -1) * cw[i] / 2, ly = (q & 2 ? 1 : -1) * ch[i] / 2;
+        const X0 = x + s * lx * cr, Y0 = y + s * ly + (CY - H / 2), Z0 = z - s * lx * sr;   // the card's corner in the scene (rotateY about its centre)
+        const X1 = X0 * cb + Z0 * sb, Z1 = -X0 * sb + Z0 * cb;                             // camera pan
+        const Y = Y0 * ca - Z1 * sa, Z = Y0 * sa + Z1 * ca, k = P / (P - Z);                 // camera tilt, then perspective
+        const xp = X1 * k, yp = Y * k;
+        if (xp < L) L = xp; if (xp > R) R = xp; if (yp < T) T = yp; if (yp > B) B = yp;
+      }
+      const b = boxes[m] || (boxes[m] = {}); b.L = L; b.R = R; b.T = T; b.B = B; b.o = o; b.z = z; m++;
+    }
+    return m;
+  }
+  const sepOf = (A, B) => Math.max(Math.max(A.L, B.L) - Math.min(A.R, B.R), Math.max(A.T, B.T) - Math.min(A.B, B.B));   // clear distance between two boxes (< 0: they intersect)
+  function drumTouches() {                                                             // does any forbidden pair come too close, at any phase, from any camera?
+    for (let v = 0; v < DRUM_LEAN.length; v++) {
+      const rest = v === 0, gap = rest ? DRUM_GAP : 0, dph = rest ? 0.125 : 0.25;
+      for (let ph = 0; ph < n; ph += dph) {
+        const m = drumProject(ph, DRUM_LEAN[v][0], DRUM_LEAN[v][1]);
+        for (let a = 0; a < m; a++) for (let b = a + 1; b < m; b++) {
+          const A = boxes[a], B = boxes[b];
+          if (A.o < 0.7 && B.o < 0.7) continue;                                         // two shoulder cards: the dark zone, nobody reads it
+          const front = A.z >= B.z ? A : B, back = front === A ? B : A;
+          if (back.o < 0.75 && (1 - front.o) * back.o <= 0.15) continue;                // a half-lit sliver tucked behind an opaque card: the desk's depth, not a clash (≤ 15 % show-through)
+          if (sepOf(A, B) < gap) return true;                                            // anything else must keep clear
+        }
+      }
+    }
+    return false;
+  }
+  function drumGap() {                                                                 // the mean distance from a bright card to its nearest bright neighbour, over a full cycle at rest
+    let sum = 0, cnt = 0;
+    for (let ph = 0; ph < n; ph += 0.25) {
+      const m = drumProject(ph, DRUM_LEAN[0][0], DRUM_LEAN[0][1]);
+      for (let a = 0; a < m; a++) {
+        if (boxes[a].o < 0.7) continue;
+        let nn = Infinity;
+        for (let b = 0; b < m; b++) if (b !== a && boxes[b].o >= 0.7) nn = Math.min(nn, sepOf(boxes[a], boxes[b]));
+        if (nn < Infinity) { sum += nn; cnt++; }
+      }
+    }
+    return cnt ? sum / cnt : Infinity;
   }
   function solveGrid() {
     const gap = Math.max(8, Math.min(16, W * 0.01));
@@ -2087,7 +2202,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     if (S.focused >= 0) stopFilm(S.focused);
     stage.classList.remove('is-3d', 'is-focused', 'is-live');
     [space, title, ...cards].forEach((el) => { el.style.transform = ''; el.style.opacity = ''; });
-    stage.style.removeProperty('--cy');
+    stage.style.removeProperty('--cy'); stage.style.removeProperty('--title-fit');
     cards.forEach((c) => { c.removeAttribute('tabindex'); c.removeAttribute('role'); c.removeAttribute('aria-label'); delete c.dataset.cursor; c.classList.remove('stage__card--wide', 'is-playing'); });
     delete stage.dataset.cursor;
     html.classList.add('no-scene');
@@ -2126,7 +2241,527 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   } catch (err) { destroy(); console.error(err); return; }
 
   /* a read-only window for QA tooling */
-  Object.defineProperty(window, 'AK_SCENE', { value: { S, cur, cards, setMode, open, close, measure, tick }, enumerable: false });
+  Object.defineProperty(window, 'AK_SCENE', { value: { S, cur, cards, setMode, open, close, measure, tick, ring, drum }, enumerable: false });
+})();
+
+</script>
+<script>
+/* ─────────────────────────────────────────────────────────────
+   ABHIJEET KANASE — the fluid (v8 · background)
+
+   A real-time fluid simulation (Navier–Stokes on a 128² velocity grid, dye at
+   512) painted on a transparent WebGL canvas inside the one background layer
+   (.bg), behind everything. Cursor-only, like the reference: a burst when the
+   page opens, then it moves only when the pointer or a finger moves, and the dye
+   dissipates back to the plain gradient in ~3 s.
+
+   Adapted from Pavel Dobryakov's WebGL-Fluid-Simulation (MIT, 2017) — the same
+   solver helloshivam.com runs — rewritten for this page:
+     · transparent over the gradient (the dye is added; the gradient remains the
+       fallback for no-JS, reduced motion, missing WebGL, context loss)
+     · pointer events on window, the canvas never intercepts a click or a drag
+     · runs inside main.js's single requestAnimationFrame loop (AK.loop)
+     · sleeps when the dye is gone (no idle GPU work), wakes on the next move
+     · a frame-time guard steps the quality down, then off, on machines that
+       cannot hold 30 fps with it — the page never gets slower than it was
+     · no per-frame layout reads: sizes arrive via the page's measure() event
+   Tunables live in C below; window.AK_FLUID exposes them for live tweaking.
+
+   Simulation and shaders: MIT License, Copyright (c) 2017 Pavel Dobryakov
+   (github.com/PavelDoGreat/WebGL-Fluid-Simulation). Permission is hereby granted,
+   free of charge, to any person obtaining a copy of this software and associated
+   documentation files (the "Software"), to deal in the Software without
+   restriction, including without limitation the rights to use, copy, modify,
+   merge, publish, distribute, sublicense, and/or sell copies of the Software, and
+   to permit persons to whom the Software is furnished to do so, subject to the
+   following conditions: The above copyright notice and this permission notice
+   shall be included in all copies or substantial portions of the Software. THE
+   SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+   INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   ───────────────────────────────────────────────────────────── */
+(() => {
+  'use strict';
+  try {
+  const AK = window.AK, host = document.querySelector('.bg');
+  if (!AK || !host || AK.reduce) return;                         // no loop, no layer, or reduced motion → the static gradient
+
+  const C = Object.assign({
+    SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
+    DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 0.8, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,
+    SPLAT_RADIUS: 0.25, SPLAT_FORCE: 3000,
+    BRIGHTNESS: 0.12, COLOR_UPDATE_SPEED: 10,                     // hue cycles 10×/s; .15 is the reference's neon, .12 keeps the type first
+    SHADING: true,
+    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.65, BLOOM_THRESHOLD: 0.6, BLOOM_SOFT_KNEE: 0.7,
+    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 1.0,
+    IMMEDIATE: true, SLEEP_AFTER: 4, MAX_DPR: 1, GUARD: true,        // MAX_DPR 1: the dye is a 512 px texture — extra display pixels add cost, not detail
+  }, window.AK_FLUID_CONFIG || {});
+
+  /* ───────────── context: WebGL2 or WebGL1 + half-float render targets, else the gradient ───────────── */
+  function supportRenderTextureFormat(gl, internalFormat, format, type) {
+    const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
+    const fbo = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.deleteFramebuffer(fbo); gl.deleteTexture(tex);
+    return ok;
+  }
+  function getContext(canvas) {
+    const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false, premultipliedAlpha: true };
+    let gl = canvas.getContext('webgl2', params); const isWebGL2 = !!gl;
+    if (!gl) gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+    if (!gl) return null;
+    let halfFloat = null, supportLinearFiltering = true;
+    if (isWebGL2) { gl.getExtension('EXT_color_buffer_float'); gl.getExtension('EXT_color_buffer_half_float'); }   // 16F filtering is core in WebGL2
+    else { halfFloat = gl.getExtension('OES_texture_half_float'); supportLinearFiltering = !!gl.getExtension('OES_texture_half_float_linear'); }
+    const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat && halfFloat.HALF_FLOAT_OES;
+    if (!halfFloatTexType) return null;
+    gl.clearColor(0, 0, 0, 0);
+    const fmt = (internalFormat, format) => (supportRenderTextureFormat(gl, internalFormat, format, halfFloatTexType) ? { internalFormat, format } : null);
+    let formatRGBA, formatRG, formatR;
+    if (isWebGL2) { formatRGBA = fmt(gl.RGBA16F, gl.RGBA); formatRG = fmt(gl.RG16F, gl.RG) || formatRGBA; formatR = fmt(gl.R16F, gl.RED) || formatRG; }
+    else formatRGBA = formatRG = formatR = fmt(gl.RGBA, gl.RGBA);
+    if (!formatRGBA) return null;
+    return { gl, ext: { formatRGBA, formatRG, formatR, halfFloatTexType, supportLinearFiltering } };
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'bg__fluid'; canvas.setAttribute('aria-hidden', 'true');
+  const ctx = getContext(canvas);
+  if (!ctx) return;                                                // no WebGL / no half-float render targets → the static gradient
+  const { gl, ext } = ctx;
+  const ac = ('AbortController' in window) ? new AbortController() : null, signal = ac ? ac.signal : undefined;
+  let live = false;
+
+  /* ───────────── shaders (GLSL ES 1.0) ───────────── */
+  const VERT = `precision highp float; attribute vec2 aPosition; varying vec2 vUv, vL, vR, vT, vB; uniform vec2 texelSize;
+    void main () { vUv = aPosition * 0.5 + 0.5; vL = vUv - vec2(texelSize.x, 0.0); vR = vUv + vec2(texelSize.x, 0.0); vT = vUv + vec2(0.0, texelSize.y); vB = vUv - vec2(0.0, texelSize.y); gl_Position = vec4(aPosition, 0.0, 1.0); }`;
+  const VERT_BLUR = `precision highp float; attribute vec2 aPosition; varying vec2 vUv, vL, vR; uniform vec2 texelSize;
+    void main () { vUv = aPosition * 0.5 + 0.5; float offset = 1.33333333; vL = vUv - texelSize * offset; vR = vUv + texelSize * offset; gl_Position = vec4(aPosition, 0.0, 1.0); }`;
+  const MED = 'precision mediump float; precision mediump sampler2D;\n', HI = 'precision highp float; precision highp sampler2D;\n';
+  const FS = {
+    blur: MED + `varying vec2 vUv, vL, vR; uniform sampler2D uTexture;
+      void main () { vec4 sum = texture2D(uTexture, vUv) * 0.29411764; sum += texture2D(uTexture, vL) * 0.35294117; sum += texture2D(uTexture, vR) * 0.35294117; gl_FragColor = sum; }`,
+    copy: MED + `varying highp vec2 vUv; uniform sampler2D uTexture; void main () { gl_FragColor = texture2D(uTexture, vUv); }`,
+    clear: MED + `varying highp vec2 vUv; uniform sampler2D uTexture; uniform float value; void main () { gl_FragColor = value * texture2D(uTexture, vUv); }`,
+    display: HI + `varying vec2 vUv, vL, vR, vT, vB; uniform sampler2D uTexture; uniform sampler2D uBloom; uniform sampler2D uSunrays; uniform vec2 texelSize;
+      vec3 linearToGamma (vec3 color) { color = max(color, vec3(0)); return max(1.055 * pow(color, vec3(0.416666667)) - 0.055, vec3(0)); }
+      void main () {
+        vec3 c = texture2D(uTexture, vUv).rgb;
+      #ifdef SHADING
+        vec3 lc = texture2D(uTexture, vL).rgb; vec3 rc = texture2D(uTexture, vR).rgb; vec3 tc = texture2D(uTexture, vT).rgb; vec3 bc = texture2D(uTexture, vB).rgb;
+        float dx = length(rc) - length(lc); float dy = length(tc) - length(bc);
+        vec3 n = normalize(vec3(dx, dy, length(texelSize))); vec3 l = vec3(0.0, 0.0, 1.0);
+        float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0); c *= diffuse;
+      #endif
+      #ifdef BLOOM
+        vec3 bloom = texture2D(uBloom, vUv).rgb;
+      #endif
+      #ifdef SUNRAYS
+        float sunrays = texture2D(uSunrays, vUv).r; c *= sunrays;
+      #ifdef BLOOM
+        bloom *= sunrays;
+      #endif
+      #endif
+      #ifdef BLOOM
+        float noise = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) * 2.0 - 1.0;   /* dither: no banding in the glow */
+        bloom += noise / 255.0; bloom = linearToGamma(bloom); c += bloom;
+      #endif
+        float a = max(c.r, max(c.g, c.b));                        /* premultiplied: the dye adds to the gradient beneath */
+        gl_FragColor = vec4(c, a);
+      }`,
+    bloomPrefilter: MED + `varying vec2 vUv; uniform sampler2D uTexture; uniform vec3 curve; uniform float threshold;
+      void main () { vec3 c = texture2D(uTexture, vUv).rgb; float br = max(c.r, max(c.g, c.b)); float rq = clamp(br - curve.x, 0.0, curve.y); rq = curve.z * rq * rq; c *= max(rq, br - threshold) / max(br, 0.0001); gl_FragColor = vec4(c, 0.0); }`,
+    bloomBlur: MED + `varying vec2 vL, vR, vT, vB; uniform sampler2D uTexture;
+      void main () { vec4 sum = vec4(0.0); sum += texture2D(uTexture, vL); sum += texture2D(uTexture, vR); sum += texture2D(uTexture, vT); sum += texture2D(uTexture, vB); sum *= 0.25; gl_FragColor = sum; }`,
+    bloomFinal: MED + `varying vec2 vL, vR, vT, vB; uniform sampler2D uTexture; uniform float intensity;
+      void main () { vec4 sum = vec4(0.0); sum += texture2D(uTexture, vL); sum += texture2D(uTexture, vR); sum += texture2D(uTexture, vT); sum += texture2D(uTexture, vB); sum *= 0.25; gl_FragColor = sum * intensity; }`,
+    sunraysMask: HI + `varying vec2 vUv; uniform sampler2D uTexture;
+      void main () { vec4 c = texture2D(uTexture, vUv); float br = max(c.r, max(c.g, c.b)); c.a = 1.0 - min(max(br * 20.0, 0.0), 0.8); gl_FragColor = c; }`,
+    sunrays: HI + `varying vec2 vUv; uniform sampler2D uTexture; uniform float weight;
+      #define ITERATIONS 16
+      void main () { float Density = 0.3; float Decay = 0.95; float Exposure = 0.7; vec2 coord = vUv; vec2 dir = vUv - 0.5; dir *= 1.0 / float(ITERATIONS) * Density; float illuminationDecay = 1.0; float color = texture2D(uTexture, vUv).a;
+        for (int i = 0; i < ITERATIONS; i++) { coord -= dir; float col = texture2D(uTexture, coord).a; color += col * illuminationDecay * weight; illuminationDecay *= Decay; }
+        gl_FragColor = vec4(color * Exposure, 0.0, 0.0, 1.0); }`,
+    splat: HI + `varying vec2 vUv; uniform sampler2D uTarget; uniform float aspectRatio; uniform vec3 color; uniform vec2 point; uniform float radius;
+      void main () { vec2 p = vUv - point.xy; p.x *= aspectRatio; vec3 splat = exp(-dot(p, p) / radius) * color; vec3 base = texture2D(uTarget, vUv).xyz; gl_FragColor = vec4(base + splat, 1.0); }`,
+    advection: HI + `varying vec2 vUv; uniform sampler2D uVelocity; uniform sampler2D uSource; uniform vec2 texelSize; uniform vec2 dyeTexelSize; uniform float dt; uniform float dissipation;
+      vec4 bilerp (sampler2D sam, vec2 uv, vec2 tsize) { vec2 st = uv / tsize - 0.5; vec2 iuv = floor(st); vec2 fuv = fract(st);
+        vec4 a = texture2D(sam, (iuv + vec2(0.5, 0.5)) * tsize); vec4 b = texture2D(sam, (iuv + vec2(1.5, 0.5)) * tsize); vec4 c = texture2D(sam, (iuv + vec2(0.5, 1.5)) * tsize); vec4 d = texture2D(sam, (iuv + vec2(1.5, 1.5)) * tsize);
+        return mix(mix(a, b, fuv.x), mix(c, d, fuv.x), fuv.y); }
+      void main () {
+      #ifdef MANUAL_FILTERING
+        vec2 coord = vUv - dt * bilerp(uVelocity, vUv, texelSize).xy * texelSize; vec4 result = bilerp(uSource, coord, dyeTexelSize);
+      #else
+        vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize; vec4 result = texture2D(uSource, coord);
+      #endif
+        float decay = 1.0 + dissipation * dt; gl_FragColor = result / decay; }`,
+    divergence: MED + `varying highp vec2 vUv, vL, vR, vT, vB; uniform sampler2D uVelocity;
+      void main () { float L = texture2D(uVelocity, vL).x; float R = texture2D(uVelocity, vR).x; float T = texture2D(uVelocity, vT).y; float B = texture2D(uVelocity, vB).y; vec2 C = texture2D(uVelocity, vUv).xy;
+        if (vL.x < 0.0) { L = -C.x; } if (vR.x > 1.0) { R = -C.x; } if (vT.y > 1.0) { T = -C.y; } if (vB.y < 0.0) { B = -C.y; }
+        float div = 0.5 * (R - L + T - B); gl_FragColor = vec4(div, 0.0, 0.0, 1.0); }`,
+    curl: MED + `varying highp vec2 vUv, vL, vR, vT, vB; uniform sampler2D uVelocity;
+      void main () { float L = texture2D(uVelocity, vL).y; float R = texture2D(uVelocity, vR).y; float T = texture2D(uVelocity, vT).x; float B = texture2D(uVelocity, vB).x; float vorticity = R - L - T + B; gl_FragColor = vec4(0.5 * vorticity, 0.0, 0.0, 1.0); }`,
+    vorticity: HI + `varying vec2 vUv, vL, vR, vT, vB; uniform sampler2D uVelocity; uniform sampler2D uCurl; uniform float curl; uniform float dt;
+      void main () { float L = texture2D(uCurl, vL).x; float R = texture2D(uCurl, vR).x; float T = texture2D(uCurl, vT).x; float B = texture2D(uCurl, vB).x; float C = texture2D(uCurl, vUv).x;
+        vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L)); force /= length(force) + 0.0001; force *= curl * C; force.y *= -1.0;
+        vec2 velocity = texture2D(uVelocity, vUv).xy; velocity += force * dt; velocity = min(max(velocity, -1000.0), 1000.0); gl_FragColor = vec4(velocity, 0.0, 1.0); }`,
+    pressure: MED + `varying highp vec2 vUv, vL, vR, vT, vB; uniform sampler2D uPressure; uniform sampler2D uDivergence;
+      void main () { float L = texture2D(uPressure, vL).x; float R = texture2D(uPressure, vR).x; float T = texture2D(uPressure, vT).x; float B = texture2D(uPressure, vB).x; float C = texture2D(uPressure, vUv).x; float divergence = texture2D(uDivergence, vUv).x; float pressure = (L + R + B + T - divergence) * 0.25; gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0); }`,
+    gradientSubtract: MED + `varying highp vec2 vUv, vL, vR, vT, vB; uniform sampler2D uPressure; uniform sampler2D uVelocity;
+      void main () { float L = texture2D(uPressure, vL).x; float R = texture2D(uPressure, vR).x; float T = texture2D(uPressure, vT).x; float B = texture2D(uPressure, vB).x; vec2 velocity = texture2D(uVelocity, vUv).xy; velocity.xy -= vec2(R - L, T - B); gl_FragColor = vec4(velocity, 0.0, 1.0); }`,
+  };
+
+  function compileShader(type, source, keywords) {
+    if (keywords && keywords.length) source = keywords.map((k) => '#define ' + k + '\n').join('') + source;
+    const sh = gl.createShader(type); gl.shaderSource(sh, source); gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error('fluid shader: ' + gl.getShaderInfoLog(sh));
+    return sh;
+  }
+  function makeProgram(vs, fsSource, keywords) {
+    const p = gl.createProgram();
+    gl.attachShader(p, vs); gl.attachShader(p, compileShader(gl.FRAGMENT_SHADER, fsSource, keywords));
+    gl.bindAttribLocation(p, 0, 'aPosition'); gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error('fluid program: ' + gl.getProgramInfoLog(p));
+    const u = {}, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+    for (let i = 0; i < n; i++) { const name = gl.getActiveUniform(p, i).name; u[name] = gl.getUniformLocation(p, name); }
+    return { u, bind() { gl.useProgram(p); } };
+  }
+
+  /* ───────────── GL state: one quad, programs, framebuffers ───────────── */
+  let P = {}, displayProgram = null, displayKey = '';
+  let dye, velocity, divergence, curl, pressure, bloom, bloomFBs = [], sunrays, sunraysTemp;
+  let cw = 1, ch = 1, aspectKey = 0, needResize = true;
+
+  function blit(target) {
+    if (target == null) { gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight); gl.bindFramebuffer(gl.FRAMEBUFFER, null); }
+    else { gl.viewport(0, 0, target.width, target.height); gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo); }
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+  }
+  function createFBO(w, h, internalFormat, format, type, param) {
+    gl.activeTexture(gl.TEXTURE0);
+    const texture = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, null);
+    const fbo = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+    gl.viewport(0, 0, w, h); gl.clear(gl.COLOR_BUFFER_BIT);
+    return { texture, fbo, width: w, height: h, texelSizeX: 1 / w, texelSizeY: 1 / h,
+      attach(id) { gl.activeTexture(gl.TEXTURE0 + id); gl.bindTexture(gl.TEXTURE_2D, texture); return id; },
+      dispose() { gl.deleteFramebuffer(fbo); gl.deleteTexture(texture); } };
+  }
+  function createDoubleFBO(w, h, internalFormat, format, type, param) {
+    let a = createFBO(w, h, internalFormat, format, type, param), b = createFBO(w, h, internalFormat, format, type, param);
+    return { width: w, height: h, texelSizeX: a.texelSizeX, texelSizeY: a.texelSizeY,
+      get read() { return a; }, set read(v) { a = v; }, get write() { return b; }, set write(v) { b = v; },
+      swap() { const t = a; a = b; b = t; }, dispose() { a.dispose(); b.dispose(); } };
+  }
+  function resizeFBO(target, w, h, internalFormat, format, type, param) {
+    const next = createFBO(w, h, internalFormat, format, type, param);
+    P.copy.bind(); gl.uniform1i(P.copy.u.uTexture, target.attach(0)); blit(next);
+    target.dispose();
+    return next;
+  }
+  function resizeDoubleFBO(target, w, h, internalFormat, format, type, param) {
+    if (target.width === w && target.height === h) return target;
+    target.read = resizeFBO(target.read, w, h, internalFormat, format, type, param);
+    target.write.dispose(); target.write = createFBO(w, h, internalFormat, format, type, param);
+    target.width = w; target.height = h; target.texelSizeX = 1 / w; target.texelSizeY = 1 / h;
+    return target;
+  }
+  function getResolution(resolution) {
+    let aspect = gl.drawingBufferWidth / gl.drawingBufferHeight; if (aspect < 1) aspect = 1 / aspect;
+    const min = Math.round(resolution), max = Math.round(resolution * aspect);
+    return gl.drawingBufferWidth > gl.drawingBufferHeight ? { width: max, height: min } : { width: min, height: max };
+  }
+  function initFramebuffers() {
+    const simRes = getResolution(C.SIM_RESOLUTION), dyeRes = getResolution(C.DYE_RESOLUTION);
+    const type = ext.halfFloatTexType, rgba = ext.formatRGBA, rg = ext.formatRG, r = ext.formatR, filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+    gl.disable(gl.BLEND);
+    dye = dye ? resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, type, filtering) : createDoubleFBO(dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, type, filtering);
+    velocity = velocity ? resizeDoubleFBO(velocity, simRes.width, simRes.height, rg.internalFormat, rg.format, type, filtering) : createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, type, filtering);
+    [divergence, curl, pressure, bloom, sunrays, sunraysTemp, ...bloomFBs].forEach((f) => f && f.dispose());
+    divergence = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, type, gl.NEAREST);
+    curl = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, type, gl.NEAREST);
+    pressure = createDoubleFBO(simRes.width, simRes.height, r.internalFormat, r.format, type, gl.NEAREST);
+    // bloom: a mip chain down from BLOOM_RESOLUTION
+    const bRes = getResolution(C.BLOOM_RESOLUTION);
+    bloom = createFBO(bRes.width, bRes.height, rgba.internalFormat, rgba.format, type, filtering);
+    bloomFBs = [];
+    for (let i = 0; i < C.BLOOM_ITERATIONS; i++) {
+      const w = bRes.width >> (i + 1), h = bRes.height >> (i + 1);
+      if (w < 2 || h < 2) break;
+      bloomFBs.push(createFBO(w, h, rgba.internalFormat, rgba.format, type, filtering));
+    }
+    const sRes = getResolution(C.SUNRAYS_RESOLUTION);
+    sunrays = createFBO(sRes.width, sRes.height, r.internalFormat, r.format, type, filtering);
+    sunraysTemp = createFBO(sRes.width, sRes.height, r.internalFormat, r.format, type, filtering);
+  }
+  function updateDisplayProgram() {
+    const keys = []; if (C.SHADING) keys.push('SHADING'); if (C.BLOOM) keys.push('BLOOM'); if (C.SUNRAYS) keys.push('SUNRAYS');
+    const key = keys.join(',');
+    if (key === displayKey && displayProgram) return;
+    displayKey = key; displayProgram = makeProgram(P.vs, FS.display, keys);
+  }
+  function resizeCanvas() {                                        // sizes come from the page's measure() (one layout read per resize, none per frame)
+    if (!needResize) return false; needResize = false;
+    cw = canvas.clientWidth || innerWidth; ch = canvas.clientHeight || innerHeight;
+    const dpr = Math.min(devicePixelRatio || 1, C.MAX_DPR);
+    const w = Math.max(1, Math.floor(cw * dpr)), h = Math.max(1, Math.floor(ch * dpr));
+    if (canvas.width === w && canvas.height === h) return false;
+    // a phone's URL bar collapsing (≈ 10 % of height) must not clear the dye: within 15 % the CSS size just stretches the buffer
+    if (canvas.width > 1 && Math.abs(w - canvas.width) / w < 0.15 && Math.abs(h - canvas.height) / h < 0.15) return false;
+    canvas.width = w; canvas.height = h;
+    const key = Math.round((w / h) * 8);                           // the sim's own grids follow the aspect ratio only when it moves ≈ 12 %
+    if (key === aspectKey) return false;
+    aspectKey = key; return true;
+  }
+
+  /* ───────────── pointers: window-level, passive — the canvas is never in the hit-test ───────────── */
+  const pointers = new Map();
+  let splatStack = [], colorTimer = 0, lastInput = -1e9, awake = false;
+  const HSVtoRGB = (h, s, v) => {
+    const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
+    switch (i % 6) { case 0: return [v, t, p]; case 1: return [q, v, p]; case 2: return [p, v, t]; case 3: return [p, q, v]; case 4: return [t, p, v]; default: return [v, p, q]; }
+  };
+  const generateColor = () => HSVtoRGB(Math.random(), 1, 1).map((c) => c * C.BRIGHTNESS);
+  const aspect = () => canvas.width / canvas.height;
+  const correctDeltaX = (d) => (aspect() < 1 ? d * aspect() : d);
+  const correctDeltaY = (d) => (aspect() > 1 ? d / aspect() : d);
+  const wake = () => { lastInput = performance.now() / 1000; awake = true; };   // same clock as the loop's timestamp
+  function pointerFor(id) {
+    let p = pointers.get(id);
+    if (!p) { p = { id, x: 0, y: 0, dx: 0, dy: 0, moved: false, fresh: true, color: generateColor() }; pointers.set(id, p); }
+    return p;
+  }
+  function moveTo(p, clientX, clientY) {
+    const x = clientX / cw, y = 1 - clientY / ch;
+    if (p.fresh || Math.abs(x - p.x) > 0.2 || Math.abs(y - p.y) > 0.2) { p.fresh = false; p.x = x; p.y = y; return; }   // first sample, or a pointer re-entering from far away: place it, no jet across the screen
+    p.dx = correctDeltaX(x - p.x); p.dy = correctDeltaY(y - p.y); p.x = x; p.y = y;
+    p.moved = p.dx !== 0 || p.dy !== 0;
+    if (p.moved) wake();
+  }
+  addEventListener('pointermove', (e) => { if (!live || e.pointerType === 'touch') return; moveTo(pointerFor(-1), e.clientX, e.clientY); }, { passive: true, signal });
+  addEventListener('touchstart', (e) => { if (!live) return; for (const t of e.changedTouches) { const p = pointerFor(t.identifier); p.fresh = true; p.color = generateColor(); moveTo(p, t.clientX, t.clientY); } }, { passive: true, signal });
+  addEventListener('touchmove', (e) => { if (!live) return; for (const t of e.changedTouches) moveTo(pointerFor(t.identifier), t.clientX, t.clientY); }, { passive: true, signal });
+  const endTouch = (e) => { for (const t of e.changedTouches) pointers.delete(t.identifier); };
+  addEventListener('touchend', endTouch, { passive: true, signal }); addEventListener('touchcancel', endTouch, { passive: true, signal });
+  document.addEventListener('page:measured', () => { needResize = true; }, { signal });
+  document.addEventListener('motion:reduce', (e) => { if (e.detail) destroy(); }, { signal });
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); destroy(); }, { signal });
+
+  /* ───────────── the solver ───────────── */
+  function splat(x, y, dx, dy, color) {
+    P.splat.bind();
+    gl.uniform1i(P.splat.u.uTarget, velocity.read.attach(0));
+    gl.uniform1f(P.splat.u.aspectRatio, aspect());
+    gl.uniform2f(P.splat.u.point, x, y);
+    gl.uniform3f(P.splat.u.color, dx, dy, 0);
+    let radius = C.SPLAT_RADIUS / 100; if (aspect() > 1) radius *= aspect();
+    gl.uniform1f(P.splat.u.radius, radius);
+    blit(velocity.write); velocity.swap();
+    gl.uniform1i(P.splat.u.uTarget, dye.read.attach(0));
+    gl.uniform3f(P.splat.u.color, color[0], color[1], color[2]);
+    blit(dye.write); dye.swap();
+  }
+  function multipleSplats(amount) {
+    for (let i = 0; i < amount; i++) {
+      const c = generateColor().map((v) => v * 5);                // the opening burst: brighter than a trail, gone in ~3 s (the reference uses 10× — too much under the orbit)
+      splat(Math.random(), Math.random(), 1000 * (Math.random() - 0.5), 1000 * (Math.random() - 0.5), c);
+    }
+  }
+  function applyInputs() {
+    if (splatStack.length) multipleSplats(splatStack.pop());
+    pointers.forEach((p) => { if (p.moved) { p.moved = false; splat(p.x, p.y, p.dx * C.SPLAT_FORCE, p.dy * C.SPLAT_FORCE, p.color); } });
+  }
+  function updateColors(dt) {
+    colorTimer += dt * C.COLOR_UPDATE_SPEED;
+    if (colorTimer >= 1) { colorTimer %= 1; pointers.forEach((p) => { p.color = generateColor(); }); }
+  }
+  function step(dt) {
+    gl.disable(gl.BLEND);
+    if (C.CURL > 0) {
+      P.curl.bind();
+      gl.uniform2f(P.curl.u.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+      gl.uniform1i(P.curl.u.uVelocity, velocity.read.attach(0));
+      blit(curl);
+      P.vorticity.bind();
+      gl.uniform2f(P.vorticity.u.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+      gl.uniform1i(P.vorticity.u.uVelocity, velocity.read.attach(0));
+      gl.uniform1i(P.vorticity.u.uCurl, curl.attach(1));
+      gl.uniform1f(P.vorticity.u.curl, C.CURL);
+      gl.uniform1f(P.vorticity.u.dt, dt);
+      blit(velocity.write); velocity.swap();
+    }
+    P.divergence.bind();
+    gl.uniform2f(P.divergence.u.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(P.divergence.u.uVelocity, velocity.read.attach(0));
+    blit(divergence);
+    P.clear.bind();
+    gl.uniform1i(P.clear.u.uTexture, pressure.read.attach(0));
+    gl.uniform1f(P.clear.u.value, C.PRESSURE);
+    blit(pressure.write); pressure.swap();
+    P.pressure.bind();
+    gl.uniform2f(P.pressure.u.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(P.pressure.u.uDivergence, divergence.attach(0));
+    for (let i = 0; i < C.PRESSURE_ITERATIONS; i++) {
+      gl.uniform1i(P.pressure.u.uPressure, pressure.read.attach(1));
+      blit(pressure.write); pressure.swap();
+    }
+    P.gradientSubtract.bind();
+    gl.uniform2f(P.gradientSubtract.u.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform1i(P.gradientSubtract.u.uPressure, pressure.read.attach(0));
+    gl.uniform1i(P.gradientSubtract.u.uVelocity, velocity.read.attach(1));
+    blit(velocity.write); velocity.swap();
+    P.advection.bind();
+    gl.uniform2f(P.advection.u.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    if (!ext.supportLinearFiltering) gl.uniform2f(P.advection.u.dyeTexelSize, velocity.texelSizeX, velocity.texelSizeY);
+    const vid = velocity.read.attach(0);
+    gl.uniform1i(P.advection.u.uVelocity, vid);
+    gl.uniform1i(P.advection.u.uSource, vid);
+    gl.uniform1f(P.advection.u.dt, dt);
+    gl.uniform1f(P.advection.u.dissipation, C.VELOCITY_DISSIPATION);
+    blit(velocity.write); velocity.swap();
+    if (!ext.supportLinearFiltering) gl.uniform2f(P.advection.u.dyeTexelSize, dye.texelSizeX, dye.texelSizeY);
+    gl.uniform1i(P.advection.u.uVelocity, velocity.read.attach(0));
+    gl.uniform1i(P.advection.u.uSource, dye.read.attach(1));
+    gl.uniform1f(P.advection.u.dissipation, C.DENSITY_DISSIPATION);
+    blit(dye.write); dye.swap();
+  }
+  function applyBloom(source, destination) {
+    if (bloomFBs.length < 2) return;
+    let last = destination;
+    gl.disable(gl.BLEND);
+    P.bloomPrefilter.bind();
+    const knee = C.BLOOM_THRESHOLD * C.BLOOM_SOFT_KNEE + 0.0001;
+    gl.uniform3f(P.bloomPrefilter.u.curve, C.BLOOM_THRESHOLD - knee, knee * 2, 0.25 / knee);
+    gl.uniform1f(P.bloomPrefilter.u.threshold, C.BLOOM_THRESHOLD);
+    gl.uniform1i(P.bloomPrefilter.u.uTexture, source.attach(0));
+    blit(last);
+    P.bloomBlur.bind();
+    for (let i = 0; i < bloomFBs.length; i++) {
+      const dest = bloomFBs[i];
+      gl.uniform2f(P.bloomBlur.u.texelSize, last.texelSizeX, last.texelSizeY);
+      gl.uniform1i(P.bloomBlur.u.uTexture, last.attach(0));
+      blit(dest); last = dest;
+    }
+    gl.blendFunc(gl.ONE, gl.ONE); gl.enable(gl.BLEND);
+    for (let i = bloomFBs.length - 2; i >= 0; i--) {
+      const base = bloomFBs[i];
+      gl.uniform2f(P.bloomBlur.u.texelSize, last.texelSizeX, last.texelSizeY);
+      gl.uniform1i(P.bloomBlur.u.uTexture, last.attach(0));
+      blit(base); last = base;
+    }
+    gl.disable(gl.BLEND);
+    P.bloomFinal.bind();
+    gl.uniform2f(P.bloomFinal.u.texelSize, last.texelSizeX, last.texelSizeY);
+    gl.uniform1i(P.bloomFinal.u.uTexture, last.attach(0));
+    gl.uniform1f(P.bloomFinal.u.intensity, C.BLOOM_INTENSITY);
+    blit(destination);
+  }
+  function applySunrays(source, mask, destination) {
+    gl.disable(gl.BLEND);
+    P.sunraysMask.bind();
+    gl.uniform1i(P.sunraysMask.u.uTexture, source.attach(0));
+    blit(mask);
+    P.sunrays.bind();
+    gl.uniform1f(P.sunrays.u.weight, C.SUNRAYS_WEIGHT);
+    gl.uniform1i(P.sunrays.u.uTexture, mask.attach(0));
+    blit(destination);
+  }
+  function blur(target, temp, iterations) {
+    P.blur.bind();
+    for (let i = 0; i < iterations; i++) {
+      gl.uniform2f(P.blur.u.texelSize, target.texelSizeX, 0); gl.uniform1i(P.blur.u.uTexture, target.attach(0)); blit(temp);
+      gl.uniform2f(P.blur.u.texelSize, 0, target.texelSizeY); gl.uniform1i(P.blur.u.uTexture, temp.attach(0)); blit(target);
+    }
+  }
+  function render() {
+    if (C.BLOOM) applyBloom(dye.read, bloom);
+    if (C.SUNRAYS) { applySunrays(dye.read, dye.write, sunrays); blur(sunrays, sunraysTemp, 1); }
+    gl.disable(gl.BLEND);                                          // the canvas itself is the compositor: premultiplied dye over the gradient
+    displayProgram.bind();
+    if (C.SHADING) gl.uniform2f(displayProgram.u.texelSize, 1 / gl.drawingBufferWidth, 1 / gl.drawingBufferHeight);
+    gl.uniform1i(displayProgram.u.uTexture, dye.read.attach(0));
+    if (C.BLOOM) gl.uniform1i(displayProgram.u.uBloom, bloom.attach(1));
+    if (C.SUNRAYS) gl.uniform1i(displayProgram.u.uSunrays, sunrays.attach(2));
+    blit(null);
+  }
+
+  /* ───────────── the guard: the fluid's OWN cost (awake frame time − asleep frame time), sustained → lighter, then off.
+     A page that is slow for other reasons keeps its fluid; a fluid that costs > 12 ms a frame loses quality, then goes.
+     Until the first sleep there is no baseline, so only an unusable page (< 20 fps) counts. ───────────── */
+  let warm = 0, emaIdle = -1, emaAwake = -1, slow = 0, level = 0, lastT = 0;
+  function guard(t, stepped) {
+    if (!C.GUARD) return;
+    const dt = lastT ? Math.min(t - lastT, 0.1) : 1 / 60; lastT = t;   // real frame time (the loop clamps its dt); a hidden tab's gap counts as one 100 ms frame
+    if (!stepped) { emaIdle = emaIdle < 0 ? dt : emaIdle + (dt - emaIdle) * 0.05; return; }
+    warm += dt; if (warm < 2) return;                              // shader warm-up and image decoding do not count
+    emaAwake = emaAwake < 0 ? dt : emaAwake + (dt - emaAwake) * 0.05;
+    const cost = emaIdle < 0 ? 0 : emaAwake - emaIdle;
+    const bad = cost > 0.012 || emaAwake > 0.05;
+    slow = bad ? slow + dt : Math.max(0, slow - dt * 0.5);
+    if (slow < 2) return;
+    slow = 0; emaAwake = -1; level++;
+    if (level === 1) { C.DYE_RESOLUTION = 256; C.BLOOM_RESOLUTION = 128; C.SUNRAYS = false; C.SHADING = false; updateDisplayProgram(); initFramebuffers(); }
+    else destroy();
+  }
+
+  /* ───────────── the frame (inside the one loop) ───────────── */
+  function tick(dt, t) {
+    if (!live) return;
+    if (resizeCanvas()) initFramebuffers();
+    if (!awake) { guard(t, false); return; }
+    const sdt = Math.min(dt, 1 / 60);                              // the solver never integrates more than a 60 Hz step (stability); the guard sees the real frame time
+    updateColors(sdt); applyInputs(); step(sdt); render();
+    if (t - lastInput > C.SLEEP_AFTER) {                           // dye at e^(−2.5·4) — gone. Sleep: clear the canvas, stop stepping until the next move.
+      awake = false; gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+    guard(t, true);
+  }
+  function destroy() {
+    if (!live) return; live = false;
+    AK.loop.remove(tick); ac && ac.abort();
+    canvas.classList.add('is-gone');                               // CSS fades it out; the gradient is already underneath
+    setTimeout(() => { const lc = gl.getExtension('WEBGL_lose_context'); lc && lc.loseContext(); canvas.remove(); }, 900);
+  }
+
+  /* ───────────── boot ───────────── */
+  try {
+    host.appendChild(canvas);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.enableVertexAttribArray(0);
+    P.vs = compileShader(gl.VERTEX_SHADER, VERT);
+    const vsBlur = compileShader(gl.VERTEX_SHADER, VERT_BLUR);
+    P.blur = makeProgram(vsBlur, FS.blur);
+    for (const k of ['copy', 'clear', 'bloomPrefilter', 'bloomBlur', 'bloomFinal', 'sunraysMask', 'sunrays', 'splat', 'divergence', 'curl', 'vorticity', 'pressure', 'gradientSubtract']) P[k] = makeProgram(P.vs, FS[k]);
+    P.advection = makeProgram(P.vs, FS.advection, ext.supportLinearFiltering ? null : ['MANUAL_FILTERING']);
+    updateDisplayProgram();
+    resizeCanvas(); initFramebuffers();
+    live = true;
+    if (C.IMMEDIATE) { splatStack.push(Math.floor(Math.random() * 4) + 5); wake(); }   // 5–8 splats: a burst, not a wash
+    AK.loop.add(tick);
+  } catch (err) {
+    live = false; canvas.remove();                                 // any GL hiccup → the gradient, silently (the page's error fail-safe is for the page)
+    if (console && console.warn) console.warn('fluid off:', err && err.message);
+    return;
+  }
+
+  window.AK_FLUID = Object.freeze({
+    config: C,
+    burst(n) { splatStack.push(n || 8); wake(); },
+    wake, destroy,
+    get live() { return live; }, get awake() { return awake; }, get level() { return level; },
+  });
+  } catch (err) { if (window.console) console.warn('fluid off:', err && err.message); }   // never the page's problem: the gradient is always there
 })();
 
 </script>
