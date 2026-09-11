@@ -13,15 +13,15 @@ Two artifacts, one pipeline:
 
   index.dev.html   the readable single file — sheet and scripts inlined, assets left as
                    files under assets/ (so it is diffable and reviewable, ~245 KB)
-  index.html       the standalone build — the same document with every asset inlined as a
-                   base64 data URI, and the webm film fallbacks dropped (ships mp4 only);
-                   ~4.7 MB, opens from a USB stick, hosts anywhere, no requests at all
+  index.html       the standalone build — the same document with every asset replaced by its
+                   base64 data URI; ~4.7 MB, opens from a USB stick, hosts anywhere, no
+                   requests at all
 
 Rules the standalone build applies, in order:
   1. <link> tags  → one <style> block, files concatenated in document order
   2. <script src> → inline <script>, same order
   3. ../assets/ and ../../assets/ → assets/ (refs are relative to the file they live in)
-  4. <source ...webm> removed, then every remaining assets/ path replaced by its data URI
+  4. every assets/ path → its data URI, longest path first so none is a prefix of another
 """
 from __future__ import annotations
 import base64, os, re, sys
@@ -69,23 +69,16 @@ def data_uri(path):
     return f'data:{MIME[ext]};base64,' + base64.b64encode(raw).decode('ascii')
 
 
-def standalone(dev_doc):
-    """the readable single file → the portable one: assets inlined, webm fallbacks dropped."""
-    doc = re.sub(r'[ \t]*<source src="assets/[^"]*\.webm" type="video/webm">\n?', '', dev_doc)
-    seen, missing = set(), set()
-    # longest first: no asset path can then be rewritten as a prefix of another
+def standalone(doc):
+    """the readable single file → the portable one: every asset path becomes its data URI."""
+    # longest path first, so no asset path can be rewritten as a prefix of another
     paths = sorted(set(ASSET_RE.findall(doc)), key=len, reverse=True)
-    for p in paths:
-        if not os.path.exists(os.path.join(ROOT, p)):
-            missing.add(p)
+    missing = sorted(p for p in paths if not os.path.exists(os.path.join(ROOT, p)))
     if missing:
-        sys.exit('build.py: referenced but absent from assets/:\n  ' + '\n  '.join(sorted(missing)))
-    uris = {p: data_uri(p) for p in paths}
-    for p, uri in uris.items():
-        doc = doc.replace(p, uri)
-        seen.add(p)
-    left = ASSET_RE.findall(doc)
-    return doc, sorted(set(left)), len(seen)
+        sys.exit('build.py: referenced but absent from assets/:\n  ' + '\n  '.join(missing))
+    for p in paths:
+        doc = doc.replace(p, data_uri(p))
+    return doc, sorted(set(ASSET_RE.findall(doc))), len(paths)
 
 
 def main():

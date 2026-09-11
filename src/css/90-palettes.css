@@ -1,7 +1,3 @@
-/* ───────────── motion.js ─────────────
-   motion.js owns exactly one thing: the 3D scene (the orbit stage). Reveals are CSS transitions
-   toggled by one IntersectionObserver in main.js; scroll-linked values come from the page loop. */
-
 /* ───────────── type palettes (v8.5) — the bottom-right Aa button + its sheet ─────────────
    The palette layer only ever writes type tokens: --font-* plus display weight/tracking.
    Everything here is additive to the tokens above, so a failed font request leaves the
