@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Abhijeet Kanase — Copywriter &amp; Creative Strategist, Mumbai</title>
 <meta name="description" content="Abhijeet Kanase — copywriter & creative strategist, Mumbai. Every slide, static, script and film, in orbit. Campaign lines, brand stories and short-form scripts for ICC, DHL, Surf Excel, GoBoult and Bajaj Electricals with Zoo Media, and for six- and seven-figure creators. Research first. Then the sentence.">
-<meta name="theme-color" content="#0B0A0F">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B0A0F'/%3E%3Ccircle cx='16' cy='22' r='5' fill='%23E5352B'/%3E%3Crect x='13' y='5' width='6' height='11' rx='1' fill='%23F4EFE6'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ccircle cx='16' cy='22' r='5' fill='%23FF3B30'/%3E%3Crect x='13' y='5' width='6' height='11' rx='1' fill='%23F6F6F4'/%3E%3C/svg%3E">
 <style>
 /* ─────────────────────────────────────────────────────────────
    ABHIJEET KANASE — copywriter & creative strategist, Mumbai
@@ -21,16 +21,16 @@
 
 :root {
   /* palette — named, deliberate, small */
-  --ink: #0B0A0F;        /* the page at night */
-  --graphite: #17161C;   /* a slightly lifted dark */
-  --paper: #F4EFE6;      /* warm cream — type and paper artifacts (index card, poster) */
-  --red: #E5352B;        /* the red pen — the only loud thing here */
+  --ink: #000000;        /* pure black — the only surface on the page */
+  --graphite: #0B0B0D;   /* a slightly lifted black — fills, placeholders */
+  --paper: #F6F6F4;      /* clean near-white — reads clean on pure black (was warm cream) */
+  --red: #FF3B30;        /* the red pen — brighter so it holds against pure black */
   --white: #FFFFFF;
 
-  /* THE gradient — the one and only background on the site, painted once on a fixed
-     layer (.bg) so every screen is lit the same way: a faint warm bloom of the red pen
-     at the top centre, ink through the middle, graphite at the foot. */
-  --bg-gradient: radial-gradient(120% 100% at 50% -15%, #2A1519 0%, #0B0A0F 46%, #17161C 100%);
+  /* THE background — plain black, painted once on a fixed layer (.bg) so every screen is
+     lit the same way. No gradient (it banded), no grain overlay. The fluid sim still paints
+     over it, cursor-only, and sleeps when the pointer is clear. */
+  --bg-gradient: #000000;   /* plain black — no gradient, no bloom, no banding */
 
   --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
   --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -38,7 +38,16 @@
 
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-inout: cubic-bezier(.7, 0, .2, 1);
-  --ease-in: cubic-bezier(.6, 0, .9, .4);
+  --ease-in: cubic-bezier(.6, 0, .9, .4);  /* ONE spacing scale, 8px base (craft.md R8: all spacing from one scale, and the gap
+     inside a group must stay visibly smaller than the gap between groups).
+     --flow  between blocks of one group   --group between groups inside a chapter
+     --section between chapters (a hairline carries the separation, not a void)
+     --col   grid column gap                */
+  --s1: .5rem; --s2: .75rem; --s3: 1rem; --s4: 1.5rem; --s5: 2rem; --s6: 3rem;
+  --flow: clamp(1.25rem, 2.2vw, 1.75rem);
+  --group: clamp(2rem, 4vw, 3rem);
+  --section: clamp(3.25rem, 7vh, 5.5rem);
+  --col: clamp(1.5rem, 3.5vw, 2.75rem);
 
   --gutter: clamp(1.25rem, 4vw, 4.5rem);
   --max: 1480px;
@@ -47,12 +56,12 @@
 }
 
 /* one surface, one set of tokens — data-theme on the chapters now only labels them */
-html, html[data-theme] { --bg: var(--ink); --bg-rgb: 11,10,15; --fg: var(--paper); --fg-rgb: 244,239,230; --muted: rgba(244,239,230,.56); --line: rgba(244,239,230,.16); --surface: #FFFDF8; }
+html, html[data-theme] { --bg: var(--ink); --bg-rgb: 0,0,0; --fg: var(--paper); --fg-rgb: 246,246,244; --muted: rgba(246,246,244,.72); --line: rgba(246,246,244,.2); --surface: #FFFDF8; }
 
 /* ───────────── base ───────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html {
-  background: var(--ink);                /* solid fallback + overscroll colour; the gradient lives on .bg */
+  background: var(--ink);                /* solid fallback + overscroll colour; the black lives on .bg */
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: 100%;
@@ -67,7 +76,7 @@ html {
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body { margin: 0; min-height: 100svh; }
 .bg { position: fixed; inset: 0; z-index: -1; background: var(--bg-gradient); pointer-events: none; contain: strict; }   /* the single background */
-.bg__fluid { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 1; transition: opacity .8s var(--ease-out); }   /* fluid.js paints the dye here, transparent over the gradient; cursor-only, sleeps when clear */
+.bg__fluid { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 1; transition: opacity .8s var(--ease-out); }   /* fluid.js paints the dye here, transparent over the black; cursor-only, sleeps when clear */
 .bg__fluid.is-gone { opacity: 0; }
 html.has-cursor body { cursor: none; }
 html.has-cursor a, html.has-cursor button { cursor: none; }
@@ -115,7 +124,7 @@ ol, ul { padding: 0; list-style: none; }
   font-weight: 400;
   letter-spacing: -.005em;
 }
-.prose + .prose { margin-top: 1.3em; }
+.prose + .prose { margin-top: 1em; }
 .prose--em { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.2vw, 2.3rem); line-height: 1.2; }
 .prose--em em { color: var(--red); }
 
@@ -125,7 +134,7 @@ ol, ul { padding: 0; list-style: none; }
 
 /* strike-through drawn with the red pen — animatable, multi-line safe */
 .strike {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23E5352B'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 0% .085em;
   background-position: 0 58%;
@@ -155,27 +164,23 @@ html.reveal-all .strike { background-size: 100% .085em; }
 /* ───────────── layout primitives ───────────── */
 main { position: relative; z-index: 2; background: transparent; color: var(--fg); }
 
-.chapter {
-  position: relative;
-  overflow: visible clip;            /* y clipped for the numerals */
-  padding: clamp(6rem, 14vh, 11rem) var(--gutter) clamp(6rem, 14vh, 10rem);
-  max-width: var(--max);
-  margin-inline: auto;
-}
+/* the boundary is a hairline, not a void: 11rem/10rem of padding stacked on a 5.5rem head
+   margin and up to 7rem of trailing block margin meant ~400px of nothing between chapters */
+.chapter { position: relative; overflow: visible clip; /* y clipped for the numerals */ padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: var(--max); margin-inline: auto; }
 .chapter__num {
   position: absolute; top: -.05em; right: calc(var(--gutter) - .06em);
   font-size: clamp(9rem, 26vw, 24rem); line-height: 1;
-  color: var(--fg); opacity: .07; pointer-events: none; user-select: none;
+  color: var(--fg); opacity: .1; pointer-events: none; user-select: none;
   will-change: transform;
 }
-.chapter__head { position: relative; display: grid; gap: 1.6rem; margin-bottom: clamp(3rem, 7vw, 5.5rem); }
+.chapter__head { position: relative; display: grid; gap: var(--s3); margin-bottom: var(--group); }
 [data-depth] { will-change: transform, opacity; transform-origin: 50% 100%; }          /* scroll-derived arrival (translate/scale/opacity), one writer: the page loop */
 .js [data-depth] { opacity: 0; }                                                       /* until the loop's first write (never under reduced motion / reveal-all) */
 
-.meta { display: grid; gap: 1rem; font-size: .95rem; }
-.meta div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); }
+.meta { display: grid; gap: .6rem; font-size: .95rem; }
+.meta div { display: grid; grid-template-columns: 6.5rem 1fr; gap: var(--s3); padding-top: var(--s3); border-top: 1px solid var(--line); }
 .meta dt { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .02em; text-transform: uppercase; color: var(--muted); padding-top: .2rem; }
-.meta dd { line-height: 1.35; }
+.meta dd { line-height: 1.35; padding-right: var(--s3); }
 
 /* ───────────── HUD ───────────── */
 .progress {
@@ -184,26 +189,38 @@ main { position: relative; z-index: 2; background: transparent; color: var(--fg)
 }
 .hud { position: fixed; inset: 0; z-index: 850; pointer-events: none; color: var(--fg); }
 .hud > * { pointer-events: auto; position: absolute; z-index: 1; }
-.hud__name { top: 1.4rem; left: var(--gutter); display: flex; align-items: baseline; gap: .8rem; }
-.hud__name .serif-i { font-size: 1.5rem; line-height: 1; }
-.hud__name .mono { color: var(--muted); }
-.hud__nav { top: 1.2rem; right: var(--gutter); display: flex; gap: .5rem; }
-.hud__btn {
-  display: inline-flex; align-items: center; height: 2.4rem; padding: 0 1.05rem;
-  border: 1px solid var(--line); border-radius: 999px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 11,10,15), .55);
-  transition: border-color .25s, background-color .25s, color .25s;
+.hud__bar {
+  top: clamp(.85rem, 2vh, 1.4rem); left: 50%; right: auto; transform: translateX(-50%);
+  z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+  width: max-content; max-width: min(94vw, 46rem);
+  padding: .4rem .45rem .4rem 1.15rem; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(var(--bg-rgb, 0,0,0), .55); backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: 0 18px 50px -22px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.05);
+  transition: background-color .35s var(--ease-out), border-color .35s var(--ease-out);
 }
-.hud__btn:hover { border-color: var(--fg); }
-.hud__btn--solid { background: var(--fg); color: var(--bg); border-color: var(--fg); backdrop-filter: none; }
-.hud__btn--solid:hover { background: var(--red); border-color: var(--red); color: var(--white); }
-.hud__chapter { bottom: 1.4rem; left: var(--gutter); color: var(--muted); overflow: hidden; padding: .2rem .5rem; margin-left: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 11,10,15), .5); }
+.hud__bar:has(:hover), .hud__bar:has(:focus-visible) { border-color: rgba(var(--fg-rgb), .26); background: rgba(var(--bg-rgb, 0,0,0), .72); }
+.hud__name { display: flex; align-items: baseline; gap: .8rem; min-width: 0; flex: 0 1 auto; }
+.hud__name .serif-i { font-size: 1.5rem; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* the bar never pushes the buttons out — the name gives first */
+.hud__name .mono { color: var(--muted); white-space: nowrap; }
+.hud__nav { display: flex; align-items: center; gap: .35rem; flex: none; }
+.hud__bar .hud__btn {
+  display: inline-flex; align-items: center; height: 2.35rem; padding: 0 1rem;
+  border: 1px solid transparent; border-radius: 999px; background: transparent; backdrop-filter: none;
+  transition: background-color .25s, color .25s, border-color .25s;
+}
+.hud__bar .hud__btn:hover { background: rgba(var(--fg-rgb), .1); border-color: transparent; }
+.hud__bar .hud__btn--solid { background: var(--fg); color: var(--bg); }
+.hud__bar .hud__btn--solid:hover { background: var(--red); color: var(--white); }
+.hud__chapter { bottom: 1.4rem; left: var(--gutter); color: var(--muted); overflow: hidden; padding: .2rem .5rem; margin-left: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__chapter span { display: inline-block; transition: transform .45s var(--ease-out), opacity .45s; }
 .hud__chapter.is-swapping span { transform: translateY(110%); opacity: 0; transition: transform .25s var(--ease-in), opacity .25s; }
-.hud__progress { bottom: 1.4rem; right: var(--gutter); color: var(--muted); font-variant-numeric: tabular-nums; padding: .2rem .5rem; margin-right: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 11,10,15), .5); }
+.hud__progress { bottom: 1.4rem; right: var(--gutter); color: var(--muted); font-variant-numeric: tabular-nums; padding: .2rem .5rem; margin-right: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__pct { margin-left: .05em; }
 html.index-open .hud { color: var(--white); }
 html.index-open .hud .mono { color: rgba(255,255,255,.7); }
-html.index-open .hud__btn { border-color: rgba(255,255,255,.4); }
+html.index-open .hud__bar { background: rgba(0,0,0,.32); border-color: rgba(255,255,255,.3); }
+html.index-open .hud__bar .hud__btn { border-color: transparent; }
 html.index-open .hud__btn--solid { background: var(--white); color: var(--red); border-color: var(--white); }
 html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 
@@ -217,7 +234,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 }
 .index.is-open { transform: none; visibility: visible; transition: transform .9s var(--ease-inout), visibility 0s; }
 .index__inner { min-height: 100%; max-width: var(--max); margin-inline: auto; padding: calc(var(--hud-h) + 1rem) var(--gutter) 2rem; display: flex; flex-direction: column; }
-.index__label { color: rgba(255,255,255,.7); margin-bottom: 1.4rem; }
+.index__label { color: rgba(255,255,255,.7); margin-bottom: var(--s3); }
 .index__list { flex: 1; }
 .index__list li { border-top: 1px solid rgba(255,255,255,.28); opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
 .index__list li:last-child { border-bottom: 1px solid rgba(255,255,255,.28); }
@@ -227,11 +244,11 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .index__title { font-family: var(--font-serif); font-size: clamp(1.5rem, min(4vw, 4.4vh), 3.2rem); line-height: 1; transition: transform .5s var(--ease-out), font-style 0s; }
 .index__list a:hover .index__title { transform: translateX(.35em); font-style: italic; }
 .index__meta { color: rgba(255,255,255,.7); text-align: right; }
-.index__foot { color: rgba(255,255,255,.7); margin-top: 2rem; }
+.index__foot { color: rgba(255,255,255,.7); margin-top: var(--s5); }
 
 /* ───────────── about ───────────── */
-.about__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; }
-.about__side { display: grid; gap: 3rem; }
+.about__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--group) var(--col); align-items: start; }
+.about__side { display: grid; gap: var(--group); }
 
 /* tilt artifacts */
 .artifact { position: relative; }
@@ -243,28 +260,29 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .card__inner {
   background: var(--surface); color: var(--ink);
   padding: 1.6rem 1.8rem 1.4rem; border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 24px 50px -22px rgba(11,10,15,.35), 0 0 0 1px rgba(11,10,15,.06);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect y='3' width='4' height='1' fill='%230B0A0F' fill-opacity='.08'/%3E%3C/svg%3E"); background-size: 4px 1.85rem; background-repeat: repeat; background-position: 0 1.2rem;   /* ruled lines */
+  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 24px 50px -22px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect y='3' width='4' height='1' fill='%23000000' fill-opacity='.08'/%3E%3C/svg%3E"); background-size: 4px 1.85rem; background-repeat: repeat; background-position: 0 1.2rem;   /* ruled lines */
   display: grid; gap: .55rem;
 }
-.card__head { color: rgba(11,10,15,.5); margin-bottom: .6rem; }
+.card__head { color: rgba(0,0,0,.5); margin-bottom: var(--s2); }
 .card__line { font-family: var(--font-serif); font-size: 1.35rem; line-height: 1.37; position: relative; }
 .card__target { position: relative; display: inline-block; }
 .card__circle { position: absolute; left: -.55em; top: -.42em; width: calc(100% + 1.1em); height: calc(100% + .85em); color: var(--red); pointer-events: none; overflow: visible; }
 .card__circle path { stroke-dasharray: 900; stroke-dashoffset: 900; transition: stroke-dashoffset 1.6s var(--ease-inout) .5s; }
 .is-in .card__circle path, .no-js .card__circle path { stroke-dashoffset: 0; }
-.card__foot { color: var(--red); margin-top: .8rem; text-transform: none; letter-spacing: 0; }
+.card__foot { color: var(--red); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
 
 /* ───────────── case chapters ───────────── */
-.case__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; }
-.case__meta { position: sticky; top: calc(var(--hud-h) + 1.5rem); }
-.case__body { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); }
+.case__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: var(--group) var(--col); align-items: start; }
+.case__meta { position: sticky; top: calc(var(--hud-h) + var(--s4)); padding-top: var(--s1); }
+.case__grid + .case__grid { margin-top: var(--section); }
+.case__body { display: grid; gap: var(--group); }
 
-.brief { display: grid; gap: .9rem; }
+.brief { display: grid; gap: var(--s2); }
 .brief p { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.8vw, 2.7rem); line-height: 1.12; letter-spacing: -.01em; max-width: 24ch; }
 .brief footer { color: var(--muted); }
 
-.edit { display: grid; gap: .8rem; padding: 2.2rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.edit { display: grid; gap: var(--s2); padding: var(--s4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .edit__label { color: var(--muted); }
 .edit__arrow { color: var(--red); margin: 0 .3em; }
 .edit__before { font-size: clamp(1.1rem, 1.5vw, 1.5rem); line-height: 1.35; max-width: 42ch; color: var(--muted); }
@@ -275,43 +293,43 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .edit__note { color: var(--red); text-transform: none; letter-spacing: 0; margin-top: .4rem; opacity: 0; transition: opacity .8s 1.1s; }
 .edit.is-inked .edit__note, .no-js .edit__note { opacity: 1; }
 
-.results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
-.results li { border-top: 1px solid var(--line); padding-top: 1rem; display: grid; gap: .5rem; align-content: start; }
+.results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); }
+.results li { border-top: 1px solid var(--line); padding-top: var(--s3); display: grid; gap: var(--s1); align-content: start; }
 .results strong { font-family: var(--font-serif); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4.8rem); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .results .mono { color: var(--muted); text-transform: none; letter-spacing: 0; line-height: 1.4; }
 
-.artifact figcaption { margin-top: 1rem; color: var(--muted); text-transform: none; letter-spacing: 0; }
+.artifact figcaption { margin-top: var(--s3); color: var(--muted); text-transform: none; letter-spacing: 0; }
 
 /* phone */
 .artifact--phone { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: end; }
 .phone {
   width: min(18rem, 78vw); aspect-ratio: 9 / 17.6;
-  background: #0E0D13; border-radius: 2.6rem; padding: .7rem;
-  box-shadow: 0 0 0 1px rgba(244,239,230,.14), 0 40px 80px -30px rgba(0,0,0,.7), inset 0 0 0 1px rgba(0,0,0,.6);
+  background: #0C0C0E; border-radius: 2.6rem; padding: .7rem;
+  box-shadow: 0 0 0 1px rgba(246,246,244,.14), 0 40px 80px -30px rgba(0,0,0,.7), inset 0 0 0 1px rgba(0,0,0,.6);
 }
 .phone__screen {
   height: 100%; border-radius: 2rem; overflow: hidden; position: relative;
-  background: #14121C;
+  background: #121216;
   color: var(--paper); padding: 1rem 1rem 1.2rem; display: flex; flex-direction: column;
 }
-.phone__status { display: flex; justify-content: space-between; color: rgba(244,239,230,.6); }
-.notif-stack { position: relative; height: 8rem; margin-top: 1.4rem; }
+.phone__status { display: flex; justify-content: space-between; color: rgba(246,246,244,.6); }
+.notif-stack { position: relative; height: 8rem; margin-top: var(--s4); }
 .notif {
   position: absolute; inset: 0 0 auto 0;
-  background: rgba(244,239,230,.09); border: 1px solid rgba(244,239,230,.1); border-radius: 1.1rem;
+  background: rgba(246,246,244,.09); border: 1px solid rgba(246,246,244,.1); border-radius: 1.1rem;
   padding: .8rem .9rem; backdrop-filter: blur(6px);
   opacity: 0; transform: translateY(-14px) scale(.97); transition: opacity .55s var(--ease-out), transform .55s var(--ease-out);
 }
 .notif.is-active { opacity: 1; transform: none; transition-delay: .18s; }
 .notif.is-leaving { opacity: 0; transform: translateY(16px) scale(.98); transition: opacity .35s var(--ease-in), transform .35s var(--ease-in); }
-.notif__app { color: rgba(244,239,230,.55); margin-bottom: .3rem; }
+.notif__app { color: rgba(246,246,244,.55); margin-bottom: .3rem; }
 .notif__text { font-size: .92rem; line-height: 1.3; }
-.phone__card { margin-top: 1rem; padding: .9rem .95rem; border-radius: 1rem; background: rgba(244,239,230,.06); border: 1px solid rgba(244,239,230,.08); display: grid; gap: .55rem; }
-.phone__card-label { color: rgba(244,239,230,.5); }
-.phone__rows li { display: flex; justify-content: space-between; font-size: .88rem; padding: .3rem 0; border-top: 1px solid rgba(244,239,230,.08); font-variant-numeric: tabular-nums; }
+.phone__card { margin-top: 1rem; padding: .9rem .95rem; border-radius: 1rem; background: rgba(246,246,244,.06); border: 1px solid rgba(246,246,244,.08); display: grid; gap: .55rem; }
+.phone__card-label { color: rgba(246,246,244,.5); }
+.phone__rows li { display: flex; justify-content: space-between; font-size: .88rem; padding: .3rem 0; border-top: 1px solid rgba(246,246,244,.08); font-variant-numeric: tabular-nums; }
 .phone__rows li:first-child { border-top: 0; }
 .phone__rows li:last-child { color: var(--paper); font-weight: 600; }
-.phone__rows li span:last-child { color: rgba(244,239,230,.85); }
+.phone__rows li span:last-child { color: rgba(246,246,244,.85); }
 .phone__hero { margin-top: auto; display: grid; gap: .8rem; }
 .phone__hero-text { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.1; }
 .phone__hero-cta { display: inline-block; justify-self: start; padding: .55rem .8rem; border-radius: 999px; background: var(--paper); color: var(--ink); }
@@ -321,38 +339,38 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .poster {
   aspect-ratio: 3 / 4; background: var(--paper); color: var(--ink);
   padding: 1.4rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
-  box-shadow: 0 30px 60px -28px rgba(11,10,15,.5), 0 0 0 1px rgba(11,10,15,.08);
+  box-shadow: 0 30px 60px -28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
 }
-.poster__top, .poster__foot { display: flex; justify-content: space-between; color: rgba(11,10,15,.55); }
+.poster__top, .poster__foot { display: flex; justify-content: space-between; color: rgba(0,0,0,.55); }
 .poster__line { font-family: var(--font-serif); font-size: clamp(2.6rem, 4.6vw, 4rem); line-height: .95; letter-spacing: -.02em; }
 
 /* departure board */
-.board { background: #0E0E13; color: var(--paper); padding: 1.2rem 1.3rem 1.4rem; border-radius: 6px; display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; box-shadow: 0 0 0 1px rgba(244,239,230,.1), 0 30px 60px -30px rgba(0,0,0,.8); max-width: 44rem; overflow: hidden; }
-.board__label { display: flex; justify-content: space-between; color: rgba(244,239,230,.5); margin-bottom: .4rem; }
+.board { background: #0C0C0F; color: var(--paper); padding: 1.2rem 1.3rem 1.4rem; border-radius: 6px; display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; box-shadow: 0 0 0 1px rgba(246,246,244,.1), 0 30px 60px -30px rgba(0,0,0,.8); max-width: 44rem; overflow: hidden; }
+.board__label { display: flex; justify-content: space-between; color: rgba(246,246,244,.5); margin-bottom: .4rem; }
 .board__row { display: flex; gap: 3px; flex-wrap: nowrap; min-width: 0; }
 .board__row--dim { opacity: .45; }
 .flap {
   flex: 0 1 auto; width: clamp(.85rem, 1.85vw, 1.35rem); height: clamp(1.4rem, 2.8vw, 2.1rem);
   display: grid; place-items: center;
-  background: #1B1B22; border-radius: 3px; position: relative;
+  background: #1A1A1F; border-radius: 3px; position: relative;
   font-family: var(--font-mono); font-size: clamp(.8rem, 1.6vw, 1.15rem); text-transform: uppercase;
   box-shadow: inset 0 -1px 0 rgba(0,0,0,.6);
 }
 .flap::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.65); }
-.flap.is-blank { background: #15151b; }
+.flap.is-blank { background: #131317; }
 
 
 /* ───────────── process ───────────── */
-.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; margin-bottom: clamp(4rem, 9vw, 7rem); }
-.step { border-top: 1px solid var(--line); padding-top: 1.4rem; display: grid; gap: .8rem; align-content: start; }
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4); margin-bottom: var(--group); }
+.step { border-top: 1px solid var(--line); padding-top: var(--s4); display: grid; gap: var(--s2); align-content: start; }
 .step__num { font-size: 2.6rem; line-height: 1; color: var(--red); }
-.step__title { font-family: var(--font-serif); font-weight: 400; font-size: 2rem; line-height: 1; margin-top: .4rem; }
+.step__title { font-family: var(--font-serif); font-weight: 400; font-size: 2rem; line-height: 1; margin-top: var(--s1); }
 .step__body { font-size: 1.02rem; line-height: 1.45; color: rgba(var(--fg-rgb), .8); }
 
-.services { display: grid; gap: 1.6rem; }
+.services { display: grid; gap: var(--flow); }
 .services__list li { border-top: 1px solid var(--line); }
 .services__list li:last-child { border-bottom: 1px solid var(--line); }
-.services__list a { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2rem; align-items: baseline; gap: 2rem; padding: 1.3rem 0; }
+.services__list a { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2rem; align-items: baseline; gap: var(--s5); padding: var(--s3) 0; }
 .services__title { font-family: var(--font-serif); font-size: clamp(1.7rem, 3.2vw, 3rem); line-height: 1; transition: transform .5s var(--ease-out); }
 .services__desc { color: var(--muted); text-transform: none; letter-spacing: 0; }
 .services__arrow { font-family: var(--font-serif); font-size: 1.6rem; justify-self: end; transition: transform .5s var(--ease-out), color .3s; }
@@ -364,9 +382,9 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 /* ───────────── brief card (About · Tone · Contribution · Deliverables) ───────────── */
 
 /* ───────────── results extras ───────────── */
-.results__src { color: var(--muted); text-transform: none; letter-spacing: 0; margin-top: -1.6rem; opacity: .8; }
+.results__src { color: var(--muted); text-transform: none; letter-spacing: 0; margin-top: calc(var(--s4) * -1 + var(--s1)); }
 .results--words strong { font-size: clamp(1.5rem, 2.4vw, 2.2rem); line-height: 1.1; }
-.results--proof { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: clamp(4rem, 9vw, 7rem); }
+.results--proof { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: var(--group); }
 .results--proof strong { font-size: clamp(2.4rem, 4vw, 3.8rem); }
 .edit__after--long { font-size: clamp(1.9rem, 3.6vw, 3.6rem); max-width: 22ch; line-height: 1.04; }
 
@@ -382,8 +400,8 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .manifesto__line--beat { color: var(--muted); margin-top: .5rem; max-width: 40ch; }
 .manifesto__line--end { font-family: var(--font-serif); font-size: clamp(1.8rem, 3.2vw, 3rem); line-height: 1.05; margin-top: .8rem; }
 .manifesto__line--end em { font-size: 1em; }
-.films { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
-.films li { border-top: 1px solid var(--line); padding-top: 1rem; display: grid; gap: .6rem; align-content: start; }
+.films { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--flow); }
+.films li { border-top: 1px solid var(--line); padding-top: var(--s3); display: grid; gap: var(--s2); align-content: start; }
 .films .mono { color: var(--red); }
 .films p { font-size: .98rem; line-height: 1.45; color: rgba(var(--fg-rgb), .82); }
 
@@ -403,7 +421,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .phone__hero-text--sm { font-size: 1.22rem; line-height: 1.12; }
 
 /* ───────────── the desk: gallery + side quests ───────────── */
-.desk__intro { max-width: 62ch; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.desk__intro { max-width: 62ch; margin-bottom: var(--group); }
 /* ───────────── 00 · the orbit — the opening screen ─────────────
    Andrianjaka Tony's card system (recent.design/i/75uqgzu): every slide, static, script and film
    on two counter-turning rings. Default markup = headline + captioned grid (no JS, GSAP blocked,
@@ -413,15 +431,19 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
   position: relative; background: transparent; color: var(--paper);
   padding: calc(var(--hud-h) + 1.5rem) var(--gutter) 3rem;
 }
-.stage__hud { position: relative; z-index: 3; display: flex; justify-content: center; margin-bottom: 1.5rem; }
-.stage__modes { display: flex; gap: .15rem; }
+.stage__hud { position: relative; z-index: 3; display: flex; justify-content: center; margin-top: var(--s4); }   /* the arrangement switch sits BELOW the animation */
+.stage__modes {
+  display: flex; gap: .15rem; padding: .25rem; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(var(--bg-rgb, 0,0,0), .55); backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 18px 50px -22px rgba(0,0,0,.85);
+}
 .stage__mode {
   font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--muted);
   background: none; border: 1px solid transparent; border-radius: 999px; padding: .45rem .85rem; cursor: pointer;
   transition: color .25s, border-color .25s, background-color .25s;
 }
 .stage__mode:hover { color: var(--paper); }
-.stage__mode.is-active { color: var(--paper); border-color: rgba(244,239,230,.32); }
+.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); }
 .stage__mode:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .stage__title {
   position: relative; z-index: 2; margin: 0 auto clamp(2rem, 5vw, 4rem); max-width: 14ch; text-align: center;
@@ -433,9 +455,9 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__ring { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
 .stage__ring + .stage__ring { margin-top: 1rem; }
 .stage__card { margin: 0; display: grid; gap: .6rem; align-content: start; }
-.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #1A191F; }
+.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #101013; }
 .stage__card figcaption { color: var(--muted); text-transform: none; letter-spacing: 0; line-height: 1.4; }
-.stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: 1rem; align-items: end; margin-top: 2rem; color: var(--muted); }
+.stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: var(--s4); align-items: end; margin-top: var(--s5); color: var(--muted); }
 .stage__foot p { margin: 0; }
 .stage__role { line-height: 1.6; max-width: 30ch; }
 .stage__line { text-align: center; display: grid; gap: .35rem; justify-items: center; text-transform: none; letter-spacing: 0; }
@@ -444,7 +466,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__q:empty { display: none; }
 .stage__more { color: var(--red); text-transform: uppercase; letter-spacing: .02em; border-bottom: 1px solid transparent; }
 .stage__more:hover { border-color: currentColor; }
-.stage__links { display: flex; gap: 1.4rem; justify-content: end; }
+.stage__links { display: flex; gap: var(--s4); justify-content: end; }
 .stage__links a { border-bottom: 1px solid transparent; transition: color .25s, border-color .25s; }
 .stage__links a:hover { color: var(--paper); border-color: var(--paper); }
 .stage:not(.is-3d) .stage__modes, .stage:not(.is-3d) .stage__k, .stage:not(.is-3d) .stage__line { display: none; }
@@ -461,7 +483,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .side__tag a:hover { border-color: currentColor; }
 
 .stage.is-3d { height: 100svh; min-height: 36rem; padding: 0; overflow: clip; perspective: 640px; touch-action: pan-y; }   /* P in motion.js must match */
-.stage.is-3d .stage__hud { position: absolute; left: 0; right: 0; top: 3.9rem; margin: 0; }
+.stage.is-3d .stage__hud { position: absolute; left: 0; right: 0; bottom: clamp(8.6rem, 15vh, 11.5rem); margin: 0; }   /* docked under the rings, above the caption band */
 .stage.is-3d .stage__hud, .stage.is-3d .stage__foot { opacity: 0; transition: opacity 1s var(--ease-out) 1.4s; }
 .stage.is-live .stage__hud, .stage.is-live .stage__foot { opacity: 1; }
 .stage.is-3d .stage__title {
@@ -469,7 +491,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
   font-size: clamp(1.7rem, 3.4vw, 3.5rem); pointer-events: none; will-change: opacity;   /* opacity is written by the scene loop (no CSS transition — they'd fight) */
   /* --title-fit: motion.js measures the headline against the hole of the inner ring on every resize and scales it to clear the cards (16:9 laptops need ≈ .8) */
 }
-.stage.is-3d .stage__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 3.2rem; margin: 0; pointer-events: none; align-items: end; }   /* sits above the fixed chapter label / progress strip */
+.stage.is-3d .stage__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 3.9rem; margin: 0; pointer-events: none; align-items: end; }   /* sits above the fixed chapter label / progress strip */
 .stage.is-3d .stage__foot a, .stage.is-3d .stage__line { pointer-events: auto; }
 .stage.is-3d .stage__space { position: absolute; inset: 0; transform-style: preserve-3d; user-select: none; -webkit-user-select: none; pointer-events: none; will-change: transform; }   /* the camera: one transform, written by the scene loop. v8.3: `will-change: opacity` was removed here — Chrome (and Firefox) treat it as a grouping property that flattens a preserve-3d context, so every card's translateZ was being ignored: no depth on the drum, no hover lift, an opened piece stuck at its base size. The camera's opacity is never animated, so the hint was pure loss. */   /* its own (transparent) plane must never catch a click meant for a card behind it (z < 0) */
 .stage.is-3d .stage__ring { position: absolute; left: 50%; top: var(--cy, 50%); width: 0; height: 0; display: block; margin: 0; transform-style: preserve-3d; }
@@ -485,13 +507,13 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .stage.is-3d .stage__card:focus-visible { outline: 2px solid var(--red); outline-offset: 6px; }
 .stage.is-3d .stage__card--film::after {                   /* a small play glyph, so films read as films at ring size */
   content: ''; position: absolute; right: 8%; bottom: 8%; width: 1.4rem; height: 1.4rem; border-radius: 50%;
-  background: rgba(11,10,15,.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7l8 5-8 5z' fill='%23F4EFE6'/%3E%3C/svg%3E") center/70% no-repeat;
+  background: rgba(0,0,0,.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7l8 5-8 5z' fill='%23F6F6F4'/%3E%3C/svg%3E") center/70% no-repeat;
   pointer-events: none; transition: opacity .3s;
 }
 .stage.is-3d .stage__card--film.is-playing::after { opacity: 0; }
 
 /* ───────────── stamp ───────────── */
-.stamp { width: 11rem; margin: 4rem 0 0 auto; color: var(--red); transform: rotate(-8deg); overflow: clip; border-radius: 50%; }   /* clips the spinning svg's rotated bbox now that chapters no longer clip x */
+.stamp { width: 11rem; margin: var(--group) 0 0 auto; color: var(--red); transform: rotate(-8deg); overflow: clip; border-radius: 50%; }   /* clips the spinning svg's rotated bbox now that chapters no longer clip x */
 .stamp__svg { animation: spin 26s linear infinite; }
 .stamp__text { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; fill: currentColor; }
 .stamp__center { font-family: var(--font-serif); font-style: italic; font-size: 30px; fill: currentColor; }
@@ -501,10 +523,8 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue {
   position: relative; min-height: 100svh; background: transparent; color: var(--paper); display: grid; align-items: end;
 }
-.epilogue__inner {
-  width: 100%; min-height: 100svh; max-width: var(--max); margin-inline: auto;
-  padding: clamp(3rem, 8vh, 6rem) var(--gutter) 3.8rem;
-  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; gap: 1.6rem clamp(2rem, 6vw, 6rem); align-content: start;
+.epilogue__inner { width: 100%; min-height: 100svh; max-width: var(--max); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group); border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; gap: var(--flow) var(--col); align-content: start;
 }
 .epilogue__inner > .kicker { grid-column: 1 / -1; }
 .epilogue__title { grid-column: 1; }
@@ -514,7 +534,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue__title { max-width: 16ch; font-size: clamp(2.3rem, 5.4vw, 5.6rem); }
 .epilogue__mail {
   justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 6.4vw, 6.4rem); line-height: 1; letter-spacing: -.02em;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23E5352B'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% .06em; background-position: 0 92%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% .06em; background-position: 0 92%;
   transition: color .3s, background-size .5s var(--ease-out); will-change: transform; display: inline-block;
 }
 .epilogue__mail:hover { color: var(--red); background-size: 100% .12em; }
@@ -527,7 +547,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
   font: 400 clamp(1.1rem, 1.6vw, 1.5rem)/1.3 var(--font-sans); padding: .5rem 0; border-radius: 0;
   transition: border-color .3s;
 }
-.redpen__input::placeholder { color: rgba(244,239,230,.35); }
+.redpen__input::placeholder { color: rgba(246,246,244,.35); }
 .redpen__input:focus { outline: none; border-color: var(--paper); }
 .redpen__btn { height: 2.6rem; padding: 0 1.2rem; border-radius: 999px; background: var(--red); color: var(--white); transition: transform .25s var(--ease-out), background-color .25s; }
 .redpen__btn:hover { background: var(--white); color: var(--red); }
@@ -542,23 +562,13 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .redpen.is-inked .redpen__note { opacity: 1; }
 
 .epilogue__inner { will-change: transform, opacity; }
-.epilogue__meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; border-top: 1px solid var(--line); padding-top: 1.4rem; align-self: end; margin-top: 2rem; }
+.epilogue__meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4); border-top: 1px solid var(--line); padding-top: var(--s4); align-self: end; margin-top: var(--group); }
 .epilogue__meta .mono { color: var(--muted); line-height: 1.7; }
 .epilogue__meta a { transition: color .25s; }
 .epilogue__meta a:hover { color: var(--paper); }
 .epilogue__disclaimer { text-transform: none; letter-spacing: 0; opacity: .7; }
 
 /* ───────────── decor ───────────── */
-.grain {
-  position: fixed; inset: 0; z-index: 700; pointer-events: none; opacity: .06;   /* viewport-sized, no blend mode, the tile moves (not the layer): the cheapest grain that still reads */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 240px 240px;
-  animation: grain 1.2s steps(6) infinite;
-}
-@keyframes grain {
-  0% { background-position: 0 0; } 20% { background-position: -70px 50px; } 40% { background-position: 50px -90px; }
-  60% { background-position: -110px -30px; } 80% { background-position: 90px 100px; } 100% { background-position: 0 0; }
-}
 
 .cursor, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000; display: none; will-change: transform; }
 html.has-cursor .cursor, html.has-cursor .cursor-ring { display: block; }
@@ -586,32 +596,31 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .epilogue__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
-  .about__grid, .case__grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .about__grid, .case__grid { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
   .case__meta { position: static; }
   .hud__chapter { display: none; }
-  .hud__name .mono { display: none; }
-  .hud__name .serif-i { font-size: 1.3rem; white-space: nowrap; }
+  .hud__bar .hud__name .mono { display: none; }
+  .hud__bar .hud__name .serif-i { font-size: 1.3rem; }
   .artifact--phone { grid-template-columns: 1fr; }
   .films { grid-template-columns: 1fr; }
   .script__head, .script__row { grid-template-columns: minmax(0, 1fr) 9rem; gap: 1rem; }
   .services__list a { grid-template-columns: minmax(0, 1fr) 2rem; }
   .services__desc { grid-column: 1 / -1; }
   .index__list a { grid-template-columns: 2.2rem 1fr; }
-  .index__meta { display: none; }
-  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 2rem; padding-bottom: 4rem; }
+  .index__meta { display: none; }  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--s4); padding-bottom: var(--s6); }
   .epilogue__inner > *, .epilogue__title, .epilogue__mail, .redpen, .epilogue__meta { grid-column: 1; grid-row: auto; }
 }
 @media (max-width: 360px) {
-  .hud__btn { padding: 0 .75rem; height: 2.2rem; }
-  .hud__nav { gap: .35rem; }
-  .hud__name .serif-i { font-size: 1.15rem; }   /* the whole name still fits beside the two buttons at 320 px */
+  .hud__bar { padding: .3rem .3rem .3rem .7rem; }
+  .hud__bar .hud__btn { padding: 0 .7rem; height: 2.1rem; }
+  .hud__bar .hud__name .serif-i { font-size: 1.1rem; }   /* the whole name still fits beside the two buttons at 320 px */
 }
 @media (max-width: 600px) {
   .results { grid-template-columns: 1fr; }
   .results--proof, .side__list { grid-template-columns: 1fr; }
-  .stage.is-3d .stage__hud { top: 4.2rem; }
-  .stage.is-3d .stage__title { top: 7.4rem; transform: translateX(-50%); width: 92vw; font-size: 1.75rem; text-align: center; }
-  .stage.is-3d .stage__foot { grid-template-columns: 1fr; gap: .8rem; bottom: 3.6rem; }
+  .stage.is-3d .stage__hud { bottom: 7.4rem; }
+  .hud__bar { width: min(calc(100vw - 1.5rem), 34rem); padding: .35rem .35rem .35rem .9rem; }
+  .stage.is-3d .stage__title { top: 7.4rem; transform: translateX(-50%); width: 92vw; font-size: 1.75rem; text-align: center; }  .stage.is-3d .stage__foot { grid-template-columns: 1fr; gap: var(--s2); bottom: 4.1rem; }
   .stage.is-3d .stage__role, .stage.is-3d .stage__links { display: none; }
   .stage.is-3d .stage__line { justify-items: start; text-align: left; }
   .stage.is-3d .stage__q { font-size: 1rem; }
@@ -629,7 +638,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .redpen__btn { justify-self: start; }
   .card { transform: none; }
   .chapter__num { font-size: 9rem; }
-  .hud__btn { padding: 0 .8rem; }
+  .hud__bar .hud__btn { padding: 0 .8rem; }
 }
 
 /* ───────────── reduced motion ───────────── */
@@ -640,16 +649,107 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .strike { background-size: 100% .085em; transition: none; }
   .js .edit__after, .js .redpen__after { opacity: 1; transform: none; transition: none; }
   .edit__note, .redpen__note { opacity: 1; transform: none; transition: none; }
-  .grain, .stamp__svg { animation: none; }
+  .stamp__svg { animation: none; }
   .bg__fluid { display: none; }
   .tilt__inner, .notif, .index, .index__list li, .hud__chapter span { transition: none; }
   .card__circle path { stroke-dashoffset: 0; transition: none; }
 }
 
-/* ───────────── motion.js ─────────────
-   motion.js owns exactly one thing: the 3D scene (the orbit stage). Reveals are CSS transitions
-   toggled by one IntersectionObserver in main.js; scroll-linked values come from the page loop. */
+/* ───────────── type palettes (v8.5) — the bottom-right Aa button + its sheet ─────────────
+   The palette layer only ever writes type tokens: --font-* plus display weight/tracking.
+   Everything here is additive to the tokens above, so a failed font request leaves the
+   site exactly as it was. */
+html[data-pal] .display, html[data-pal] .stage__title, html[data-pal] .prose--em, html[data-pal] .index__title,
+html[data-pal] .card__line, html[data-pal] .brief p, html[data-pal] .edit__after, html[data-pal] .results strong,
+html[data-pal] .phone__hero-text, html[data-pal] .poster__line, html[data-pal] .step__title, html[data-pal] .services__title,
+html[data-pal] .services__arrow, html[data-pal] .manifesto__line em, html[data-pal] .manifesto__line--end,
+html[data-pal] .stamp__center, html[data-pal] .epilogue__mail, html[data-pal] .redpen__after, html[data-pal] .serif-i { font-weight: var(--disp-weight, 400); }
+html[data-pal] .display, html[data-pal] .stage__title, html[data-pal] .epilogue__mail, html[data-pal] .index__title,
+html[data-pal] .step__title, html[data-pal] .services__title, html[data-pal] .card__line, html[data-pal] .poster__line { letter-spacing: var(--disp-ls, -.015em); }
+   /* the italic voice stays Instrument Serif in every palette: it is the one face already inlined,
+      and it has a real italic — no synthesised slants, whatever display face is chosen. */
+html[data-pal] .serif-i, html[data-pal] .display em, html[data-pal] .stage__title em, html[data-pal] .manifesto__line em,
+html[data-pal] .stamp__center, html[data-pal] .index__list a:hover .index__title { font-family: var(--font-ital, var(--font-serif)); font-style: italic; }
+html[data-pal] .mono { letter-spacing: var(--mono-ls, .02em); font-weight: var(--mono-weight, 400); }
+html[data-pal] .index__title { font-family: var(--font-serif); }
 
+/* the corner control, docked with the reading progress so the bottom right stays one cluster */
+.hud__type {
+  bottom: 1.4rem; right: calc(var(--gutter) + .55rem); display: inline-flex; align-items: center; gap: .45rem;
+  height: 2rem; padding: 0 .7rem; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(var(--bg-rgb, 0,0,0), .55); backdrop-filter: blur(10px);
+  color: var(--muted); transition: color .25s, border-color .25s, background-color .25s;
+}
+.hud__corner { bottom: 1.4rem; right: var(--gutter); left: auto; display: flex; align-items: center; gap: .55rem; }
+.hud__type:hover { color: var(--fg); border-color: var(--fg); }
+.hud__type .mono { font-size: .68rem; letter-spacing: .06em; }
+.hud__type__aa { font-family: var(--font-serif); font-size: 1rem; line-height: 1; letter-spacing: -.02em; }
+.hud__progress { padding: .2rem .1rem; margin: 0; background: none; backdrop-filter: none; }
+
+/* the sheet */
+.typepal {
+  position: fixed; z-index: 880; top: 0; right: 0; bottom: 0; width: min(46rem, 100vw);
+  display: grid; grid-template-rows: auto auto 1fr; gap: 0;
+  background: rgba(var(--bg-rgb, 0,0,0), .92); backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-left: 1px solid var(--line); color: var(--fg); overscroll-behavior: contain;
+  box-shadow: -30px 0 80px -40px rgba(0,0,0,.9);
+}
+.typepal[hidden] { display: none; }
+html.tp-open { overflow: hidden; }
+.typepal__head { padding: 1.5rem var(--gutter) 1rem; border-bottom: 1px solid var(--line); display: grid; gap: .55rem; }
+.typepal__label { color: var(--muted); }
+.typepal__title { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.06; letter-spacing: -.015em; }
+.typepal__title em { font-style: italic; color: var(--red); }
+.typepal__row { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
+.typepal__hint { color: var(--muted); margin-right: auto; }
+.typepal__x, .typepal__reset, .typepal__chip {
+  font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .05em;
+  border: 1px solid var(--line); border-radius: 999px; padding: .42rem .8rem; cursor: pointer; color: var(--fg);
+  transition: border-color .2s, background-color .2s, color .2s;
+}
+.typepal__x:hover, .typepal__chip:hover, .typepal__reset:hover { border-color: var(--fg); }
+.typepal__chip.is-on, .typepal__x { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.typepal__x:hover { background: var(--red); border-color: var(--red); color: var(--white); }
+.typepal__scroll { overflow: auto; padding: 1.2rem var(--gutter) 3rem; scrollbar-width: thin; }
+.typepal__note { color: var(--muted); padding: .8rem var(--gutter) 1.2rem; border-top: 1px solid var(--line); }
+.typepal[data-palfonts='fallback'] .typepal__note { color: var(--red); }
+.tpg { margin: 0 0 1.8rem; }
+.tpg[hidden] { display: none; }
+.tpg__t { color: var(--red); margin-bottom: .35rem; }
+.tpg__b { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 62ch; margin-bottom: .9rem; }
+.tpg__row { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: .6rem; }
+.tp {
+  display: grid; gap: .5rem; justify-items: start; text-align: left; cursor: pointer; min-width: 0;
+  padding: .85rem .9rem 1rem; border: 1px solid var(--line); border-radius: 4px;
+  background: rgba(var(--fg-rgb), .03); color: var(--fg);
+  transition: border-color .2s, background-color .2s, transform .2s var(--ease-out);
+}
+.tp:hover { border-color: rgba(var(--fg-rgb), .4); background: rgba(var(--fg-rgb), .06); }
+.tp.is-on { border-color: var(--red); background: rgba(var(--fg-rgb), .05); box-shadow: inset 0 0 0 1px var(--red); }
+.tp:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.tp__top { width: 100%; display: flex; justify-content: space-between; gap: .6rem; align-items: baseline; color: var(--muted); }
+.tp__fam { text-align: right; opacity: .7; }
+.tp__disp { font-family: var(--font-serif); font-weight: 400; font-size: 1.5rem; line-height: 1.02; letter-spacing: -.02em; }
+.tp__body { font-family: var(--font-sans); font-size: .86rem; line-height: 1.4; color: var(--muted); }
+.tp__body em { font-family: var(--font-serif); font-style: italic; color: var(--fg); }
+.tp__mono { font-family: var(--font-mono); font-size: .58rem; text-transform: uppercase; letter-spacing: .06em; color: var(--red); }
+.tp__note { font-size: .78rem; line-height: 1.35; color: var(--muted); opacity: .85; }
+@media (prefers-reduced-motion: no-preference) { .typepal { animation: tp-in .4s var(--ease-out); } }
+@keyframes tp-in { from { opacity: 0; transform: translateX(1.2rem); } }
+@media (max-width: 900px) {
+  .typepal { width: 100vw; top: auto; height: min(84svh, 46rem); border-left: 0; border-top: 1px solid var(--line); }
+  .typepal__head { padding: 1.1rem var(--gutter) .8rem; }
+  .tpg__row { grid-template-columns: 1fr; }
+  .tp { padding: .8rem .85rem .9rem; }
+  html.tp-open body { padding-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .hud__type { bottom: 1.35rem; right: var(--gutter); }
+  .hud__type .hud__type__lbl { display: none; }
+  .hud__type { padding: 0 .6rem; }
+  .hud__corner { gap: .4rem; }
+}
 </style>
 </head>
 <body>
@@ -662,19 +762,49 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <div class="progress" data-progress aria-hidden="true"></div>
 
 <header class="hud" data-hud>
-  <a class="hud__name" href="#orbit" data-cursor="top">
-    <span class="serif-i">Abhijeet Kanase</span><span class="mono">Copywriter</span>
-  </a>
-  <nav class="hud__nav" aria-label="Primary">
-    <button class="hud__btn" type="button" data-index-toggle aria-controls="index" aria-expanded="false">
-      <span class="mono" data-index-label>Index</span>
-    </button>
-    <a class="hud__btn hud__btn--solid" href="#epilogue" data-cursor="hello"><span class="mono">Say hello</span></a>
-  </nav>
+  <div class="hud__bar">
+    <a class="hud__name" href="#orbit" data-cursor="top">
+      <span class="serif-i">Abhijeet Kanase</span><span class="mono">Copywriter</span>
+    </a>
+    <nav class="hud__nav" aria-label="Primary">
+      <button class="hud__btn" type="button" data-index-toggle aria-controls="index" aria-expanded="false">
+        <span class="mono" data-index-label>Index</span>
+      </button>
+      <a class="hud__btn hud__btn--solid" href="#epilogue" data-cursor="hello"><span class="mono">Say hello</span></a>
+    </nav>
+  </div>
   <p class="hud__chapter mono" aria-live="polite"><span data-chapter-label>Prologue</span></p>
-  <p class="hud__progress mono"><span data-progress-num>00</span><span class="hud__pct">%</span><span class="hud__read"> read</span></p>
+  <div class="hud__corner">
+    <p class="hud__progress mono"><span data-progress-num>00</span><span class="hud__pct">%</span><span class="hud__read"> read</span></p>
+    <button class="hud__type mono" type="button" data-type-toggle aria-controls="typepal" aria-expanded="false" aria-label="Type palettes" title="Type palettes — click to open the list">
+      <span class="hud__type__aa" aria-hidden="true">Aa</span><span class="hud__type__lbl" data-pal-label>Instrument</span>
+    </button>
+  </div>
 </header>
 
+<!-- ───────────────────────── TYPE PALETTES — 40 pairings, click to apply ───────────────────────── -->
+<div class="typepal" id="typepal" data-typepal role="dialog" aria-label="Type palettes" hidden>
+  <div class="typepal__head">
+    <p class="typepal__label mono">Type palettes · 40 settings, from the typography that keeps winning on Awwwards</p>
+    <h2 class="typepal__title">Pick the voice. <em>The page re-types instantly.</em></h2>
+    <div class="typepal__row">
+      <span class="typepal__hint mono">Every card is live · click to apply · Esc closes · kept on this device</span>
+      <button class="typepal__reset" type="button" data-type-reset>Reset</button>
+      <button class="typepal__x" type="button" data-type-close>Close</button>
+    </div>
+    <div class="typepal__row">
+      <button class="typepal__chip is-on" type="button" data-type-filter="all">All 40</button>
+      <button class="typepal__chip" type="button" data-type-filter="editorial">Editorial</button>
+      <button class="typepal__chip" type="button" data-type-filter="grotesk">Grotesk</button>
+      <button class="typepal__chip" type="button" data-type-filter="display">Display</button>
+      <button class="typepal__chip" type="button" data-type-filter="mono">Mono</button>
+      <button class="typepal__chip" type="button" data-type-filter="humanist">Humanist</button>
+      <button class="typepal__chip" type="button" data-type-filter="luxury">Luxury</button>
+    </div>
+  </div>
+  <div class="typepal__scroll" data-type-grid></div>
+  <p class="typepal__note mono">Specimens load from Google Fonts when this panel opens — nothing else on the site ever does. Blocked or offline, the cards fall back to the same category of system face.</p>
+</div>
 <!-- ───────────────────────── INDEX OVERLAY ───────────────────────── -->
 <div class="index" id="index" data-index aria-hidden="true">
   <div class="index__inner">
@@ -702,13 +832,6 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
      film on two counter-turning rings; Scatter / Grid are the other two arrangements. motion.js §8 adds .is-3d;
      without it (no JS, GSAP blocked, reduced motion) this is a captioned grid under the headline. -->
 <section class="stage" id="orbit" data-stage data-theme="ink" data-chapter="00 · The orbit" aria-label="Selected work — every slide, static, script and film, in orbit">
-  <div class="stage__hud mono">
-    <div class="stage__modes" role="group" aria-label="Arrangement">
-      <button class="stage__mode" type="button" data-stage-mode="scatter" aria-pressed="false">Scatter</button>
-      <button class="stage__mode" type="button" data-stage-mode="grid" aria-pressed="false">Grid</button>
-      <button class="stage__mode is-active" type="button" data-stage-mode="orbit" aria-pressed="true">Orbit</button>
-    </div>
-  </div>
   <h1 class="stage__title" data-stage-title>The audience wrote the brief. <em>I write the line.</em></h1>
   <div class="stage__space" data-stage-space>
     <div class="stage__ring" data-ring="in">
@@ -731,23 +854,30 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
       <figure class="stage__card" data-stage-card data-card-id="bajaj-lohri" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="#ch7"><img src="assets/work/bajaj-lohri.jpg" alt="Bajaj Electricals Lohri post: a bonfire in a courtyard" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lohri — “As the fire glows brighter, warmth finds its way home.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="derek-01" data-k="Creator scripts · Real estate · 15 reels · 2025" data-href="#ch6"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: Day 1 – 15 reel scripts for a real-estate creator; B-roll video, viral audio link, filming notes in red, text on screen, editor notes in green." width="761" height="1075" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Real estate, p.1 — B‑roll, viral audio, one number</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-sankranti" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="#ch7"><img src="assets/work/bajaj-sankranti.jpg" alt="Bajaj Electricals Makar Sankranti post: a child flying a kite from a pile of til laddoos beside a mixer grinder" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-auto-shut-off" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-auto-shut-off.webp" width="432" height="768" aria-label="Bajaj Auto Shut Off water heater film"><source src="assets/work/films/bajaj-auto-shut-off.mp4" type="video/mp4"><source src="assets/work/films/bajaj-auto-shut-off.webm" type="video/webm"></video><figcaption class="mono">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-auto-shut-off" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-auto-shut-off.webp" width="432" height="768" aria-label="Bajaj Auto Shut Off water heater film"><source src="assets/work/films/bajaj-auto-shut-off.mp4" type="video/mp4"></video><figcaption class="mono">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-summer" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-summer.jpg" alt="Bajaj Majesty RX10 room heater post: a man sunbathing indoors while it snows outside" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Majesty RX10 — “It’s always summer with Bajaj.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="vanilla-noir" data-k="Vanilla Noir · Spec sales page + teardown · 2025" data-href="#side"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours" width="899" height="518" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-kettle" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-kettle.jpg" alt="Bajaj KTP electric kettle post: a chef reaching past a kettle for a pizza" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">KTP kettle — “Indulgence that never gets in your way.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="harshit-01" data-k="Creator scripts · Fitness · storytelling · 2025" data-href="#ch6"><img src="assets/work/plates/harshit-01.webp" alt="Script document, page 1: fitness storytelling script beginning “This is a 2.5 kg dumbbell”, with camera directions highlighted." width="761" height="1075" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“This is a 2.5 kg dumbbell.” — the fitness script</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-gracio" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-gracio.jpg" alt="Bajaj Gracio water heater post: a cutaway showing the anti-corrosion magnesium anode" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Gracio — “Corrosion doesn’t stand a chance.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-new-year" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-new-year.webp" width="432" height="768" aria-label="Bajaj New Year film"><source src="assets/work/films/bajaj-new-year.mp4" type="video/mp4"><source src="assets/work/films/bajaj-new-year.webm" type="video/webm"></video><figcaption class="mono">New Year — “When lights guide your way, every glow becomes a brighter step.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-new-year" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-new-year.webp" width="432" height="768" aria-label="Bajaj New Year film"><source src="assets/work/films/bajaj-new-year.mp4" type="video/mp4"></video><figcaption class="mono">New Year — “When lights guide your way, every glow becomes a brighter step.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-contempo" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-contempo.jpg" alt="Bajaj Contempo water heater post: two children playing in a bathtub under a protective dome" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contempo — “Joy in every splash, safety in every moment.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="nyc-01" data-k="Not Your College · Website copy, v1 · 2026" data-href="#side"><img src="assets/work/plates/nyc-01.webp" alt="Not Your College website, hero: Build the skills, projects, and proof you need — before graduation." width="1120" height="792" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Build the skills, projects, and proof you need — before graduation.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-1" data-k="Bajaj Electricals × Zoo Media · Wrapped series 1/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-1.jpg" alt="Bajaj Wrapped 2025 post: Your Spotify Wrapped is incomplete" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-2" data-k="Bajaj Electricals × Zoo Media · Wrapped series 2/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “912 minutes singing in the shower.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="jobcoach-01" data-k="Creator scripts · Careers · talking‑head · 2025" data-href="#ch6"><img src="assets/work/plates/jobcoach-01.webp" alt="Script document, page 1: talking-head script about the interview question 90% of people answer wrong, with three reframes in red." width="760" height="1074" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The interview question 90% of people answer wrong.” — three reframes</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-3" data-k="Bajaj Electricals × Zoo Media · Wrapped series 3/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-3.jpg" alt="Bajaj Wrapped 2025 post: 643 minutes to look fresh, with a Splendora iron" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “643 minutes to look fresh.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-home-stories" data-k="Bajaj Electricals × Zoo Media · Year‑end film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-home-stories.webp" width="432" height="768" aria-label="Bajaj A Home Full of Stories film"><source src="assets/work/films/bajaj-home-stories.mp4" type="video/mp4"><source src="assets/work/films/bajaj-home-stories.webm" type="video/webm"></video><figcaption class="mono">Year‑end — “What makes your home a home? … A home full of stories.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-home-stories" data-k="Bajaj Electricals × Zoo Media · Year‑end film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-home-stories.webp" width="432" height="768" aria-label="Bajaj A Home Full of Stories film"><source src="assets/work/films/bajaj-home-stories.mp4" type="video/mp4"></video><figcaption class="mono">Year‑end — “What makes your home a home? … A home full of stories.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-4" data-k="Bajaj Electricals × Zoo Media · Wrapped series 4/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-4.jpg" alt="Bajaj Wrapped 2025 post: 1526 minutes of mastering the art of cooking" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="luna-01" data-k="Luna by Khush · Founder‑led brand story email · 2025" data-href="#side"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, with the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Ignited by a glow from within.”</figcaption></figure>
       <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-5" data-k="Bajaj Electricals × Zoo Media · Wrapped series 5/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-5.jpg" alt="Bajaj Wrapped 2025 post: Your top products in 2025 — Pentacle Digi water heater, Splendora iron, ICX 190 FS induction" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your top products in 2025.”</figcaption></figure>
+    </div>
+  </div>
+  <div class="stage__hud mono">
+    <div class="stage__modes" role="group" aria-label="Arrangement">
+      <button class="stage__mode" type="button" data-stage-mode="scatter" aria-pressed="false">Scatter</button>
+      <button class="stage__mode" type="button" data-stage-mode="grid" aria-pressed="false">Grid</button>
+      <button class="stage__mode is-active" type="button" data-stage-mode="orbit" aria-pressed="true">Orbit</button>
     </div>
   </div>
   <div class="stage__foot mono">
@@ -766,13 +896,13 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   </div>
   <div class="about__grid">
     <div class="about__prose">
-      <p class="prose" data-reveal>Copywriter &amp; creative strategist with Zoo Media, Mumbai, since December 2024 — DHL, Surf Excel, GoBoult, Bajaj Electricals, Luna by Khush, the ICC — and 15+ reels for six‑ and seven‑figure creators. Before that, a computer‑engineering degree and a year of two hundred cold calls a day.</p>
+      <p class="prose" data-reveal>Copywriter and creative strategist at Zoo Media, Mumbai, since December 2024. I write for DHL, Surf Excel, GoBoult, Bajaj Electricals, Luna by Khush and the ICC, and I’ve scripted 15+ reels for six- and seven-figure creators. Before the ads: an engineering degree and a year of two hundred cold calls a day.</p>
       <p class="prose prose--em" data-reveal style="--d:.1s">Most briefs don’t have a writing problem. They have a <em>listening</em> problem. That’s the one I fix first.</p>
     </div>
     <div class="about__side">
       <dl class="meta" data-reveal>
         <div><dt>Based</dt><dd>Mumbai, India · GMT+5:30</dd></div>
-        <div><dt>Now</dt><dd>Copywriter &amp; creative strategist, Zoo Media (freelance) · open to briefs</dd></div>
+        <div><dt>Now</dt><dd>Zoo Media, Mumbai · freelance, open to briefs</dd></div>
         <div><dt>Writes</dt><dd>Campaign lines, short‑form scripts, brand voice, pitch decks, web &amp; email</dd></div>
         <div><dt>Studied</dt><dd>50+ Cannes &amp; Clio winners across 100 years of advertising</dd></div>
         <div><dt>Won’t write</dt><dd>Anything nobody would type in a comment</dd></div>
@@ -909,7 +1039,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
           <p class="manifesto__line manifesto__line--beat" data-reveal style="--d:.62s">Boult has always moved with you. Now, we’re moving like you.</p>
           <p class="manifesto__line manifesto__line--end" data-reveal style="--d:.76s">Boult is now GoBoult. <em>Lesssgooo!</em></p>
         </div>
-        <figcaption class="mono">The anthem manifesto, as pitched. One hesitant “lessgooo” becomes a confident one — the butterfly effect that structures all three films.</figcaption>
+        <figcaption class="mono">The anthem manifesto, as pitched. One hesitant “lessgooo” becomes a confident one — and that turn structures all three films.</figcaption>
       </figure>
 <ul class="films" data-reveal>
         <li><span class="mono">Film 1 · The Run</span><p>A doom‑scroll, a friend, a hesitant yes. Then a 10K, a marathon, and an oxygen reading on Everest.</p></li>
@@ -1018,7 +1148,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
             </div>
           </div>
         </div>
-        <figcaption class="mono">Five hooks from the folder. Every one came with its own camera direction and editor note.</figcaption>
+        <figcaption class="mono">Five hooks from the folder, each with its own camera direction and editor note.</figcaption>
       </figure>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="derek-01">Three of the scripts, as delivered, are in the orbit <span aria-hidden="true">↑</span></a></p>
     </div>
@@ -1075,10 +1205,10 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     <h2 class="display" data-split>The method is research. <em>The output is a line.</em></h2>
   </div>
   <ol class="steps">
-    <li class="step" data-reveal><span class="step__num serif-i">01</span><h3 class="step__title">Mine the comments</h3><p class="step__body">Reddit threads, one‑star reviews, YouTube replies — the audience has already written the objections and the desires.</p></li>
-    <li class="step" data-reveal style="--d:.08s"><span class="step__num serif-i">02</span><h3 class="step__title">Study the winners</h3><p class="step__body">50+ Cannes and Clio winners reverse‑engineered, to learn which structures survive a change of medium.</p></li>
-    <li class="step" data-reveal style="--d:.16s"><span class="step__num serif-i">03</span><h3 class="step__title">Write a hundred</h3><p class="step__body">Every brief gets 100–200 concepts from a research system built on Claude and Lovable. The client sees three.</p></li>
-    <li class="step" data-reveal style="--d:.24s"><span class="step__num serif-i">04</span><h3 class="step__title">Write for the ear and the thumb</h3><p class="step__body">If a line can’t survive being said aloud, or being scrolled past, it isn’t finished.</p></li>
+    <li class="step" data-reveal><span class="step__num serif-i">01</span><h3 class="step__title">Mine the comments</h3><p class="step__body">Reddit threads, one‑star reviews, YouTube replies. The audience has already written the objections and the desires.</p></li>
+    <li class="step" data-reveal style="--d:.08s"><span class="step__num serif-i">02</span><h3 class="step__title">Study the winners</h3><p class="step__body">50+ Cannes and Clio winners, reverse‑engineered. Which structures survive a change of medium?</p></li>
+    <li class="step" data-reveal style="--d:.16s"><span class="step__num serif-i">03</span><h3 class="step__title">Write a hundred</h3><p class="step__body">100–200 concepts per brief, from a research system built on Claude and Lovable. The client sees three.</p></li>
+    <li class="step" data-reveal style="--d:.24s"><span class="step__num serif-i">04</span><h3 class="step__title">Write for the ear and the thumb</h3><p class="step__body">A line that can’t survive being said aloud, or scrolled past, isn’t finished.</p></li>
   </ol>
 
 <ul class="results results--proof" data-reveal>
@@ -1155,7 +1285,6 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </footer>
 
 <!-- ───────────────────────── DECOR / CURSOR ───────────────────────── -->
-<div class="grain" aria-hidden="true"></div>
 <div class="cursor" data-cursor-dot aria-hidden="true"></div>
 <div class="cursor-ring" data-cursor-ring aria-hidden="true"><span data-cursor-label></span></div>
 
@@ -1283,7 +1412,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     if (chapterLabel.textContent !== currentChapter) { swapping = true; swapAt = performance.now(); hudChapter.classList.add('is-swapping'); }
   };
   if (chapterLabel) chapterLabel.addEventListener('transitionend', (e) => { if (e.propertyName === 'transform') finishSwap(); });
-  function setTheme(t) { if (t === currentTheme) return; currentTheme = t; html.dataset.theme = t; }   // labels only — one gradient site-wide
+  function setTheme(t) { if (t === currentTheme) return; currentTheme = t; html.dataset.theme = t; }   // labels only — plain black site-wide
 
   function hud() {
     const y = scroll.y, vh = scroll.vh;
@@ -1716,8 +1845,13 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   function measure() {
     W = stage.clientWidth; H = stage.clientHeight; mobile = W < 700; stacked = W <= 600;
     cw = cards.map((c) => c.offsetWidth); ch = cards.map((c) => c.offsetHeight);
-    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : hud.offsetTop + hud.offsetHeight + 12;
-    const below = stacked ? 118 : 108;
+    /* the arrangement switch is docked at the BOTTOM of the scene now (below the rings, above the
+       caption band), so the top band is just breathing room and the bottom band is measured from the
+       mode row down. In the stacked (≤600px) layout the headline sits above the rings and reserves its own height. */
+    const band = stacked ? 118 : 108;                                                          // the caption band, as before
+    const hudTop = hud ? hud.getBoundingClientRect().top - stage.getBoundingClientRect().top : H - band;
+    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : 20;
+    const below = Math.max(band, H - hudTop + 12);                                             // everything the mode row + foot occupy
     CY = above + (H - above - below) / 2;                                 // the scene's centre, in stage px
     roomTop = above - CY; roomBottom = H - below - CY;                    // the room, relative to that centre
     stage.style.setProperty('--cy', CY.toFixed(1) + 'px');
@@ -2253,11 +2387,11 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
    512) painted on a transparent WebGL canvas inside the one background layer
    (.bg), behind everything. Cursor-only, like the reference: a burst when the
    page opens, then it moves only when the pointer or a finger moves, and the dye
-   dissipates back to the plain gradient in ~3 s.
+   dissipates back to plain black in ~3 s.
 
    Adapted from Pavel Dobryakov's WebGL-Fluid-Simulation (MIT, 2017) — the same
    solver helloshivam.com runs — rewritten for this page:
-     · transparent over the gradient (the dye is added; the gradient remains the
+     · transparent over the black (the dye is added; the black remains the
        fallback for no-JS, reduced motion, missing WebGL, context loss)
      · pointer events on window, the canvas never intercepts a click or a drag
      · runs inside main.js's single requestAnimationFrame loop (AK.loop)
@@ -2287,7 +2421,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   'use strict';
   try {
   const AK = window.AK, host = document.querySelector('.bg');
-  if (!AK || !host || AK.reduce) return;                         // no loop, no layer, or reduced motion → the static gradient
+  if (!AK || !host || AK.reduce) return;                         // no loop, no layer, or reduced motion → plain black
 
   const C = Object.assign({
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
@@ -2300,7 +2434,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     IMMEDIATE: true, SLEEP_AFTER: 4, MAX_DPR: 1, GUARD: true,        // MAX_DPR 1: the dye is a 512 px texture — extra display pixels add cost, not detail
   }, window.AK_FLUID_CONFIG || {});
 
-  /* ───────────── context: WebGL2 or WebGL1 + half-float render targets, else the gradient ───────────── */
+  /* ───────────── context: WebGL2 or WebGL1 + half-float render targets, else plain black ───────────── */
   function supportRenderTextureFormat(gl, internalFormat, format, type) {
     const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -2334,7 +2468,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   const canvas = document.createElement('canvas');
   canvas.className = 'bg__fluid'; canvas.setAttribute('aria-hidden', 'true');
   const ctx = getContext(canvas);
-  if (!ctx) return;                                                // no WebGL / no half-float render targets → the static gradient
+  if (!ctx) return;                                                // no WebGL / no half-float render targets → plain black
   const { gl, ext } = ctx;
   const ac = ('AbortController' in window) ? new AbortController() : null, signal = ac ? ac.signal : undefined;
   let live = false;
@@ -2373,7 +2507,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
         float noise = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) * 2.0 - 1.0;   /* dither: no banding in the glow */
         bloom += noise / 255.0; bloom = linearToGamma(bloom); c += bloom;
       #endif
-        float a = max(c.r, max(c.g, c.b));                        /* premultiplied: the dye adds to the gradient beneath */
+        float a = max(c.r, max(c.g, c.b));                        /* premultiplied: the dye adds to the black beneath */
         gl_FragColor = vec4(c, a);
       }`,
     bloomPrefilter: MED + `varying vec2 vUv; uniform sampler2D uTexture; uniform vec3 curve; uniform float threshold;
@@ -2686,7 +2820,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   function render() {
     if (C.BLOOM) applyBloom(dye.read, bloom);
     if (C.SUNRAYS) { applySunrays(dye.read, dye.write, sunrays); blur(sunrays, sunraysTemp, 1); }
-    gl.disable(gl.BLEND);                                          // the canvas itself is the compositor: premultiplied dye over the gradient
+    gl.disable(gl.BLEND);                                          // the canvas itself is the compositor: premultiplied dye over the black
     displayProgram.bind();
     if (C.SHADING) gl.uniform2f(displayProgram.u.texelSize, 1 / gl.drawingBufferWidth, 1 / gl.drawingBufferHeight);
     gl.uniform1i(displayProgram.u.uTexture, dye.read.attach(0));
@@ -2729,7 +2863,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   function destroy() {
     if (!live) return; live = false;
     AK.loop.remove(tick); ac && ac.abort();
-    canvas.classList.add('is-gone');                               // CSS fades it out; the gradient is already underneath
+    canvas.classList.add('is-gone');                               // CSS fades it out; the black is already underneath
     setTimeout(() => { const lc = gl.getExtension('WEBGL_lose_context'); lc && lc.loseContext(); canvas.remove(); }, 900);
   }
 
@@ -2764,6 +2898,111 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   } catch (err) { if (window.console) console.warn('fluid off:', err && err.message); }   // never the page's problem: the gradient is always there
 })();
 
+</script>
+<script>
+/* ─────────────────────────────────────────────────────────────
+   TYPE PALETTES (v8.5) — 40 pairings, picked from the typography
+   that keeps winning on Awwwards. Nothing loads until the panel is opened; the
+   site default (Instrument Serif / Sans, inlined) is free and works offline.
+   A palette is just CSS custom properties, so it can only ever touch type — the
+   layout, the copy and the orbit are untouched. Choices persist in localStorage.
+   ───────────────────────────────────────────────────────────── */
+(() => {
+  'use strict';
+  const D = {"palettes":[{"id":"instrument","name":"Instrument · site default","mood":"editorial","d":"Instrument Serif","dw":400,"b":"Instrument Sans","m":"JetBrains Mono","ls":"-.015em","mls":".02em","note":"What the site ships today. Fonts are inlined, so this pairing costs nothing and works offline.","url":"https://fonts.googleapis.com/css2?family=Instrument%2BSerif:wght@400;400&family=Instrument%2BSans:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Instrument Serif','Iowan Old Style',serif","bS":"'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"fraunces","name":"Fraunces Editorial","mood":"editorial","d":"Fraunces","dw":600,"b":"Inter","m":"IBM Plex Mono","ls":"-.022em","mls":".03em","note":"The variable-serif move behind most recent typography honours — wonky at display size, demure at text.","url":"https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Inter:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Fraunces','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"newsreader","name":"Newsreader Press","mood":"editorial","d":"Newsreader","dw":500,"b":"Archivo","m":"JetBrains Mono","ls":"-.02em","mls":".025em","note":"Newspaper-front-page serif over a workhorse grotesk. Reads like an opinion column, not a template.","url":"https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500&family=Archivo:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Newsreader','Iowan Old Style','Times New Roman',serif","bS":"'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"playfair","name":"Playfair Contrast","mood":"editorial","d":"Playfair Display","dw":700,"b":"Libre Franklin","m":"Space Mono","ls":"-.018em","mls":".03em","note":"The highest-contrast pairing on Awwwards portfolios: thin hairlines, fat stems, one loud italic.","url":"https://fonts.googleapis.com/css2?family=Playfair%2BDisplay&family=Libre%2BFranklin:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Playfair Display','Iowan Old Style','Times New Roman',serif","bS":"'Libre Franklin',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"cormorant","name":"Cormorant Gallery","mood":"editorial","d":"Cormorant Garamond","dw":600,"b":"Manrope","m":"IBM Plex Mono","ls":"-.008em","mls":".04em","note":"Museum-catalogue serif. Needs the air — set the headlines large or not at all.","url":"https://fonts.googleapis.com/css2?family=Cormorant%2BGaramond:wght@400;600&family=Manrope:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Cormorant Garamond','Iowan Old Style','Times New Roman',serif","bS":"'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"garamond","name":"Garamond Long Read","mood":"editorial","d":"EB Garamond","dw":500,"b":"Work Sans","m":"Inconsolata","ls":"-.01em","mls":".02em","note":"Book-typography serif for a page whose real product is sentences.","url":"https://fonts.googleapis.com/css2?family=EB%2BGaramond:wght@400;500&family=Work%2BSans:wght@400;600&family=Inconsolata:wght@400;700&display=swap","dS":"'EB Garamond','Iowan Old Style','Times New Roman',serif","bS":"'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Inconsolata',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"spectral","name":"Spectral Quiet","mood":"editorial","d":"Spectral","dw":500,"b":"Karla","m":"DM Mono","ls":"-.012em","mls":".025em","note":"Low-contrast screen serif; the loudest thing left on the page is still the red pen.","url":"https://fonts.googleapis.com/css2?family=Spectral:wght@400;500&family=Karla:wght@400;600&family=DM%2BMono:wght@400;700&display=swap","dS":"'Spectral','Iowan Old Style','Times New Roman',serif","bS":"'Karla',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'DM Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"prata","name":"Prata Poster","mood":"editorial","d":"Prata","dw":400,"b":"Montserrat","m":"Space Mono","ls":"0em","mls":".04em","note":"Single-weight Didone-flavoured serif — one weight, so hierarchy comes from size alone.","url":"https://fonts.googleapis.com/css2?family=Prata&family=Montserrat:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Prata','Iowan Old Style','Times New Roman',serif","bS":"'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"marcellus","name":"Marcellus Classical","mood":"editorial","d":"Marcellus","dw":400,"b":"Outfit","m":"JetBrains Mono","ls":".01em","mls":".02em","note":"Roman-caps serif for a headline that wants to sound like an institution.","url":"https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Marcellus','Iowan Old Style','Times New Roman',serif","bS":"'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"spacegrotesk","name":"Space Grotesk Tech","mood":"grotesk","d":"Space Grotesk","dw":700,"b":"Inter","m":"Space Mono","ls":"-.03em","mls":".03em","note":"The default of a thousand shortlisted studios: monospaced DNA in the letterforms, zero decoration.","url":"https://fonts.googleapis.com/css2?family=Space%2BGrotesk:wght@400;700&family=Inter:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Space Grotesk','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"syne","name":"Syne Extended","mood":"grotesk","d":"Syne","dw":700,"b":"DM Sans","m":"Space Mono","ls":"-.035em","mls":".04em","note":"Extended, slightly rude display grotesk — the Awwwards-circuit flex of 2022 onwards.","url":"https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM%2BSans:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Syne','Iowan Old Style','Times New Roman',serif","bS":"'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"sora","name":"Sora Statement","mood":"grotesk","d":"Sora","dw":700,"b":"DM Sans","m":"IBM Plex Mono","ls":"-.028em","mls":".03em","note":"Geometric and heavy: reads like a brand, not a résumé.","url":"https://fonts.googleapis.com/css2?family=Sora:wght@400;700&family=DM%2BSans:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Sora','Iowan Old Style','Times New Roman',serif","bS":"'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"unbounded","name":"Unbounded Wide","mood":"grotesk","d":"Unbounded","dw":700,"b":"Manrope","m":"Space Mono","ls":"-.015em","mls":".05em","note":"Wide-set display caps for a page that should feel like an album cover.","url":"https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Manrope:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Unbounded','Iowan Old Style','Times New Roman',serif","bS":"'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"jakarta","name":"Jakarta Solo","mood":"grotesk","d":"Plus Jakarta Sans","dw":700,"b":"Plus Jakarta Sans","m":"JetBrains Mono","ls":"-.025em","mls":".03em","note":"One family, three weights — the low-risk way to build hierarchy that Vercel/Linear portfolios use.","url":"https://fonts.googleapis.com/css2?family=Plus%2BJakarta%2BSans:wght@400;700&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Plus Jakarta Sans','Iowan Old Style','Times New Roman',serif","bS":"'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"onest","name":"Onest Neutral","mood":"grotesk","d":"Onest","dw":600,"b":"Onest","m":"IBM Plex Mono","ls":"-.02em","mls":".025em","note":"The quiet neo-grotesque. Nearly invisible, which is the point when the work is loud.","url":"https://fonts.googleapis.com/css2?family=Onest:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Onest','Iowan Old Style','Times New Roman',serif","bS":"'Onest',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"geist","name":"Geist System","mood":"grotesk","d":"Geist","dw":700,"b":"Geist","m":"Geist Mono","ls":"-.03em","mls":".02em","note":"Vercel's own system, now on Google Fonts: the most 'product designer' setting available.","url":"https://fonts.googleapis.com/css2?family=Geist:wght@400;700&family=Geist%2BMono:wght@400;700&display=swap","dS":"'Geist','Iowan Old Style','Times New Roman',serif","bS":"'Geist',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"hanken","name":"Hanken Grotesk","mood":"grotesk","d":"Hanken Grotesk","dw":700,"b":"Hanken Grotesk","m":"Azeret Mono","ls":"-.022em","mls":".02em","note":"Swiss-ish and warm at small sizes — good if the metadata rows matter as much as the headlines.","url":"https://fonts.googleapis.com/css2?family=Hanken%2BGrotesk:wght@400;700&family=Azeret%2BMono:wght@400;700&display=swap","dS":"'Hanken Grotesk','Iowan Old Style','Times New Roman',serif","bS":"'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Azeret Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"figtree","name":"Figtree Clean","mood":"grotesk","d":"Figtree","dw":700,"b":"Figtree","m":"JetBrains Mono","ls":"-.02em","mls":".025em","note":"Rounded terminals, SaaS-default politeness. Reads friendly without going toy.","url":"https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Figtree','Iowan Old Style','Times New Roman',serif","bS":"'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"epilogue","name":"Epilogue Edge","mood":"grotesk","d":"Epilogue","dw":700,"b":"Inter","m":"Space Mono","ls":"-.03em","mls":".03em","note":"Slightly flattened counters — the grotesk that looks like it was art-directed, not picked.","url":"https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700&family=Inter:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Epilogue','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"archivoblack","name":"Archivo Poster","mood":"display","d":"Archivo Black","dw":400,"b":"Work Sans","m":"IBM Plex Mono","ls":"-.025em","mls":".03em","note":"Dense single-weight caps: the closest free thing to a screenprint.","url":"https://fonts.googleapis.com/css2?family=Archivo%2BBlack&family=Work%2BSans:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Archivo Black','Iowan Old Style','Times New Roman',serif","bS":"'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"anton","name":"Anton Tabloid","mood":"display","d":"Anton","dw":400,"b":"Barlow","m":"Space Mono","ls":"-.01em","mls":".04em","note":"Condensed newsprint shout. Takes no prisoners, needs no copy.","url":"https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Anton','Iowan Old Style','Times New Roman',serif","bS":"'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"bebas","name":"Bebas Cinema","mood":"display","d":"Bebas Neue","dw":400,"b":"Lato","m":"JetBrains Mono","ls":".005em","mls":".03em","note":"Poster condensed — the Awwwards launch-page trick for a headline that must survive a thumbnail.","url":"https://fonts.googleapis.com/css2?family=Bebas%2BNeue&family=Lato:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Bebas Neue','Iowan Old Style','Times New Roman',serif","bS":"'Lato',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"ultra","name":"Ultra Slab","mood":"display","d":"Ultra","dw":400,"b":"Lora","m":"Space Mono","ls":"0em","mls":".04em","note":"Fat slab display over a book serif — 1970s billboard energy.","url":"https://fonts.googleapis.com/css2?family=Ultra&family=Lora:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Ultra','Iowan Old Style','Times New Roman',serif","bS":"'Lora',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"yeseva","name":"Yeseva Theatrical","mood":"display","d":"Yeseva One","dw":400,"b":"Montserrat","m":"DM Mono","ls":".005em","mls":".035em","note":"High-contrast display with ball terminals; reads as a film-title card.","url":"https://fonts.googleapis.com/css2?family=Yeseva%2BOne&family=Montserrat:wght@400;600&family=DM%2BMono:wght@400;700&display=swap","dS":"'Yeseva One','Iowan Old Style','Times New Roman',serif","bS":"'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'DM Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"michroma","name":"Michroma Machine","mood":"display","d":"Michroma","dw":400,"b":"Manrope","m":"Space Mono","ls":".02em","mls":".04em","note":"Very wide, very few letters per line. Use for two-word headlines only.","url":"https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Michroma','Iowan Old Style','Times New Roman',serif","bS":"'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"syncopate","name":"Syncopate Spaced","mood":"display","d":"Syncopate","dw":700,"b":"Jost","m":"Space Mono","ls":".06em","mls":".05em","note":"Extended caps with room to breathe — the fashion-tech setting.","url":"https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jost:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Syncopate','Iowan Old Style','Times New Roman',serif","bS":"'Jost',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"spartan","name":"Spartan Geometric","mood":"display","d":"League Spartan","dw":400,"b":"Inter","m":"Space Mono","ls":"-.02em","mls":".03em","note":"Bauhaus-flavoured geometric, single weight, brutal at size.","url":"https://fonts.googleapis.com/css2?family=League%2BSpartan&family=Inter:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'League Spartan','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"jetbrains","name":"JetBrains Everywhere","mood":"mono","d":"JetBrains Mono","dw":700,"b":"IBM Plex Sans","m":"JetBrains Mono","ls":"-.02em","mls":".02em","note":"Code-face headlines: reads like a terminal that got a design budget.","url":"https://fonts.googleapis.com/css2?family=JetBrains%2BMono:wght@400;700&family=IBM%2BPlex%2BSans:wght@400;600&display=swap","dS":"'JetBrains Mono','Iowan Old Style','Times New Roman',serif","bS":"'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"azeret","name":"Azeret Typewriter","mood":"mono","d":"Azeret Mono","dw":700,"b":"Space Grotesk","m":"Azeret Mono","ls":"-.015em","mls":".02em","note":"Fixed-pitch display for a copywriter who wants the page to feel like a script draft.","url":"https://fonts.googleapis.com/css2?family=Azeret%2BMono:wght@400;700&family=Space%2BGrotesk:wght@400;600&display=swap","dS":"'Azeret Mono','Iowan Old Style','Times New Roman',serif","bS":"'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Azeret Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"spacemono","name":"Space Mono Terminal","mood":"mono","d":"Space Mono","dw":700,"b":"Archivo","m":"Space Mono","ls":"-.01em","mls":".03em","note":"The original design-community typewriter — quirky legibility, huge character.","url":"https://fonts.googleapis.com/css2?family=Space%2BMono:wght@400;700&family=Archivo:wght@400;600&display=swap","dS":"'Space Mono','Iowan Old Style','Times New Roman',serif","bS":"'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"fragment","name":"Fragment Grid","mood":"mono","d":"Fragment Mono","dw":700,"b":"Public Sans","m":"Fragment Mono","ls":"0em","mls":".02em","note":"Narrow mono, tight grid. Good when the metadata strip is the design.","url":"https://fonts.googleapis.com/css2?family=Fragment%2BMono:wght@400;700&family=Public%2BSans:wght@400;600&display=swap","dS":"'Fragment Mono','Iowan Old Style','Times New Roman',serif","bS":"'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Fragment Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"tektur","name":"Tektur Sci-fi","mood":"mono","d":"Tektur","dw":700,"b":"Rajdhani","m":"Share Tech Mono","ls":"-.01em","mls":".04em","note":"Squared corners and cut terminals — the Awwwards 3D-reel setting.","url":"https://fonts.googleapis.com/css2?family=Tektur:wght@400;700&family=Rajdhani:wght@400;600&family=Share%2BTech%2BMono:wght@400;700&display=swap","dS":"'Tektur','Iowan Old Style','Times New Roman',serif","bS":"'Rajdhani',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Share Tech Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"oxanium","name":"Oxanium Console","mood":"mono","d":"Oxanium","dw":700,"b":"Rajdhani","m":"JetBrains Mono","ls":"-.015em","mls":".03em","note":"Angular and fast; best with the red pen doing all the colour work.","url":"https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Rajdhani:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Oxanium','Iowan Old Style','Times New Roman',serif","bS":"'Rajdhani',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"lora","name":"Lora Warmth","mood":"humanist","d":"Lora","dw":600,"b":"Mulish","m":"Inconsolata","ls":"-.012em","mls":".02em","note":"Humanist serif with brush-ish curves; the friendly end of the editorial range.","url":"https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Mulish:wght@400;600&family=Inconsolata:wght@400;700&display=swap","dS":"'Lora','Iowan Old Style','Times New Roman',serif","bS":"'Mulish',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Inconsolata',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"sourceserif","name":"Source Document","mood":"humanist","d":"Source Serif 4","dw":600,"b":"Source Sans 3","m":"IBM Plex Mono","ls":"-.012em","mls":".02em","note":"Adobe's text family: the most readable small-size setting on this list.","url":"https://fonts.googleapis.com/css2?family=Source%2BSerif%2B4:wght@400;600&family=Source%2BSans%2B3:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Source Serif 4','Iowan Old Style','Times New Roman',serif","bS":"'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"bitter","name":"Bitter Report","mood":"humanist","d":"Bitter","dw":700,"b":"Open Sans","m":"Roboto Mono","ls":"-.015em","mls":".02em","note":"Slab-ish serif built for screens — long-form without the costume drama.","url":"https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&family=Open%2BSans:wght@400;600&family=Roboto%2BMono:wght@400;700&display=swap","dS":"'Bitter','Iowan Old Style','Times New Roman',serif","bS":"'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Roboto Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"zilla","name":"Zilla Journal","mood":"humanist","d":"Zilla Slab","dw":600,"b":"Inter","m":"JetBrains Mono","ls":"-.01em","mls":".025em","note":"Mozilla's slab: a printed-report feel that stays legible at 16px.","url":"https://fonts.googleapis.com/css2?family=Zilla%2BSlab:wght@400;600&family=Inter:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Zilla Slab','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"bodoni","name":"Bodoni Vogue","mood":"luxury","d":"Bodoni Moda","dw":600,"b":"Jost","m":"JetBrains Mono","ls":"-.01em","mls":".05em","note":"The fashion-magazine contrast: hairlines against geometric sans.","url":"https://fonts.googleapis.com/css2?family=Bodoni%2BModa&family=Jost:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Bodoni Moda','Iowan Old Style','Times New Roman',serif","bS":"'Jost',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"dmserif","name":"DM Serif Trio","mood":"luxury","d":"DM Serif Display","dw":400,"b":"DM Sans","m":"DM Mono","ls":"-.012em","mls":".03em","note":"One designer's three-part system — guaranteed to cohere because it is one voice.","url":"https://fonts.googleapis.com/css2?family=DM%2BSerif%2BDisplay&family=DM%2BSans:wght@400;600&family=DM%2BMono:wght@400;700&display=swap","dS":"'DM Serif Display','Iowan Old Style','Times New Roman',serif","bS":"'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'DM Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"italiana","name":"Italiana Cinema","mood":"luxury","d":"Italiana","dw":400,"b":"Montserrat","m":"Space Mono","ls":".02em","mls":".05em","note":"Tall, thin, single weight: title-card elegance for a page about film work.","url":"https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Italiana','Iowan Old Style','Times New Roman',serif","bS":"'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0}],"moods":[{"id":"editorial","letter":"A","title":"Editorial serif × grotesk","blurb":"The Awwwards typography-honour standard: a display serif for the line, a neutral grotesk for the reading."},{"id":"grotesk","letter":"B","title":"Modern grotesk, one voice","blurb":"Single-voice sans systems — the developer-award and SaaS look. Hierarchy comes from weight, not from a second typeface."},{"id":"display","letter":"C","title":"Display statement","blurb":"Poster faces. One loud voice, everything else stays quiet — for a page whose product is a line of copy."},{"id":"mono","letter":"D","title":"Mono-led / technical","blurb":"Fixed-pitch headlines. Reads like a script draft or a terminal, which suits a writer who shows the work."},{"id":"humanist","letter":"E","title":"Warm humanist","blurb":"Book-and-report settings. Choses readability over the look of a design award."},{"id":"luxury","letter":"F","title":"High-contrast luxury","blurb":"Fashion and title-card contrast — hairline serifs for a page about Clio case films and perfume copy."}]};
+  const html = document.documentElement, $ = (s, r) => (r || document).querySelector(s);
+  const store = 'ak-type-palette';
+  const link = document.createElement('style'); link.id = 'ak-palette-vars'; document.head.appendChild(link);
+  const loaded = new Set(); let panelFonts = false;
+
+  const byId = (id) => D.palettes.filter((p) => p.id === id)[0] || D.palettes[0];
+  function cssFor(p) {
+    if (p.id === 'instrument') return '';                       /* the inlined default — no override needed */
+    return ':root{--font-serif:' + p.dS + ';--font-sans:' + p.bS + ';--font-mono:' + p.mS +
+      ';--font-ital:\'Instrument Serif\',\'Iowan Old Style\',Georgia,serif;--disp-weight:' + p.dw +
+      ';--disp-ls:' + p.ls + ';--mono-ls:' + p.mls + ';--mono-weight:' + (p.s ? 500 : 400) + ';}';
+  }
+  function fonts(p) {
+    if (p.id === 'instrument' || loaded.has(p.id)) return;
+    loaded.add(p.id);
+    const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = p.url;
+    l.onerror = () => { loaded.delete(p.id); html.dataset.palFonts = 'fallback'; };
+    document.head.appendChild(l);
+  }
+  function apply(id, save) {
+    const p = byId(id);
+    link.textContent = cssFor(p);
+    html.dataset.pal = p.id;
+    fonts(p);
+    const lbl = $('[data-pal-label]'); if (lbl) lbl.textContent = p.name.split(' · ')[0];
+    document.querySelectorAll('[data-pal-pick]').forEach((b) => {
+      const on = b.dataset.palPick === p.id; b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.classList.toggle('is-on', on);
+    });
+    if (save !== false) { try { localStorage.setItem(store, p.id); } catch (e) {} }
+  }
+  /* build the panel body once */
+  const grid = $('[data-type-grid]');
+  if (grid && !grid.childElementCount) {
+    D.moods.forEach((g) => {
+      const wrap = document.createElement('section'); wrap.className = 'tpg'; wrap.dataset.mood = g.id;
+      wrap.innerHTML = '<h3 class="tpg__t mono">' + g.letter + ' · ' + g.title + '</h3>' +
+        '<p class="tpg__b">' + g.blurb + '</p>';
+      const row = document.createElement('div'); row.className = 'tpg__row';
+      D.palettes.filter((p) => p.mood === g.id).forEach((p) => row.appendChild(card(p)));
+      wrap.appendChild(row); grid.appendChild(wrap);
+    });
+  }
+  function card(p) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'tp'; b.dataset.palPick = p.id; b.setAttribute('aria-pressed', 'false');
+    b.style.setProperty('--font-serif', p.dS); b.style.setProperty('--font-sans', p.bS); b.style.setProperty('--font-mono', p.mS);
+    b.innerHTML = '<span class="tp__top mono"><span>' + p.name + '</span><span class="tp__fam">' +
+      [p.d, p.b, p.m].filter((v, i, a) => a.indexOf(v) === i).join(' · ') + '</span></span>' +
+      '<span class="tp__disp">All on the Line.</span>' +
+      '<span class="tp__body">The audience wrote the brief. <em>I write the line.</em></span>' +
+      '<span class="tp__mono">Surf Excel × Zoo Media · slide 24 / 74 · 2025</span>' +
+      '<span class="tp__note">' + p.note + '</span>';
+    b.addEventListener('click', () => apply(p.id));
+    return b;
+  }
+  const allchip = $('[data-type-filter="all"]'); if (allchip) allchip.textContent = 'All ' + D.palettes.length;
+  /* filter chips */
+  document.querySelectorAll('[data-type-filter]').forEach((chip) => chip.addEventListener('click', () => {
+    const m = chip.dataset.typeFilter;
+    document.querySelectorAll('[data-type-filter]').forEach((c) => c.classList.toggle('is-on', c === chip));
+    document.querySelectorAll('.tpg').forEach((s) => { s.hidden = !(m === 'all' || s.dataset.mood === m); });
+  }));
+
+  const open = (on) => {
+    const pal = $('[data-typepal]'), btn = $('[data-type-toggle]');
+    if (!pal) return;
+    pal.hidden = !on; html.classList.toggle('tp-open', on);
+    if (btn) { btn.setAttribute('aria-expanded', on ? 'true' : 'false'); btn.classList.toggle('is-on', on); }
+    if (on && !panelFonts) {                                    /* one request for every specimen */
+      panelFonts = true;
+      const urls = D.palettes.map((p) => p.url).filter((u) => u.indexOf('Instrument') < 0);
+      urls.forEach((u, i) => {                                   /* chunked: a bad family can only sink its own link */
+        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = u;
+        l.onerror = () => { html.dataset.palFonts = 'fallback'; };
+        document.head.appendChild(l);
+        if (i === 0 && document.fonts) document.fonts.ready.then(() => { html.dataset.palFonts = html.dataset.palFonts || 'live'; });
+      });
+    }
+    if (on) { const c = $('.tp.is-on') || $('.tp'); if (c) c.focus({ preventScroll: true }); }
+    else if (btn) btn.focus({ preventScroll: true });
+  };
+
+  const tog = $('[data-type-toggle]');
+  if (tog) tog.addEventListener('click', () => open($('[data-typepal]').hidden));
+  document.querySelectorAll('[data-type-close]').forEach((b) => b.addEventListener('click', () => open(false)));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && html.classList.contains('tp-open')) open(false); });
+  const scrim = $('[data-type-scrim]'); if (scrim) scrim.addEventListener('click', () => open(false));
+  const reset = $('[data-type-reset]');
+  if (reset) reset.addEventListener('click', () => { link.textContent = ''; apply('instrument'); });
+
+  let saved = null; try { saved = localStorage.getItem(store); } catch (e) {}
+  apply(saved && byId(saved).id === saved ? saved : 'instrument', false);
+})();
 </script>
 </body>
 </html>

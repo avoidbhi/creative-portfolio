@@ -1,0 +1,90 @@
+/* ───────────── 00 · the orbit — the opening screen ─────────────
+   Andrianjaka Tony's card system (recent.design/i/75uqgzu): every slide, static, script and film
+   on two counter-turning rings. Default markup = headline + captioned grid (no JS, GSAP blocked,
+   reduced motion). motion.js §8 adds .is-3d → a 100svh room with perspective; the rings and cards
+   are absolutely centred and motion.js's scene loop is the ONLY writer of their transforms. */
+.stage {
+  position: relative; background: transparent; color: var(--paper);
+  padding: calc(var(--hud-h) + 1.5rem) var(--gutter) 3rem;
+}
+.stage__hud { position: relative; z-index: 3; display: flex; justify-content: center; margin-top: var(--s4); }   /* the arrangement switch sits BELOW the animation */
+.stage__modes {
+  display: flex; gap: .15rem; padding: .25rem; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(var(--bg-rgb, 0,0,0), .55); backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%); box-shadow: 0 18px 50px -22px rgba(0,0,0,.85);
+}
+.stage__mode {
+  font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--muted);
+  background: none; border: 1px solid transparent; border-radius: 999px; padding: .45rem .85rem; cursor: pointer;
+  transition: color .25s, border-color .25s, background-color .25s;
+}
+.stage__mode:hover { color: var(--paper); }
+.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); }
+.stage__mode:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.stage__title {
+  position: relative; z-index: 2; margin: 0 auto clamp(2rem, 5vw, 4rem); max-width: 14ch; text-align: center;
+  font-family: var(--font-serif); font-weight: 400; letter-spacing: -.025em; line-height: .96;
+  font-size: clamp(2.6rem, 6.4vw, 6.4rem); text-wrap: balance;
+}
+.stage__title em { font-style: italic; color: var(--red); }
+.stage__space { position: relative; }
+.stage__ring { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.stage__ring + .stage__ring { margin-top: 1rem; }
+.stage__card { margin: 0; display: grid; gap: .6rem; align-content: start; }
+.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #101013; }
+.stage__card figcaption { color: var(--muted); text-transform: none; letter-spacing: 0; line-height: 1.4; }
+.stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: var(--s4); align-items: end; margin-top: var(--s5); color: var(--muted); }
+.stage__foot p { margin: 0; }
+.stage__role { line-height: 1.6; max-width: 30ch; }
+.stage__line { text-align: center; display: grid; gap: .35rem; justify-items: center; text-transform: none; letter-spacing: 0; }
+.stage__k { text-transform: uppercase; letter-spacing: .02em; }
+.stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--paper); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
+.stage__q:empty { display: none; }
+.stage__more { color: var(--red); text-transform: uppercase; letter-spacing: .02em; border-bottom: 1px solid transparent; }
+.stage__more:hover { border-color: currentColor; }
+.stage__links { display: flex; gap: var(--s4); justify-content: end; }
+.stage__links a { border-bottom: 1px solid transparent; transition: color .25s, border-color .25s; }
+.stage__links a:hover { color: var(--paper); border-color: var(--paper); }
+.stage:not(.is-3d) .stage__modes, .stage:not(.is-3d) .stage__k, .stage:not(.is-3d) .stage__line { display: none; }
+html.js:not(.no-scene) .stage:not(.is-3d) .stage__space { visibility: hidden; }   /* main.js adds .no-scene at load if the scene never booted; html.reveal-all also uncovers it */
+/* while the scripts are still streaming in (the standalone file is 4.6 MB; they sit at its end), a JS page must not flash the
+   big stacked no-JS headline and then snap to the small centred one: hold the headline invisible and the stage at its final
+   height from the first paint. Fail-safes: html.no-scene / html.reveal-all (scene never booted) show the stacked layout again. */
+html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) { min-height: 100svh; }
+html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opacity: 0; }
+.stage:not(.is-3d) .stage__foot { grid-template-columns: 1fr auto; }
+.orbit-link a { color: var(--red); text-transform: none; letter-spacing: 0; font-size: .82rem; border-bottom: 1px solid transparent; transition: border-color .25s; }
+.orbit-link a:hover { border-color: currentColor; }
+.side__tag a { color: var(--red); border-bottom: 1px solid transparent; }
+.side__tag a:hover { border-color: currentColor; }
+
+.stage.is-3d { height: 100svh; min-height: 36rem; padding: 0; overflow: clip; perspective: 640px; touch-action: pan-y; }   /* P in motion.js must match */
+.stage.is-3d .stage__hud { position: absolute; left: 0; right: 0; bottom: clamp(8.6rem, 15vh, 11.5rem); margin: 0; }   /* docked under the rings, above the caption band */
+.stage.is-3d .stage__hud, .stage.is-3d .stage__foot { opacity: 0; transition: opacity 1s var(--ease-out) 1.4s; }
+.stage.is-live .stage__hud, .stage.is-live .stage__foot { opacity: 1; }
+.stage.is-3d .stage__title {
+  position: absolute; left: 50%; top: var(--cy, 50%); transform: translate(-50%, -50%) scale(var(--title-fit, 1)); margin: 0; width: min(92vw, 13ch);
+  font-size: clamp(1.7rem, 3.4vw, 3.5rem); pointer-events: none; will-change: opacity;   /* opacity is written by the scene loop (no CSS transition — they'd fight) */
+  /* --title-fit: motion.js measures the headline against the hole of the inner ring on every resize and scales it to clear the cards (16:9 laptops need ≈ .8) */
+}
+.stage.is-3d .stage__foot { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 3.9rem; margin: 0; pointer-events: none; align-items: end; }   /* sits above the fixed chapter label / progress strip */
+.stage.is-3d .stage__foot a, .stage.is-3d .stage__line { pointer-events: auto; }
+.stage.is-3d .stage__space { position: absolute; inset: 0; transform-style: preserve-3d; user-select: none; -webkit-user-select: none; pointer-events: none; will-change: transform; }   /* the camera: one transform, written by the scene loop. v8.3: `will-change: opacity` was removed here — Chrome (and Firefox) treat it as a grouping property that flattens a preserve-3d context, so every card's translateZ was being ignored: no depth on the drum, no hover lift, an opened piece stuck at its base size. The camera's opacity is never animated, so the hint was pure loss. */   /* its own (transparent) plane must never catch a click meant for a card behind it (z < 0) */
+.stage.is-3d .stage__ring { position: absolute; left: 50%; top: var(--cy, 50%); width: 0; height: 0; display: block; margin: 0; transform-style: preserve-3d; }
+.stage.is-3d .stage__card {
+  --cw: clamp(120px, 15vw, 220px); --ch: calc(var(--cw) * var(--ar, 1.25));
+  position: absolute; left: 0; top: 0; width: var(--cw); height: var(--ch);
+  margin: calc(var(--ch) / -2) 0 0 calc(var(--cw) / -2); display: block; gap: 0;
+  transform-style: preserve-3d; will-change: transform, opacity; cursor: pointer; pointer-events: auto;
+}
+.stage.is-3d .stage__card--wide { --cw: clamp(160px, 20vw, 300px); }
+.stage.is-3d .stage__card img, .stage.is-3d .stage__card video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; box-shadow: 0 16px 40px -16px rgba(0,0,0,.8); }   /* a tight shadow: an 80 px blur made every card layer ~2× larger to composite (34 of them, every frame); the face is always turned to the camera, so no backface rule is needed */
+.stage.is-3d .stage__card figcaption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.stage.is-3d .stage__card:focus-visible { outline: 2px solid var(--red); outline-offset: 6px; }
+.stage.is-3d .stage__card--film::after {                   /* a small play glyph, so films read as films at ring size */
+  content: ''; position: absolute; right: 8%; bottom: 8%; width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  background: rgba(0,0,0,.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7l8 5-8 5z' fill='%23F6F6F4'/%3E%3C/svg%3E") center/70% no-repeat;
+  pointer-events: none; transition: opacity .3s;
+}
+.stage.is-3d .stage__card--film.is-playing::after { opacity: 0; }
+

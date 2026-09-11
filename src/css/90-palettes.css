@@ -1,0 +1,95 @@
+/* ───────────── type palettes (v8.5) — the bottom-right Aa button + its sheet ─────────────
+   The palette layer only ever writes type tokens: --font-* plus display weight/tracking.
+   Everything here is additive to the tokens above, so a failed font request leaves the
+   site exactly as it was. */
+html[data-pal] .display, html[data-pal] .stage__title, html[data-pal] .prose--em, html[data-pal] .index__title,
+html[data-pal] .card__line, html[data-pal] .brief p, html[data-pal] .edit__after, html[data-pal] .results strong,
+html[data-pal] .phone__hero-text, html[data-pal] .poster__line, html[data-pal] .step__title, html[data-pal] .services__title,
+html[data-pal] .services__arrow, html[data-pal] .manifesto__line em, html[data-pal] .manifesto__line--end,
+html[data-pal] .stamp__center, html[data-pal] .epilogue__mail, html[data-pal] .redpen__after, html[data-pal] .serif-i { font-weight: var(--disp-weight, 400); }
+html[data-pal] .display, html[data-pal] .stage__title, html[data-pal] .epilogue__mail, html[data-pal] .index__title,
+html[data-pal] .step__title, html[data-pal] .services__title, html[data-pal] .card__line, html[data-pal] .poster__line { letter-spacing: var(--disp-ls, -.015em); }
+   /* the italic voice stays Instrument Serif in every palette: it is the one face already inlined,
+      and it has a real italic — no synthesised slants, whatever display face is chosen. */
+html[data-pal] .serif-i, html[data-pal] .display em, html[data-pal] .stage__title em, html[data-pal] .manifesto__line em,
+html[data-pal] .stamp__center, html[data-pal] .index__list a:hover .index__title { font-family: var(--font-ital, var(--font-serif)); font-style: italic; }
+html[data-pal] .mono { letter-spacing: var(--mono-ls, .02em); font-weight: var(--mono-weight, 400); }
+html[data-pal] .index__title { font-family: var(--font-serif); }
+
+/* the corner control, docked with the reading progress so the bottom right stays one cluster */
+.hud__type {
+  bottom: 1.4rem; right: calc(var(--gutter) + .55rem); display: inline-flex; align-items: center; gap: .45rem;
+  height: 2rem; padding: 0 .7rem; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(var(--bg-rgb, 0,0,0), .55); backdrop-filter: blur(10px);
+  color: var(--muted); transition: color .25s, border-color .25s, background-color .25s;
+}
+.hud__corner { bottom: 1.4rem; right: var(--gutter); left: auto; display: flex; align-items: center; gap: .55rem; }
+.hud__type:hover { color: var(--fg); border-color: var(--fg); }
+.hud__type .mono { font-size: .68rem; letter-spacing: .06em; }
+.hud__type__aa { font-family: var(--font-serif); font-size: 1rem; line-height: 1; letter-spacing: -.02em; }
+.hud__progress { padding: .2rem .1rem; margin: 0; background: none; backdrop-filter: none; }
+
+/* the sheet */
+.typepal {
+  position: fixed; z-index: 880; top: 0; right: 0; bottom: 0; width: min(46rem, 100vw);
+  display: grid; grid-template-rows: auto auto 1fr; gap: 0;
+  background: rgba(var(--bg-rgb, 0,0,0), .92); backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border-left: 1px solid var(--line); color: var(--fg); overscroll-behavior: contain;
+  box-shadow: -30px 0 80px -40px rgba(0,0,0,.9);
+}
+.typepal[hidden] { display: none; }
+html.tp-open { overflow: hidden; }
+.typepal__head { padding: 1.5rem var(--gutter) 1rem; border-bottom: 1px solid var(--line); display: grid; gap: .55rem; }
+.typepal__label { color: var(--muted); }
+.typepal__title { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.06; letter-spacing: -.015em; }
+.typepal__title em { font-style: italic; color: var(--red); }
+.typepal__row { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
+.typepal__hint { color: var(--muted); margin-right: auto; }
+.typepal__x, .typepal__reset, .typepal__chip {
+  font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .05em;
+  border: 1px solid var(--line); border-radius: 999px; padding: .42rem .8rem; cursor: pointer; color: var(--fg);
+  transition: border-color .2s, background-color .2s, color .2s;
+}
+.typepal__x:hover, .typepal__chip:hover, .typepal__reset:hover { border-color: var(--fg); }
+.typepal__chip.is-on, .typepal__x { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.typepal__x:hover { background: var(--red); border-color: var(--red); color: var(--white); }
+.typepal__scroll { overflow: auto; padding: 1.2rem var(--gutter) 3rem; scrollbar-width: thin; }
+.typepal__note { color: var(--muted); padding: .8rem var(--gutter) 1.2rem; border-top: 1px solid var(--line); }
+.typepal[data-palfonts='fallback'] .typepal__note { color: var(--red); }
+.tpg { margin: 0 0 1.8rem; }
+.tpg[hidden] { display: none; }
+.tpg__t { color: var(--red); margin-bottom: .35rem; }
+.tpg__b { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 62ch; margin-bottom: .9rem; }
+.tpg__row { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: .6rem; }
+.tp {
+  display: grid; gap: .5rem; justify-items: start; text-align: left; cursor: pointer; min-width: 0;
+  padding: .85rem .9rem 1rem; border: 1px solid var(--line); border-radius: 4px;
+  background: rgba(var(--fg-rgb), .03); color: var(--fg);
+  transition: border-color .2s, background-color .2s, transform .2s var(--ease-out);
+}
+.tp:hover { border-color: rgba(var(--fg-rgb), .4); background: rgba(var(--fg-rgb), .06); }
+.tp.is-on { border-color: var(--red); background: rgba(var(--fg-rgb), .05); box-shadow: inset 0 0 0 1px var(--red); }
+.tp:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.tp__top { width: 100%; display: flex; justify-content: space-between; gap: .6rem; align-items: baseline; color: var(--muted); }
+.tp__fam { text-align: right; opacity: .7; }
+.tp__disp { font-family: var(--font-serif); font-weight: 400; font-size: 1.5rem; line-height: 1.02; letter-spacing: -.02em; }
+.tp__body { font-family: var(--font-sans); font-size: .86rem; line-height: 1.4; color: var(--muted); }
+.tp__body em { font-family: var(--font-serif); font-style: italic; color: var(--fg); }
+.tp__mono { font-family: var(--font-mono); font-size: .58rem; text-transform: uppercase; letter-spacing: .06em; color: var(--red); }
+.tp__note { font-size: .78rem; line-height: 1.35; color: var(--muted); opacity: .85; }
+@media (prefers-reduced-motion: no-preference) { .typepal { animation: tp-in .4s var(--ease-out); } }
+@keyframes tp-in { from { opacity: 0; transform: translateX(1.2rem); } }
+@media (max-width: 900px) {
+  .typepal { width: 100vw; top: auto; height: min(84svh, 46rem); border-left: 0; border-top: 1px solid var(--line); }
+  .typepal__head { padding: 1.1rem var(--gutter) .8rem; }
+  .tpg__row { grid-template-columns: 1fr; }
+  .tp { padding: .8rem .85rem .9rem; }
+  html.tp-open body { padding-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .hud__type { bottom: 1.35rem; right: var(--gutter); }
+  .hud__type .hud__type__lbl { display: none; }
+  .hud__type { padding: 0 .6rem; }
+  .hud__corner { gap: .4rem; }
+}
