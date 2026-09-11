@@ -1,0 +1,50 @@
+/* ─────────────────────────────────────────────────────────────
+   ABHIJEET KANASE — copywriter & creative strategist, Mumbai
+   Design system: two typefaces, one red pen, four paper stocks.
+   Motion: enter = ease-out, exit = ease-in, nothing high-frequency animates.
+   ───────────────────────────────────────────────────────────── */
+
+@font-face { font-family: 'Instrument Serif'; font-style: normal; font-weight: 400; font-display: swap; src: url('../../assets/fonts/InstrumentSerif-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; font-display: swap; src: url('../../assets/fonts/InstrumentSerif-Italic.woff2') format('woff2'); }
+@font-face { font-family: 'Instrument Sans'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('../../assets/fonts/InstrumentSans-var.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('../../assets/fonts/JetBrainsMono-Regular.woff2') format('woff2'); }
+
+:root {
+  /* palette — named, deliberate, small */
+  --ink: #000000;        /* pure black — the only surface on the page */
+  --graphite: #0B0B0D;   /* a slightly lifted black — fills, placeholders */
+  --paper: #F6F6F4;      /* clean near-white — reads clean on pure black (was warm cream) */
+  --red: #FF3B30;        /* the red pen — brighter so it holds against pure black */
+  --white: #FFFFFF;
+
+  /* THE background — plain black, painted once on a fixed layer (.bg) so every screen is
+     lit the same way. No gradient (it banded), no grain overlay. The fluid sim still paints
+     over it, cursor-only, and sleeps when the pointer is clear. */
+  --bg-gradient: #000000;   /* plain black — no gradient, no bloom, no banding */
+
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
+  --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-inout: cubic-bezier(.7, 0, .2, 1);
+  --ease-in: cubic-bezier(.6, 0, .9, .4);  /* ONE spacing scale, 8px base (craft.md R8: all spacing from one scale, and the gap
+     inside a group must stay visibly smaller than the gap between groups).
+     --flow  between blocks of one group   --group between groups inside a chapter
+     --section between chapters (a hairline carries the separation, not a void)
+     --col   grid column gap                */
+  --s1: .5rem; --s2: .75rem; --s3: 1rem; --s4: 1.5rem; --s5: 2rem; --s6: 3rem;
+  --flow: clamp(1.25rem, 2.2vw, 1.75rem);
+  --group: clamp(2rem, 4vw, 3rem);
+  --section: clamp(3.25rem, 7vh, 5.5rem);
+  --col: clamp(1.5rem, 3.5vw, 2.75rem);
+
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --max: 1480px;
+  --hud-h: 4.5rem;
+
+}
+
+/* one surface, one set of tokens — data-theme on the chapters now only labels them */
+html, html[data-theme] { --bg: var(--ink); --bg-rgb: 0,0,0; --fg: var(--paper); --fg-rgb: 246,246,244; --muted: rgba(246,246,244,.72); --line: rgba(246,246,244,.2); --surface: #FFFDF8; }
+

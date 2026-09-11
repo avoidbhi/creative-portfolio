@@ -1,0 +1,21 @@
+/* ───────────── layout primitives ───────────── */
+main { position: relative; z-index: 2; background: transparent; color: var(--fg); }
+
+/* the boundary is a hairline, not a void: 11rem/10rem of padding stacked on a 5.5rem head
+   margin and up to 7rem of trailing block margin meant ~400px of nothing between chapters */
+.chapter { position: relative; overflow: visible clip; /* y clipped for the numerals */ padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: var(--max); margin-inline: auto; }
+.chapter__num {
+  position: absolute; top: -.05em; right: calc(var(--gutter) - .06em);
+  font-size: clamp(9rem, 26vw, 24rem); line-height: 1;
+  color: var(--fg); opacity: .1; pointer-events: none; user-select: none;
+  will-change: transform;
+}
+.chapter__head { position: relative; display: grid; gap: var(--s3); margin-bottom: var(--group); }
+[data-depth] { will-change: transform, opacity; transform-origin: 50% 100%; }          /* scroll-derived arrival (translate/scale/opacity), one writer: the page loop */
+.js [data-depth] { opacity: 0; }                                                       /* until the loop's first write (never under reduced motion / reveal-all) */
+
+.meta { display: grid; gap: .6rem; font-size: .95rem; }
+.meta div { display: grid; grid-template-columns: 6.5rem 1fr; gap: var(--s3); padding-top: var(--s3); border-top: 1px solid var(--line); }
+.meta dt { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .02em; text-transform: uppercase; color: var(--muted); padding-top: .2rem; }
+.meta dd { line-height: 1.35; padding-right: var(--s3); }
+

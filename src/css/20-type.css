@@ -1,0 +1,62 @@
+/* ───────────── type ───────────── */
+.serif-i { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.mono { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .02em; text-transform: uppercase; font-weight: 400; }
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6.2vw, 6.6rem);
+  line-height: .98;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+  max-width: 14ch;
+}
+.display em { font-style: italic; color: var(--red); }
+
+.kicker { color: var(--muted); display: flex; gap: .6em; align-items: center; }
+.kicker__sep { opacity: .5; }
+
+.prose {
+  font-size: clamp(1.1rem, 1.35vw, 1.4rem);
+  line-height: 1.45;
+  max-width: 58ch;
+  font-weight: 400;
+  letter-spacing: -.005em;
+}
+.prose + .prose { margin-top: 1em; }
+.prose--em { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.2vw, 2.3rem); line-height: 1.2; }
+.prose--em em { color: var(--red); }
+
+.note { color: var(--red); text-transform: none; letter-spacing: 0; }
+
+.dot { color: var(--red); }
+
+/* strike-through drawn with the red pen — animatable, multi-line safe */
+.strike {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 0% .085em;
+  background-position: 0 58%;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  transition: background-size .55s var(--ease-inout);
+  color: var(--muted);
+}
+.is-struck .strike, .strike.is-struck { background-size: 100% .085em; }
+.no-js .strike { background-size: 100% .085em; }
+
+/* word-mask reveal (JS splits words into .w > .w__in) */
+.w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0 .06em .14em 0; margin: 0 -.06em -.14em 0; }
+.w__in { display: inline-block; transform: translateY(112%); will-change: transform; transition: transform 1.05s var(--ease-out); transition-delay: calc(var(--i, 0) * 45ms); }
+.is-in .w__in { transform: translateY(0); will-change: auto; }   /* selective will-change: promoted only while the words are still to move */
+.no-js .w__in { transform: none; }
+
+/* generic reveal */
+.js [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease-out) var(--d, 0s), transform .9s var(--ease-out) var(--d, 0s); }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+/* fail-safe: if any script throws, main.js adds html.reveal-all and every reveal state is forced visible (beats inline GSAP props) */
+html.reveal-all [data-reveal], html.reveal-all .w__in, html.reveal-all .edit__after, html.reveal-all .edit__note, html.reveal-all .artifact,
+html.reveal-all .script__row, html.reveal-all .script__super, html.reveal-all .manifesto__line, html.reveal-all .manifesto__line em, html.reveal-all .stage:not(.is-3d) .stage__space, html.reveal-all [data-depth], html.reveal-all .stage__hud, html.reveal-all .stage__foot {
+  opacity: 1 !important; transform: none !important; visibility: visible !important; transition: none !important;
+}
+html.reveal-all .strike { background-size: 100% .085em; }
+

@@ -1,0 +1,71 @@
+/* ───────────── responsive ───────────── */
+/* back to the first line (Jopecuro's back-to-top, as a sentence) */
+.epilogue__top { display: inline-block; margin-top: .4rem; color: var(--paper) !important; border-bottom: 1px solid var(--line); padding-bottom: .15rem; transition: color .25s, border-color .25s; }
+.epilogue__top:hover { color: var(--red) !important; border-color: var(--red); }
+
+@media (max-width: 1100px) {
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .results--proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .side__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .epilogue__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .about__grid, .case__grid { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+  .case__meta { position: static; }
+  .hud__chapter { display: none; }
+  .hud__bar .hud__name .mono { display: none; }
+  .hud__bar .hud__name .serif-i { font-size: 1.3rem; }
+  .artifact--phone { grid-template-columns: 1fr; }
+  .films { grid-template-columns: 1fr; }
+  .script__head, .script__row { grid-template-columns: minmax(0, 1fr) 9rem; gap: 1rem; }
+  .services__list a { grid-template-columns: minmax(0, 1fr) 2rem; }
+  .services__desc { grid-column: 1 / -1; }
+  .index__list a { grid-template-columns: 2.2rem 1fr; }
+  .index__meta { display: none; }  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--s4); padding-bottom: var(--s6); }
+  .epilogue__inner > *, .epilogue__title, .epilogue__mail, .redpen, .epilogue__meta { grid-column: 1; grid-row: auto; }
+}
+@media (max-width: 360px) {
+  .hud__bar { padding: .3rem .3rem .3rem .7rem; }
+  .hud__bar .hud__btn { padding: 0 .7rem; height: 2.1rem; }
+  .hud__bar .hud__name .serif-i { font-size: 1.1rem; }   /* the whole name still fits beside the two buttons at 320 px */
+}
+@media (max-width: 600px) {
+  .results { grid-template-columns: 1fr; }
+  .results--proof, .side__list { grid-template-columns: 1fr; }
+  .stage.is-3d .stage__hud { bottom: 7.4rem; }
+  .hud__bar { width: min(calc(100vw - 1.5rem), 34rem); padding: .35rem .35rem .35rem .9rem; }
+  .stage.is-3d .stage__title { top: 7.4rem; transform: translateX(-50%); width: 92vw; font-size: 1.75rem; text-align: center; }  .stage.is-3d .stage__foot { grid-template-columns: 1fr; gap: var(--s2); bottom: 4.1rem; }
+  .stage.is-3d .stage__role, .stage.is-3d .stage__links { display: none; }
+  .stage.is-3d .stage__line { justify-items: start; text-align: left; }
+  .stage.is-3d .stage__q { font-size: 1rem; }
+  .stage__ring { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+  .stage__foot { grid-template-columns: 1fr; }
+  .stage__links { justify-content: start; }
+  .script__head { display: none; }
+  .script__row { grid-template-columns: 1fr; gap: .5rem; }
+  .script__row .script__super { order: -1; }
+  .results__src { margin-top: -.6rem; }
+  .steps { grid-template-columns: 1fr; }
+  .epilogue__meta { grid-template-columns: 1fr; }
+  .meta div { grid-template-columns: 5rem 1fr; }
+  .redpen__row { grid-template-columns: 1fr; }
+  .redpen__btn { justify-self: start; }
+  .card { transform: none; }
+  .chapter__num { font-size: 9rem; }
+  .hud__bar .hud__btn { padding: 0 .8rem; }
+}
+
+/* ───────────── reduced motion ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js [data-reveal], .js .script__row .script__super, .js .manifesto__line em, [data-depth] { opacity: 1 !important; transform: none !important; transition: none; }
+  .w__in { transform: none; transition: none; }
+  .strike { background-size: 100% .085em; transition: none; }
+  .js .edit__after, .js .redpen__after { opacity: 1; transform: none; transition: none; }
+  .edit__note, .redpen__note { opacity: 1; transform: none; transition: none; }
+  .stamp__svg { animation: none; }
+  .bg__fluid { display: none; }
+  .tilt__inner, .notif, .index, .index__list li, .hud__chapter span { transition: none; }
+  .card__circle path { stroke-dashoffset: 0; transition: none; }
+}
+
