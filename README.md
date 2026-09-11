@@ -42,25 +42,25 @@ orbit (`[data-orbit-open]`) that opens the relevant piece. Word count went from 
 
 | # | Section | Source in the Drive | Surface | Signature moment |
 | --- | --- | --- | --- | --- |
-| 00 | **The orbit** — headline + 34 cards on two rings (scatter / grid / orbit) | everything | the gradient | rings assemble out of the dark and turn; hover reads the line, click opens the piece (films play), drag spins |
-| 01 | **The brief before the brief** — two paragraphs, meta, index card | résumé | the gradient | index card with a hand-drawn red circle |
-| 02 | **ICC Champions Trophy 2025 — "All on the Line"** | CT 2025 script, problem statement, research doc | the gradient | split-flap scoreboard; 368 bn / +23 % / 28 yrs |
-| 03 | **Surf Excel — "We are Cleanliness Paglus"** | 74-page Zoo Media pitch deck | the gradient | identity slide as a tilting poster; the six deck pages live in the orbit |
-| 04 | **GoBoult — "Lesssgooo!!"** | 61-page rebrand deck | the gradient | anthem manifesto line by line; three film loglines; eight deck pages in the orbit |
-| 05 | **DHL × Mumbai Indians** — Clio case film | DHL x CLIOS script | the gradient | shooting-script table; 140 M+ / 31 K / 100 fielders |
-| 06 | **The hook lab** — creator scripts, 3–5× engagement | Derek / Harshit / Job Coach PDFs | the gradient | phone cycling five real hooks; the script pages are in the orbit |
-| 07 | **The rest of the desk** — Bajaj + side quests | Bajaj PNGs, films, Vanilla Noir, NYC site, Luna email | the gradient | text-only side items; every image and film is in the orbit |
-| 08 | **How I work** — method, proof, services | résumé | the gradient | numbered one-liners, proof strip, "final." stamp |
-| ∞ | **Epilogue** | — | the gradient | magnetic mailto, phone, **the red pen** toy |
+| 00 | **The orbit** — headline + 34 cards on two rings (scatter / grid / orbit) | everything | plain black | rings assemble out of the dark and turn; hover reads the line, click opens the piece (films play), drag spins |
+| 01 | **The brief before the brief** — two paragraphs, meta, index card | résumé | plain black | index card with a hand-drawn red circle |
+| 02 | **ICC Champions Trophy 2025 — "All on the Line"** | CT 2025 script, problem statement, research doc | plain black | split-flap scoreboard; 368 bn / +23 % / 28 yrs |
+| 03 | **Surf Excel — "We are Cleanliness Paglus"** | 74-page Zoo Media pitch deck | plain black | identity slide as a tilting poster; the six deck pages live in the orbit |
+| 04 | **GoBoult — "Lesssgooo!!"** | 61-page rebrand deck | plain black | anthem manifesto line by line; three film loglines; eight deck pages in the orbit |
+| 05 | **DHL × Mumbai Indians** — Clio case film | DHL x CLIOS script | plain black | shooting-script table; 140 M+ / 31 K / 100 fielders |
+| 06 | **The hook lab** — creator scripts, 3–5× engagement | Derek / Harshit / Job Coach PDFs | plain black | phone cycling five real hooks; the script pages are in the orbit |
+| 07 | **The rest of the desk** — Bajaj + side quests | Bajaj PNGs, films, Vanilla Noir, NYC site, Luna email | plain black | text-only side items; every image and film is in the orbit |
+| 08 | **How I work** — method, proof, services | résumé | plain black | numbered one-liners, proof strip, "final." stamp |
+| ∞ | **Epilogue** | — | plain black | magnetic mailto, phone, **the red pen** toy |
 
 Removed in v6 (all in `research/backup/v5-story/`): the typed prologue + preloader, the ledger/contents with the hover
 peek, the interlude marquees, the per-chapter `.briefcard` prose, the in-chapter `.plates` strips and film players.
 
-Design rules: **one background for the whole site** — a single gradient (`--bg-gradient` in `styles.css`, painted once on
-the fixed `.bg` layer: a faint warm bloom of the red at the top centre → ink → graphite at the foot), so the orbit, every
+Design rules: **one background for the whole site** — **plain black** (`--bg-gradient: #000000` in `styles.css`, painted once on
+the fixed `.bg` layer; no gradient, no grain overlay, so nothing bands or fizzes), so the orbit, every
 chapter, the fallbacks and the epilogue are lit identically. Since v8 the same `.bg` layer also carries **the fluid** — a
 transparent WebGL canvas (`fluid.js`) that paints cursor-driven ink over the gradient and clears back to it (see "The fluid
-background"); the gradient remains the only *static* background and the fallback everywhere. There are no other gradients
+background"); black remains the only *static* background and the fallback everywhere. There are no other gradients
 anywhere (the red strike/underline and the index card's ruling are SVG data-URIs). The per-chapter paper stocks (`data-theme` paper/sand/graphite) are gone;
 the attribute stays only to label chapters for the HUD. HUD with reading progress and chapter label, red full-screen Index
 (press `Esc` to close).
@@ -136,7 +136,7 @@ S = { mode, prevMode, scrollProgress, scrollVelocity, orbitRotation, drumRotatio
 - Mobile: same system, smaller ring, fewer drum turns (5 per turn), no cursor parallax, touch swipe spins, vertical swipe scrolls.
 
 Compositing budget: only `transform`/`opacity` animate; `will-change` is limited to the 3D subtree (**`transform` only** — see v8.3 below), the depth layer,
-the cursor, and word masks *until they have arrived*; the grain is a viewport-sized fixed layer whose tile moves via
+the cursor, and word masks *until they have arrived*; the old full-page grain overlay is gone (it read as noise on flat black),
 `background-position` (no blend mode); card shadows are tight (an 80 px blur doubled every card's layer size).
 
 ## The fluid background — v8 (from helloshivam.com)
@@ -170,14 +170,52 @@ Reference: [Portfolio Homepage Layout](https://recent.design/i/75uqgzu-portfolio
 | **O** — small cards on a ring, tangentially rotated, ring turning slowly | **Orbit (default, spinning at load)** — two rings: inner = the 14 pitch pages (`[data-ring=in]`), outer = statics, films, scripts and pages (`[data-ring=out]`). Radii solved from the room under the mode buttons; each card's arc share ∝ its width so mixed aspect ratios pack evenly; card scale from the circumference. Outer ring turns once per ~64 s, inner ring the other way ×1.35 (the scene loop; rotation is an unbounded number). Hover holds the rings, drag spins with inertia (mouse + touch; vertical touch still scrolls). The headline sits in the still centre. |
 | **S** — cards float at different depths, some turned on Y, far ones dim | **Scatter** — in v7 a turning drum: the 34 cards sit on a screw helix around a vertical axis behind the screen, tangent to the drum (edge-on at the sides, face-on up front), one full pass in ~90 s; the near half is lit, the far side almost dark, the ends fade before they wrap. Desktop (v7.1, tightened in v8.2, self-packing since v8.3): the drum is a wide, shallow **ellipse** (Rz = 55 % of Rx, 6.5 cards per turn) whose radius and vertical pitch are **solved per screen** by `drumPack()` — the narrowest drum and tightest pitch at which no two lit cards ever touch at any angle or camera lean (Rx ≈ 19 % of the width and a card every room/17 px on 16:9 laptops, 24 % on 1440×900; the lit cluster spans ≈ 42 % × 76 % of a 1366×768 screen, 43 % × 91 % of 1920×1080); every card is scaled to one common area (a 16:9 plate and a 9:16 film take the same room, no card taller than the median one) and gets a small deterministic per-card offset, so lit neighbours never collide and never leave a hole. Mobile keeps the round drum (R = 44 % of the width, 5 per turn; only its pitch is checked by the same rule). Drag spins it with inertia; hover slows it. |
 | **G** — all cards snap to a flat grid | **Grid** — a contact sheet: rows balanced by card width at a common height, the row count (2–10) picked to maximise that height inside the room; the headline steps aside. |
-| Mode switch by a tiny centre nav | Three mono buttons (`aria-pressed`) under the HUD, plus one quiet tour after 12 s (scatter → grid → orbit) that stops the moment you touch anything. |
+| Mode switch by a tiny centre nav | Three mono buttons (`aria-pressed`) in a glass pill **below the animation** (docked under the rings in 3D, after the grid in the no-JS flow), plus one quiet tour after 12 s (scatter → grid → orbit) that stops the moment you touch anything. |
 | Transitions ~1 s, per-card stagger | `travel()` 1.15 s power3-in-out, per-card stagger in a fixed pseudo-random order; rotations take the short way; the same DOM cards move (no crossfade). |
 | Custom cursor dot | The site's cursor ring labels **read / drag / close** over the orbit. |
 | Not in the reference | Hover (fine pointers) prints the card's `data-k` (client · type · year) and its real caption in the `aria-live` line. Click / Enter opens the piece to ~90 % of the room, upright (the ring's rotation is undone), with a **Read the chapter ↓** link; films (`<video muted loop playsinline preload="none">`) play only while open. Chapters link back with `a[data-orbit-open="<card-id>"]` → scroll to `#orbit`, open that card. No-JS / reduced motion / scripts blocked → the same markup as a captioned grid under the headline (`html.no-scene` / `html.reveal-all` guarantee nothing stays hidden). |
 
+## Type & surfaces on black (v8.4)
+
+`--ink: #000000` / `--graphite: #0B0B0D` / `--paper: #F6F6F4` / `--red: #FF3B30`. Warm cream was tuned to the old gradient;
+on flat black it yellowed, so the type palette is a cooler near-white with `--muted` raised to .6 and `--line` dropped to
+.13 (hairlines read hotter against #000), and the red pen is brightened to hold up as a small-caps accent. Fills that used to
+pick up the warm cast (film placeholders, the phone, the split-flap board) are neutral near-blacks now. The HUD nav
+(name · Index · Say hello) is one centred glass blob — `.hud__bar` — instead of two separate corners: it caps at 46rem,
+drops the "Copywriter" tag at ≤900 px, tightens padding at ≤600 px and ≤360 px, and the name ellipsises before the
+buttons can be pushed out.
+
+## Type palettes — the `Aa` button, bottom right (v8.5)
+
+A second reader can always be had for one more look at the page, so the site now ships a **type
+picker**: a glass button docked with the reading progress in the bottom-right corner opens a sheet of
+**40 palettes in 6 moods** (editorial · grotesk · display · mono · humanist · luxury). The set is drawn from the
+kind of typography that keeps taking Awwwards honours — high-contrast display serif over a neutral grotesk,
+one-voice grotesk systems, poster faces, fixed-pitch headlines — rebuilt entirely from free Google Fonts so it
+can actually ship here: *Fraunces / Inter*, *Syne / DM Sans*, *Space Grotesk / Inter*, *Archivo Black / Work Sans*,
+*Geist* single-family, *Azeret Mono* headlines, *Bodoni Moda / Jost*, and so on. Each card is a live specimen of the
+same three lines from this site (headline, lede, a metadata row), so the palettes compare against each other instead
+of against stock text.
+
+- Clicking a card applies it and remembers it in `localStorage` (`ak-type-palette`); **Reset** returns to Instrument.
+- A palette is *only* CSS custom properties — `--font-serif/-sans/-mono` plus `--disp-weight`, `--disp-ls`,
+  `--mono-ls`, `--mono-weight` — written into a single `#ak-palette-vars` block. It cannot touch layout, copy or
+  the orbit, and `html[data-pal]` scopes the layer so the site is byte-identical to before until something is picked.
+- The default palette costs nothing: Instrument Serif/Sans are inlined. **Nothing loads from any CDN until the sheet
+  is opened** — then one `<link>` per palette, lazily. Every request uses `css2?family=…:wght@400;700` and never an
+  `ital,` axis, because a family without italics answers that with a 400; the italic accents therefore stay
+  Instrument Serif in all 40 settings (the one face here with a real italic, already on the page).
+- Every stack ends in a same-category system fallback, and `onerror` flips `html[data-pal-fonts="fallback"]` to
+  say so in the sheet — blocked or offline, the picker still works, it just reads in Georgia/Helvetica/Menlo.
+- Family names are checked against the `google/fonts` repository (2,053 families) so no card can point at a face
+  that does not exist. The orbit's caption band sits at `3.9rem` so it never collides with the corner cluster.
+
+To add or change a palette, edit the `D.palettes` array in the last inline `<script>` of **both** files (same index,
+no `src/` here yet) and keep the two builds in sync.
+
 ## Editing & rebuilding
 
-0. The background: edit `--bg-gradient` in `src/styles.css` — one declaration, one place. The fluid's knobs are the `C` object at the top of `src/fluid.js` (brightness, dissipation, splat force/radius, bloom, sleep delay); to try values live, open the console: `AK_FLUID.config.BRIGHTNESS = .15; AK_FLUID.burst(8)`.
+0. The background: `--bg-gradient` in `src/styles.css` is one declaration (`#000000`) — change it in that one place. The fluid's knobs are the `C` object at the top of `src/fluid.js` (brightness, dissipation, splat force/radius, bloom, sleep delay); to try values live, open the console: `AK_FLUID.config.BRIGHTNESS = .15; AK_FLUID.burst(8)`.
 
 1. Edit copy in `src/index.html` (chapters are `#ch1`–`#ch8`; the Index list is at the top).
 2. Add a piece to the orbit: drop the file in `assets/work/` and add a `<figure class="stage__card" data-stage-card data-card-id="<basename>" data-k="Client · Type · Year" data-href="#chN">` inside `[data-ring=in]` (pitch pages) or `[data-ring=out]` (everything else) — `width`/`height` attributes on the `<img>`/`<video>` drive the aspect ratio, the `<figcaption>` is the line that prints on hover/open. Any count works; the three layouts re-solve. Films: 432×768 mp4 (+ webm) with a WebP poster, class `stage__card--film`.
