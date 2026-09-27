@@ -7,8 +7,8 @@
    page opens, then it moves only when the pointer or a finger moves, and the dye
    dissipates back to plain black in ~3 s.
 
-   Adapted from Pavel Dobryakov's WebGL-Fluid-Simulation (MIT, 2017) — the same
-   solver helloshivam.com runs — rewritten for this page:
+   Adapted from Pavel Dobryakov's WebGL-Fluid-Simulation (MIT, 2017) and
+   rewritten for this page:
      · transparent over the black (the dye is added; the black remains the
        fallback for no-JS, reduced motion, missing WebGL, context loss)
      · pointer events on window, the canvas never intercepts a click or a drag

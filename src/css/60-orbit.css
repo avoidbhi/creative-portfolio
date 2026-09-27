@@ -1,6 +1,6 @@
 /* ───────────── 00 · the orbit — the opening screen ─────────────
-   Andrianjaka Tony's card system (recent.design/i/75uqgzu): every slide, static, script and film
-   on two counter-turning rings. Default markup = headline + captioned grid (no JS, GSAP blocked,
+   Every slide, static, script and film on two counter-turning rings.
+   Default markup = headline + captioned grid (no JS, GSAP blocked,
    reduced motion). motion.js §8 adds .is-3d → a 100svh room with perspective; the rings and cards
    are absolutely centred and motion.js's scene loop is the ONLY writer of their transforms. */
 .stage {

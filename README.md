@@ -1,343 +1,43 @@
-# Abhijeet Kanase — a copywriter's portfolio, told in chapters
+# Abhijeet Kanase — Portfolio
 
-A single-page, story-format portfolio for **Abhijeet Kanase**, copywriter & creative strategist
-(Zoo Media, Mumbai). No frameworks; one dependency-free Python script assembles the two published
-files. Every case study, line and number on the page comes from his résumé and the work-sample
-Drive folder — nothing is invented.
+A single-page, story-format portfolio for **Abhijeet Kanase** — copywriter & creative strategist,
+Mumbai. It opens on **the orbit**: every piece of work (pitch pages, statics, films, scripts, web
+and email) turning on two rings around the first line. Below it, eight short chapters tell the
+work, line by line — and a red pen closes the page. No frameworks, no dependencies.
 
-- `src/` — **the source you edit**: `index.html` (all the copy), `css/` (one sheet, cut on its own
-  section seams, concatenated in the order the `<link>` tags list it) and four scripts, each a
-  self-contained IIFE that only ever meets the others on `window.AK` / `window.AK_SCENE`.
-- `index.dev.html` — the **readable single file** (sheet + the four scripts inlined, `assets/`
-  external, ~250 KB). This is the file to read or review. **Generated.**
-- `index.html` — the **standalone build** (the same document with the fonts, every image and the
-  three films inlined as base64, ~4.7 MB — the films are ~1.6 MB of it). Open it anywhere, or host
-  it as-is. **Generated.**
+## What's in this repo
 
-```
-python3 tools/build.py          # rebuild both          (stdlib only, no deps, ~0.3 s)
-python3 tools/build.py --check  # rebuild in memory and fail on any drift
-```
-
-Never hand-edit the two published files: the check in `--check` is how the pair stays honest, and
-the build is byte-deterministic, so a diff in `index.html` is always a real change to the page.
-
-```
-portfolio/
-├── src/
-│   ├── index.html          the story — the only file you touch for copy
-│   ├── css/                one sheet, ten files, concatenated in <link> order
-│   │   ├── 00-tokens.css        palette · the one background · the spacing scale
-│   │   ├── 10-base.css          reset · selection · focus · the skip link
-│   │   ├── 20-type.css          display/serif/mono scales · red-pen strike · reveals · fail-safe
-│   │   ├── 30-layout.css        gutters · chapter rhythm · hairline boundaries
-│   │   ├── 40-hud.css           the floating nav · the full-screen index
-│   │   ├── 50-chapters.css      about · case studies · artifacts · process
-│   │   ├── 60-orbit.css         00 · the orbit, the opening screen
-│   │   ├── 70-epilogue.css      the stamp · the epilogue · decor
-│   │   ├── 80-responsive.css    breakpoints · reduced motion
-│   │   └── 90-palettes.css      the type-picker layer (v8.5)
-│   ├── main.js             the page: ONE rAF loop, scroll model, HUD, depth layer, cursor, reveals, index, red pen
-│   ├── motion.js           the scene: sceneState → card poses → one transform write per card
-│   ├── fluid.js            the background: a WebGL fluid simulation painted inside .bg, cursor-driven
-│   └── palettes.js         the `Aa` sheet: 40 type palettes, expressed only as CSS custom properties
-├── assets/                 committed, so `src/` renders on its own
-│   ├── fonts/              Instrument Serif (roman + italic), Instrument Sans (variable), JetBrains Mono
-│   ├── work/               12 Bajaj Electricals statics + the Vanilla Noir page crop
-│   │   ├── plates/         19 real pitch/script pages (Surf Excel, GoBoult, NYC, Luna) — 1120×630 WebP
-│   │   └── films/          the three Bajaj films, 432×768 H.264, with WebP posters
-│   └── vendor/             gsap.min.js, ScrollTrigger.min.js — v6 backups only, NOT referenced by v7
-├── index.dev.html          generated — readable single file (assets external)
-├── index.html              generated — standalone build (everything inlined)
-├── tools/build.py          assembles both from src/ + assets/
-├── tools/shoot.py · elements.py · redpen_test.py · qa/   the QA harness — lives in the full project,
-│                           this checkout carries the site, its source and its build
-├── research/               local only (gitignored): decks, frames, Drive originals, screenshots
-└── RESEARCH.md             GitHub agent-skills (UX / animation direction / motion build) + Awwwards refs
-```
-
-## The story structure (v6 — orbit first)
-
-The site opens on **the orbit**: every piece of work — 14 pitch pages, 11 Bajaj statics, 3 films, 3 script pages, 3 web/email
-pages — on two counter-turning rings around one headline, already spinning when the page arrives. The chapters below it
-are short: a headline, the metadata strip, the brief-vs-line edit, the numbers, one artifact, and a link back up into the
-orbit (`[data-orbit-open]`) that opens the relevant piece. Word count went from ~3,500 to ~2,150.
-
-| # | Section | Source in the Drive | Surface | Signature moment |
-| --- | --- | --- | --- | --- |
-| 00 | **The orbit** — headline + 34 cards on two rings (scatter / grid / orbit) | everything | plain black | rings assemble out of the dark and turn; hover reads the line, click opens the piece (films play), drag spins |
-| 01 | **The brief before the brief** — two paragraphs, meta, index card | résumé | plain black | index card with a hand-drawn red circle |
-| 02 | **ICC Champions Trophy 2025 — "All on the Line"** | CT 2025 script, problem statement, research doc | plain black | split-flap scoreboard; 368 bn / +23 % / 28 yrs |
-| 03 | **Surf Excel — "We are Cleanliness Paglus"** | 74-page Zoo Media pitch deck | plain black | identity slide as a tilting poster; the six deck pages live in the orbit |
-| 04 | **GoBoult — "Lesssgooo!!"** | 61-page rebrand deck | plain black | anthem manifesto line by line; three film loglines; eight deck pages in the orbit |
-| 05 | **DHL × Mumbai Indians** — Clio case film | DHL x CLIOS script | plain black | shooting-script table; 140 M+ / 31 K / 100 fielders |
-| 06 | **The hook lab** — creator scripts, 3–5× engagement | Derek / Harshit / Job Coach PDFs | plain black | phone cycling five real hooks; the script pages are in the orbit |
-| 07 | **The rest of the desk** — Bajaj + side quests | Bajaj PNGs, films, Vanilla Noir, NYC site, Luna email | plain black | text-only side items; every image and film is in the orbit |
-| 08 | **How I work** — method, proof, services | résumé | plain black | numbered one-liners, proof strip, "final." stamp |
-| ∞ | **Epilogue** | — | plain black | magnetic mailto, phone, **the red pen** toy |
-
-Removed in v6 (all in `research/backup/v5-story/`): the typed prologue + preloader, the ledger/contents with the hover
-peek, the interlude marquees, the per-chapter `.briefcard` prose, the in-chapter `.plates` strips and film players.
-
-Design rules: **one background for the whole site** — **plain black** (`--bg-gradient: #000000` in `styles.css`, painted once on
-the fixed `.bg` layer; no gradient, no grain overlay, so nothing bands or fizzes), so the orbit, every
-chapter, the fallbacks and the epilogue are lit identically. Since v8 the same `.bg` layer also carries **the fluid** — a
-transparent WebGL canvas (`fluid.js`) that paints cursor-driven ink over the gradient and clears back to it (see "The fluid
-background"); black remains the only *static* background and the fallback everywhere. There are no other gradients
-anywhere (the red strike/underline and the index card's ruling are SVG data-URIs). The per-chapter paper stocks (`data-theme` paper/sand/graphite) are gone;
-the attribute stays only to label chapters for the HUD. HUD with reading progress and chapter label, red full-screen Index
-(press `Esc` to close).
-
-## Case-study structure (borrowed from Behance's most-appreciated copywriter portfolios)
-
-The top projects in Behance's *copywriter portfolio* search (Drishti Bhatia, Mika Chen, Calya Fajrian) all set
-context the same way before showing a single line of copy: **brand → About (two sentences) → Tone (three
-adjectives) → what I did → the work shown in-situ** (phone mockups, feed captions, the deck slide). Each case
-chapter opened with that strip — the `.briefcard` — in v3–v5. In v6 the same four facts survive as the `dl.meta` rows (Client · Role · Deliverables · Tone) and the long prose is gone:
-
-```
-Chapter head (the tension, as a headline)
-└ Client · Agency · Role · Scope             ← sticky meta rail
-└ About · Tone · My contribution · Deliverables   ← briefcard (Behance pattern)
-└ The problem, quoted from the actual document
-└ Could have said → said                     ← the red-pen edit
-└ Numbers, with a source line
-└ The artifact (scoreboard / poster / manifesto / script table / phone / gallery)
-```
-
-## Attribution rules used in the copy
-
-- Agency work is labelled "Zoo Media, Mumbai" with Abhijeet's role stated per chapter (research / script / strategy & copy).
-- Campaign-level results (ICC viewing minutes, DHL views/followers) are shown with a source line — "as reported by the ICC / as stated in the case film" — not as personal attribution.
-- Personal claims (3–5× creator engagement, 50+ winners studied, 100–200 concepts per brief, SIH finalist) come straight from the résumé.
-- No testimonials: the résumé has none, so the "Kind words" chapter was replaced by a proof strip.
-- The "Could have said → said" blocks: the *left* side is a generic placeholder I wrote to contrast against; the *right* side is always his real line.
-
-## Motion — v7: one 3D motion system (modelled on the recent.design reference)
-
-v7 replaced the GSAP + ScrollTrigger layer with two dependency-free scripts that behave as one spatial system.
-The design-for-animation skills from RESEARCH.md still set the rules (GPU-only properties, ease-out enters /
-in-out moves, primary–secondary–ambient per scene, `ease: none` for anything continuous), but the runtime is now:
-
-**`main.js` — the page.** One `requestAnimationFrame` loop (`frame`) reads `scrollY` once per frame and derives
-`AK.scroll = { y, smooth (≈80 ms lag), velocity (signed px/s), energy (0–1), progress, max, vh, vw }`. Native scroll is
-never written to — wheel, trackpad fling, swipe and scrollbar drag stay free. Everything continuous runs inside that
-loop: HUD chapter/percent, the chapter numerals, the `[data-depth]` arrival of chapter heads / artifacts / epilogue
-(translate + scale + opacity derived from scroll position — the page is the same space the camera moves through),
-the cursor follower (lerped, transform-only, fine pointers only), counters, the split-flap and the phone cadence.
-One-shot reveals are CSS transitions toggled once by IntersectionObservers (`.is-in`, `.is-inked`, `.is-struck`);
-choreography beats are `transition-delay`s. No `setTimeout`/`setInterval` interaction logic remains (the only timer
-is the 15 s clock in the footer). Fail-safes: `html.reveal-all` (any `error` / `unhandledrejection`, or `window.AK`
-missing at `load`) shows everything with `!important`; `html.no-scene` if the stage never went 3D.
-
-**`motion.js` — the scene.** A central state object drives the 34 cards:
-
-```
-S = { mode, prevMode, scrollProgress, scrollVelocity, orbitRotation, drumRotation (unbounded °),
-      carouselProgress (getter), layoutProgress, ringRate, drumRate, ringVel, drumVel,
-      focused, hovered, hold, touchHold, dragging, active, live, cam, camT, ptr, dim, titleO, idle }
-```
-
-- Poses are pure functions of `(i, S)`: `poseRing` (two counter-turning rings, outer ×1, inner ×−1.35),
-  `poseDrum` (a screw helix — `u = (i + drumRotation/step) mod n`, x = sin·R, y = mid + (u − n/2)·dy,
-  z = (cos − 0.2)·R, rotateY tangent; opacity from the projected overlap with the room: near half lit, far side
-  almost dark, ends fade before the wrap), `poseGrid` (rows packed at a common height), `poseFront` (the opened piece fills 90 % of the room).
-- Layout changes are journeys: `travel(i, delay, dur, ease)` snapshots the card's current pose and eases it to the
-  live destination with a per-card stagger (`setMode` 1.15 s power3-in-out, `open` 0.9 s expo-out, `close` 1.0 s).
-  The same DOM elements travel; nothing crossfades.
-- Mass: `cur += (pose − cur) · (1 − e^(−24·dt))` on every axis, hover lift lerped separately (z +40, scale ×1.03).
-- **One write per card per frame** — `transform` + `opacity`, skipped when the string is unchanged. Camera = one
-  transform on `.stage__space` (`translateZ rotateX rotateY`): lies back 16° and recedes as the stage scrolls out,
-  ±3° from scroll velocity, cursor parallax that freezes over a card.
-- Rotation is infinite and never resets: `rotation += rate·dt (+ drag impulse decaying e^(−4.5·dt))`;
-  `rate = base × (1 + 1.4·energy)` so a flung page adds energy that settles when you stop. Hover in the ring band,
-  drag or an open piece hold the ring; a hovered drum slows to ×0.12 but never freezes. Constants: perspective 640 px
-  (CSS and JS agree), ring 360°/64 s, drum 360°/18 s, drum R = clamp(W·0.155, 140, 260) desktop / W·0.44 mobile.
-- Idle tour scatter → grid → orbit (12 s then 6 s) only near the top and idle; any input ends it.
-- Deep links `a[data-orbit-open]` open once the stage has arrived. `ResizeObserver` re-measures; cards glide to the new solve.
-- `destroy()` on a reduced-motion change or a thrown error → the same markup as a captioned grid.
-- Mobile: same system, smaller ring, fewer drum turns (5 per turn), no cursor parallax, touch swipe spins, vertical swipe scrolls.
-
-Compositing budget: only `transform`/`opacity` animate; `will-change` is limited to the 3D subtree (**`transform` only** — see v8.3 below), the depth layer,
-the cursor, and word masks *until they have arrived*; the old full-page grain overlay is gone (it read as noise on flat black),
-`background-position` (no blend mode); card shadows are tight (an 80 px blur doubled every card's layer size).
-
-## The fluid background — v8 (from helloshivam.com)
-
-The reference (Shivam Sinha's site) runs Pavel Dobryakov's **WebGL fluid simulation** full-screen behind the page: a burst
-of dye on load, then the fluid only moves where the cursor moves, and every trail dissipates back to black in a few seconds.
-`src/fluid.js` is that solver — MIT-licensed, the licence is in the file header — adapted to this page rather than dropped in:
-
-| | reference | here |
-|---|---|---|
-| where it paints | its own fixed black `<canvas>`, the page on top | a **transparent** canvas *inside* `.bg`, so the dye adds to the one gradient (premultiplied `ONE, ONE_MINUS_SRC_ALPHA`) and the gradient stays the fallback |
-| trigger | hover: every pointer move splats; a random burst on load | same — `pointermove` / touch on `window` (passive, the canvas is never in the hit-test: the orbit still drags, links still click); 5–8 splats on load |
-| colour | full spectrum, hue re-rolled 10×/s, brightness .15 | full spectrum, same cadence, brightness **.12** (medium: clearly visible, the type stays first); the opening burst at 5× not 10× |
-| solver | 128² velocity, 512 dye (1024 on desktop), 20 pressure iterations, curl 0, density dissipation 2.5, velocity .8, splat force 3000 / radius .25, bloom .8, sunrays | same numbers, dye 512 everywhere, bloom .65, backbuffer capped at 1× DPR (the dye is a 512 px texture — more display pixels add cost, not detail) |
-| loop | its own rAF | inside `main.js`'s single loop (`AK.loop`); solver dt capped at 1/60 |
-| idle | steps and renders forever | **sleeps** 4 s after the last input (the dye is at e^−10 by then): the canvas is cleared and nothing is stepped until the next move — an idle page costs nothing |
-| resize | reallocates on any size change | sizes arrive via the page's `page:measured` event (no layout reads in the loop); a phone's URL bar (< 15 % change) stretches the buffer instead of clearing the dye |
-| when it can't | — | reduced motion → never boots (CSS hides the canvas too); no WebGL / no half-float render targets → never boots; context lost → removed; a live `prefers-reduced-motion` change → removed; any GL error → removed silently. In every case the gradient is simply there. |
-| perf guard | — | measures its *own* cost (awake frame time − asleep frame time); sustained > 12 ms for 2 s → dye 256 / bloom 128 / no sunrays, no shading; again → off. A page that is slow for other reasons keeps its fluid; a fluid the machine can't afford removes itself. |
-
-`window.AK_FLUID` exposes `config`, `burst(n)`, `wake()`, `destroy()`, `live`, `awake`, `level`.
-
-## The orbit — from recent.design / Andrianjaka Tony
-
-Reference: [Portfolio Homepage Layout](https://recent.design/i/75uqgzu-portfolio-homepage-layout) by Andrianjaka Tony
-(`x.com/andrianja_tony`) — b/w photo cards cycling through three 3D arrangements on a near-black page. Frame study in
-`research/recent/`. In v5 this was one chapter's ads stage (11 statics); in v6 it is the opening screen holding all 34 pieces.
-
-| Reference | Here (`section.stage#orbit`, `motion.js` §8) |
+| Path | What it is |
 | --- | --- |
-| **O** — small cards on a ring, tangentially rotated, ring turning slowly | **Orbit (default, spinning at load)** — two rings: inner = the 14 pitch pages (`[data-ring=in]`), outer = statics, films, scripts and pages (`[data-ring=out]`). Radii solved from the room under the mode buttons; each card's arc share ∝ its width so mixed aspect ratios pack evenly; card scale from the circumference. Outer ring turns once per ~64 s, inner ring the other way ×1.35 (the scene loop; rotation is an unbounded number). Hover holds the rings, drag spins with inertia (mouse + touch; vertical touch still scrolls). The headline sits in the still centre. |
-| **S** — cards float at different depths, some turned on Y, far ones dim | **Scatter** — in v7 a turning drum: the 34 cards sit on a screw helix around a vertical axis behind the screen, tangent to the drum (edge-on at the sides, face-on up front), one full pass in ~90 s; the near half is lit, the far side almost dark, the ends fade before they wrap. Desktop (v7.1, tightened in v8.2, self-packing since v8.3): the drum is a wide, shallow **ellipse** (Rz = 55 % of Rx, 6.5 cards per turn) whose radius and vertical pitch are **solved per screen** by `drumPack()` — the narrowest drum and tightest pitch at which no two lit cards ever touch at any angle or camera lean (Rx ≈ 19 % of the width and a card every room/17 px on 16:9 laptops, 24 % on 1440×900; the lit cluster spans ≈ 42 % × 76 % of a 1366×768 screen, 43 % × 91 % of 1920×1080); every card is scaled to one common area (a 16:9 plate and a 9:16 film take the same room, no card taller than the median one) and gets a small deterministic per-card offset, so lit neighbours never collide and never leave a hole. Mobile keeps the round drum (R = 44 % of the width, 5 per turn; only its pitch is checked by the same rule). Drag spins it with inertia; hover slows it. |
-| **G** — all cards snap to a flat grid | **Grid** — a contact sheet: rows balanced by card width at a common height, the row count (2–10) picked to maximise that height inside the room; the headline steps aside. |
-| Mode switch by a tiny centre nav | Three mono buttons (`aria-pressed`) in a glass pill **below the animation** (docked under the rings in 3D, after the grid in the no-JS flow), plus one quiet tour after 12 s (scatter → grid → orbit) that stops the moment you touch anything. |
-| Transitions ~1 s, per-card stagger | `travel()` 1.15 s power3-in-out, per-card stagger in a fixed pseudo-random order; rotations take the short way; the same DOM cards move (no crossfade). |
-| Custom cursor dot | The site's cursor ring labels **read / drag / close** over the orbit. |
-| Not in the reference | Hover (fine pointers) prints the card's `data-k` (client · type · year) and its real caption in the `aria-live` line. Click / Enter opens the piece to ~90 % of the room, upright (the ring's rotation is undone), with a **Read the chapter ↓** link; films (`<video muted loop playsinline preload="none">`) play only while open. Chapters link back with `a[data-orbit-open="<card-id>"]` → scroll to `#orbit`, open that card. No-JS / reduced motion / scripts blocked → the same markup as a captioned grid under the headline (`html.no-scene` / `html.reveal-all` guarantee nothing stays hidden). |
-
-## Type & surfaces on black (v8.4)
-
-`--ink: #000000` / `--graphite: #0B0B0D` / `--paper: #F6F6F4` / `--red: #FF3B30`. Warm cream was tuned to the old gradient;
-on flat black it yellowed, so the type palette is a cooler near-white with `--muted` raised to .6 and `--line` dropped to
-.13 (hairlines read hotter against #000), and the red pen is brightened to hold up as a small-caps accent. Fills that used to
-pick up the warm cast (film placeholders, the phone, the split-flap board) are neutral near-blacks now. The HUD nav
-(name · Index · Say hello) is one centred glass blob — `.hud__bar` — instead of two separate corners: it caps at 46rem,
-drops the "Copywriter" tag at ≤900 px, tightens padding at ≤600 px and ≤360 px, and the name ellipsises before the
-buttons can be pushed out.
-
-## Type palettes — the `Aa` button, bottom right (v8.5)
-
-A second reader can always be had for one more look at the page, so the site now ships a **type
-picker**: a glass button docked with the reading progress in the bottom-right corner opens a sheet of
-**40 palettes in 6 moods** (editorial · grotesk · display · mono · humanist · luxury). The set is drawn from the
-kind of typography that keeps taking Awwwards honours — high-contrast display serif over a neutral grotesk,
-one-voice grotesk systems, poster faces, fixed-pitch headlines — rebuilt entirely from free Google Fonts so it
-can actually ship here: *Fraunces / Inter*, *Syne / DM Sans*, *Space Grotesk / Inter*, *Archivo Black / Work Sans*,
-*Geist* single-family, *Azeret Mono* headlines, *Bodoni Moda / Jost*, and so on. Each card is a live specimen of the
-same three lines from this site (headline, lede, a metadata row), so the palettes compare against each other instead
-of against stock text.
-
-- Clicking a card applies it and remembers it in `localStorage` (`ak-type-palette`); **Reset** returns to Instrument.
-- A palette is *only* CSS custom properties — `--font-serif/-sans/-mono` plus `--disp-weight`, `--disp-ls`,
-  `--mono-ls`, `--mono-weight` — written into a single `#ak-palette-vars` block. It cannot touch layout, copy or
-  the orbit, and `html[data-pal]` scopes the layer so the site is byte-identical to before until something is picked.
-- The default palette costs nothing: Instrument Serif/Sans are inlined. **Nothing loads from any CDN until the sheet
-  is opened** — then one `<link>` per palette, lazily. Every request uses `css2?family=…:wght@400;700` and never an
-  `ital,` axis, because a family without italics answers that with a 400; the italic accents therefore stay
-  Instrument Serif in all 40 settings (the one face here with a real italic, already on the page).
-- Every stack ends in a same-category system fallback, and `onerror` flips `html[data-pal-fonts="fallback"]` to
-  say so in the sheet — blocked or offline, the picker still works, it just reads in Georgia/Helvetica/Menlo.
-- Family names are checked against the `google/fonts` repository (2,053 families) so no card can point at a face
-  that does not exist. The orbit's caption band sits at `3.9rem` so it never collides with the corner cluster.
-
-To add or change a palette, edit the `D.palettes` array in `src/palettes.js` and rebuild: both published files take
-it from the same file, so they can no longer disagree.
+| `src/index.html` | **The page** — all the copy. The only file you edit for content. |
+| `src/css/` | One stylesheet in ten files, concatenated in `<link>` order. |
+| `src/main.js` · `motion.js` · `fluid.js` · `palettes.js` | Plain JS, no dependencies: page behaviour, the 3D orbit, the fluid background, the type-picker. |
+| `assets/` | The fonts and the work — Bajaj statics & films, pitch-deck plates, script pages. |
+| `index.dev.html` | **Generated.** The page in one readable file (styles + scripts inlined, assets external). |
+| `index.html` | **Generated.** The standalone build — every font, image and film inlined as data URIs. Opens from a USB stick; hosts anywhere. |
+| `tools/build.py` | Assembles the two published files from `src/` + `assets/` (Python stdlib only). |
+| `DEPLOY.md` | How to publish it — GitHub Pages or any static host. |
 
 ## Editing & rebuilding
 
-0. The background: `--bg-gradient` in `src/css/00-tokens.css` is one declaration (`#000000`) — change it in that one place. The fluid's knobs are the `C` object at the top of `src/fluid.js` (brightness, dissipation, splat force/radius, bloom, sleep delay); to try values live, open the console: `AK_FLUID.config.BRIGHTNESS = .15; AK_FLUID.burst(8)`.
-
-1. Edit copy in `src/index.html` (chapters are `#ch1`–`#ch8`; the Index list is at the top).
-2. Add a piece to the orbit: drop the file in `assets/work/` and add a `<figure class="stage__card" data-stage-card data-card-id="<basename>" data-k="Client · Type · Year" data-href="#chN">` inside `[data-ring=in]` (pitch pages) or `[data-ring=out]` (everything else) — `width`/`height` attributes on the `<img>`/`<video>` drive the aspect ratio, the `<figcaption>` is the line that prints on hover/open. Any count works; the three layouts re-solve. Films: 432×768 mp4 with a WebP poster, class `stage__card--film`.
-3. Rebuild both files — `python3 tools/build.py` writes `index.dev.html` (sheet + the four scripts inlined, assets
-   external) and `index.html` (the same document with every asset inlined as a data URI). It reports any external
-   ref it could not inline and any asset referenced but absent from `assets/`; `--check` does the same without
-   writing, for before a commit.
-4. To let a chapter open a piece in the orbit, add `<p class="orbit-link mono"><a href="#orbit" data-orbit-open="<card-id>">…</a></p>`.
-
-## QA
-
 ```bash
-pip install playwright && python -m playwright install chromium   # + install-deps on a bare box
-python tools/shoot.py 1440 900 d     # desktop screens → research/shots/
-python tools/shoot.py 390 844 m      # mobile screens
-python tools/elements.py 1440        # close-ups of the artifacts
-python tools/redpen_test.py          # exercise the red-pen toy
-python tools/qa/sweep.py [file]      # nine viewports: overflow / out-of-stage / overlap / no-JS / reduced motion
-python tools/qa/touch.py             # 390×844 CDP touch: swipe, tap, tap-outside, vertical scroll
-python tools/qa/drum.py [file] [--quick]   # v8.3 drum soak (server on 127.0.0.1:8090): real rects, bright-vs-bright + dim-in-front rule, spans, gaps, FAULTS n
+# 1. edit copy in src/index.html  (or add files to assets/ + a card in the orbit)
+# 2. rebuild the two published files:
+python3 tools/build.py          # writes index.dev.html and index.html  (~0.3 s)
+python3 tools/build.py --check  # verify the published files match src/ — no writes
 ```
 
-Heavy-use hardening (v6.2, after the "glitches when used a lot" report — all of it carried into v7's single-writer design): every open/close/mode change starts a new journey from the card's *current* pose (no half-way captures); rotations are absolute, unbounded numbers; the previously open piece returns to its slot when another opens; the headline's fade
-is killed before it is restarted (it used to stay on over an opened piece / in grid); a double-click is one open; a press that
-travels > 8 px is a drag, never a click; `.stage__space` is `pointer-events: none` so far cards (z < 0) receive clicks; the
-rings hold while the cursor is anywhere in the ring band (per-card hover made the ring stutter); the tour never fires while a
-piece is open, while dragging or while the orbit is off-screen; a resize while open re-opens at the new size; a film paused
-by scrolling away resumes on return; no `backdrop-filter` inside the 3D subtree (Chrome flicker). Stress script: /tmp/qa/stress.py.
+Never hand-edit `index.html` or `index.dev.html`. They are generated, the build is byte-deterministic,
+and `--check` is how you notice drift: a diff in a published file is always a real change to the page.
 
-Last run (v6, orbit first): zero console errors on desktop, mobile and the 4.7 MB standalone; the orbit's 34 cards stay
-inside the stage in all three layouts at 360/390/768/1024/1280/1440/1920; no horizontal overflow before or after a full
-scroll; single `<h1>`; Tab reaches every card (Enter opens, Esc closes); mouse drag and touch swipe spin the rings without
-opening a card, vertical swipe scrolls; films play only while open and pause on close; deep links from chapters 3/4/6/7
-scroll up and open the right card; the auto tour stops on the first click; reduced-motion / GSAP-blocked / no-JS all
-render the captioned grid under the headline with nothing hidden.
+## Adding a piece to the orbit
 
-v7 run (motion-system rework): nine viewports 1920×1080 · 1440×900 · 1280×800 · 1024×768 · 768×1024 · 430×932 · 390×844 ·
-375×812 · 320×700 — zero page errors, no horizontal overflow, all 34 cards inside the stage in every layout; 60 s soak:
-ring and drum rotations monotonic, scroll energy 5.6 → 12.8 → 5.6 °/s, camera returns to rest, deep link from #ch3 opens
-its card in 1.0 s, rapid index navigation / refresh at #ch4 / resize storm all clean; touch (390×844, CDP): swipe spins,
-tap opens, tap outside closes, vertical swipe scrolls natively; headless frame times (software compositor, relative):
-orbit / grid 16.7 ms median, drum ≈ 25 ms, versus v6.2's 33–50 ms in every mode. QA scripts now live in `tools/qa/` (`sweep.py` nine viewports + overlap count + fallbacks, `touch.py`, `perf.py`).
+Drop the file in `assets/work/` and add one card in the opening `#orbit` section:
 
-v7.1 (scatter fix, desktop): the drum's lit cards overlapped up to 100 % and left a gap column on laptops — now a wide
-ellipse with area-normalised cards (see the orbit table); measured over 30 frames at 1366/1440/1920/1280/1024/768: lit
-cards ≈ 6, overlapping pairs 0, nothing outside the stage; transitions, hover-slow, drag, open/close, resize unchanged.
+- pitch / script pages go in `[data-ring="in"]`, everything else in `[data-ring="out"]`
+- `<figure class="stage__card" data-stage-card data-card-id="…">` — the `width`/`height`
+  attributes on the `<img>`/`<video>` drive the card's aspect ratio
+- the `<figcaption>` is the line that prints on hover and when the card opens
+- films: 432×768 mp4 with a WebP poster, class `stage__card--film`
 
-
-v8 (the fluid): `tools/qa/fluid.py [url] [W H] [prefix] [touch]` boots with SwiftShader WebGL and checks the canvas is
-mounted inside `.bg` at the viewport size, the opening burst paints (saturated-pixel share 10–60 % of the frame at 300 ms),
-the page sleeps within 6 s (≈ 3 %, the gradient alone), a pointer / CDP-touch trail paints again (≈ 10 %), no horizontal
-overflow, zero page errors — passing on `src/`, `index.dev.html`, `index.html` at 1440×900 / 1366×768 and 390×844 touch.
-Fallbacks verified: reduced motion → no canvas, `getContext` returning null → no canvas and the scene still boots, live
-reduce toggle and a forced context loss → canvas removed, no errors. `sweep.py` (nine viewports) and `touch.py` unchanged
-and clean; `perf.py` now reports each mode with the fluid asleep (16.7 ms median, identical to v7.1), awake, and off. The
-awake number in headless SwiftShader (~150 ms) is software GL rendering 22 full-screen passes on a 2-CPU sandbox and says
-nothing about a real GPU (the reference site runs the same passes at 1024 dye); the guard is disabled in the QA runs and
-verified separately (`level` climbs 0 → 1 → 2 within ~6 s under sustained slowness, the canvas leaves).
-
-v8.1 (the headline): two glitches in the orbit's title. (1) On 16:9 laptops (1366×768, 1280×720, 1536×864 …) the
-headline's CSS size follows the viewport *width* (3.4vw) while the hole in the inner ring follows the room *height*, so
-the words outgrew the hole and the inner cards swept across "The" and "line." on every turn — now `measure()` runs
-`fitTitle()` after `solveRing()`: it measures the headline once per resize and sets `--title-fit` (a `scale()` in the
-title's transform, .55–1) so its corners clear the hole with the cards' own headroom; 1920×1080 / 1024×768 / tablets stay
-at 1, 1440×900 → .89, 1366×768 → .76, 1280×720 → .72. Measured over 3 s at eleven viewports: card ∩ title-box ≤ 300 px²
-(corner slivers of the bounding box, no glyph touched) versus up to 2,400 px² before. (2) Loading the 4.6 MB standalone
-file on a slow connection showed the big stacked no-JS headline (87 px, top of the page) for the seconds the inline
-scripts were still streaming, then it snapped to the small centred one — the `html.js` page now holds the stage at
-`100svh` and the headline invisible until the scene boots; `html.no-scene` / `html.reveal-all` (scene never booted,
-reduced motion, scripts blocked) show the stacked layout again, verified in all three states. Also: the JS breakpoint for
-the stacked layout is now `W <= 600`, matching the CSS `(max-width: 600px)` — exactly 600 px wide used to centre the
-headline over the rings while the rings were solved for a headline above them.
-
-v8.2 (scatter, desktop): the drum's horizontal reach reduced — Rx 38 % → 30 % of the stage width (Rz 45 % → 55 % of Rx,
-so the depth stays ≈ 16.5 % of the width and the far side still recedes). The lit arc now spans ≈ 63 % of the screen
-(was ≈ 80 %); 9-second soaks at 1366×768 / 1440×900 / 1024×768 / 768×1024 / 2560×1080: 6–7 lit cards, 0 overlapping
-pairs, 0 lit cards outside the stage. Mobile (< 700 px) untouched. Both builds rebuilt; sweep and touch QA clean.
-
-v8.3 (scatter, both axes — and real depth again): the drum's spacing no longer comes from fixed fractions; `drumPack()`
-in motion.js solves it once per resize (30–50 ms, nothing in the frame loop): for every vertical pitch from a card every
-room/18 px to room/12 px it finds the narrowest radius (14 → 36 % of the width, 1 % steps) at which the projected boxes
-of the lit cards never touch — checked at every 1/8 of a slot over a full pass, from the resting camera and four leaned
-ones — then keeps the pitch whose bright cards sit closest to their nearest neighbour. Rules: a pair with a bright card
-(opacity ≥ .7) keeps 12 px at rest and never intersects under the lean, unless the one behind is a half-lit shoulder card
-(< .75) tucked behind an opaque one (real depth order, ≤ 15 % show-through — a stack of prints, not a clash); two
-shoulder cards and the dark far side are free. Results (real DOM rects, 1.5 turns, tools/qa/drum.py): 1366×768 Rx 30 %
-→ 19 %, pitch 37 → 32 px, lit cluster 67 % × 63 % → 42 % × 76 % of the screen, mean edge gap to the side neighbour
-167 → 57 px and to the one above/below 116 → 84 px; 1920×1080 30 % → 19 %, 58 → 51 px, 67 % × 69 % → 43 % × 91 %,
-237 → 79 px / 195 → 153 px; 1440×900 30 % → 24 %, 46 → 40 px, 69 % × 68 % → 53 % × 83 %, 137 → 83 / 123 → 97 px;
-1536×864 21 %, 1280×720 18 %, 1024×768 20 %, 768×1024 27 %, 2560×1080 15 % — zero bright-on-bright or dim-in-front
-faults at every viewport, 0 lit cards outside the stage. (The cluster is *taller* than before because the near arc now
-holds 7–8 lit cards instead of 6–7 — the pitch is tighter, so more of the helix is in the light.) No card is taller than
-the median one any more (a 9:16 film at equal area was ⅓ taller and set the vertical pitch for everyone), the room-height
-cap on ultra-wides stays. Found on the way: `.stage__space` carried `will-change: transform, opacity`, and a
-will-change of `opacity` on a `preserve-3d` container **flattens its whole 3D subtree** in Chrome and Firefox — v7 to
-v8.2 shipped the scene flat (every card drawn at its layout size, no perspective magnification). It is `will-change:
-transform` now: near cards are larger, far cards smaller, the opened piece fills ≈ 90 % of the room as designed, and the
-drum solver models exactly that projection (P = 640, camera tilt/pan, per-corner). Mobile (< 700 px): same radius (44 %),
-same 5 per turn, same front-card size as the approved drum (the common scale is divided by the perspective factor the
-flat build never applied — 1.15 → .90 in the scene, ≈ 1.15 on screen), and only the pitch is checked by the same
-touching rule (36 → 44 px at 390×844: with real depth the front cards *are* a fifth bigger, and 36 px made two of them
-overlap on every pass). Sweep / touch / perf clean; frame times unchanged.
+Then rebuild. The three arrangements (Scatter / Grid / Orbit) re-solve automatically for any count.
