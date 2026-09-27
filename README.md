@@ -16,6 +16,7 @@ work, line by line — and a red pen closes the page. No frameworks, no dependen
 | `index.dev.html` | **Generated.** The page in one readable file (styles + scripts inlined, assets external). |
 | `index.html` | **Generated.** The standalone build — every font, image and film inlined as data URIs. Opens from a USB stick; hosts anywhere. |
 | `tools/build.py` | Assembles the two published files from `src/` + `assets/` (Python stdlib only). |
+| `tools/pull_work.py` | Pulls the latest work from the shared Drive folder (updated Bajaj pieces, the WWC player scripts, the finance/creator scripts), renders them as orbit plates and wires the new cards in. Run it, then rebuild. |
 | `DEPLOY.md` | How to publish it — GitHub Pages or any static host. |
 
 ## Editing & rebuilding

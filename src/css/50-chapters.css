@@ -30,6 +30,12 @@
 .case__grid + .case__grid { margin-top: var(--section); }
 .case__body { display: grid; gap: var(--group); }
 
+/* the WWC roster — ten players, numbered */
+.players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 48rem; }
+.players li { display: flex; align-items: baseline; gap: 1.1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-family: var(--font-serif); font-size: clamp(1.25rem, 1.7vw, 1.55rem); line-height: 1.15; }
+.players .mono { color: var(--muted); min-width: 2ch; flex: none; }
+@media (max-width: 640px) { .players { grid-template-columns: 1fr; } }
+
 .brief { display: grid; gap: var(--s2); }
 .brief p { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.8vw, 2.7rem); line-height: 1.12; letter-spacing: -.01em; max-width: 24ch; }
 .brief footer { color: var(--muted); }
