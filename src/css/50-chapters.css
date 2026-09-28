@@ -186,5 +186,11 @@
 /* phone (hook lab) */
 .phone__hero-text--sm { font-size: 1.22rem; line-height: 1.12; }
 
-/* ───────────── the desk: gallery + side quests ───────────── */
+/* ───────────── the desk: side quests ───────────── */
 .desk__intro { max-width: 62ch; margin-bottom: var(--group); }
+.side { display: grid; gap: var(--s5); }
+.side__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; }
+.side__item { display: grid; gap: .45rem; padding: var(--s4) 0; border-top: 1px solid var(--line); align-content: start; }
+.side__big { font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 1.8rem); line-height: 1.12; letter-spacing: -.01em; }
+.side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
+.side__tag { color: var(--muted); }

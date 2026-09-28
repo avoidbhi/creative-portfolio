@@ -16,7 +16,6 @@
 <link rel="stylesheet" href="css/60-orbit.css">
 <link rel="stylesheet" href="css/70-epilogue.css">
 <link rel="stylesheet" href="css/80-responsive.css">
-<link rel="stylesheet" href="css/90-palettes.css">
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div>
@@ -42,35 +41,9 @@
   <p class="hud__chapter mono" aria-live="polite"><span data-chapter-label>Prologue</span></p>
   <div class="hud__corner">
     <p class="hud__progress mono"><span data-progress-num>00</span><span class="hud__pct">%</span><span class="hud__read"> read</span></p>
-    <button class="hud__type mono" type="button" data-type-toggle aria-controls="typepal" aria-expanded="false" aria-label="Type palettes" title="Type palettes — click to open the list">
-      <span class="hud__type__aa" aria-hidden="true">Aa</span><span class="hud__type__lbl" data-pal-label>Instrument</span>
-    </button>
   </div>
 </header>
 
-<!-- ───────────────────────── TYPE PALETTES — 40 pairings, click to apply ───────────────────────── -->
-<div class="typepal" id="typepal" data-typepal role="dialog" aria-label="Type palettes" hidden>
-  <div class="typepal__head">
-    <p class="typepal__label mono">Type palettes · 40 settings in six moods</p>
-    <h2 class="typepal__title">Pick the voice. <em>The page re-types instantly.</em></h2>
-    <div class="typepal__row">
-      <span class="typepal__hint mono">Every card is live · click to apply · Esc closes · kept on this device</span>
-      <button class="typepal__reset" type="button" data-type-reset>Reset</button>
-      <button class="typepal__x" type="button" data-type-close>Close</button>
-    </div>
-    <div class="typepal__row">
-      <button class="typepal__chip is-on" type="button" data-type-filter="all">All 40</button>
-      <button class="typepal__chip" type="button" data-type-filter="editorial">Editorial</button>
-      <button class="typepal__chip" type="button" data-type-filter="grotesk">Grotesk</button>
-      <button class="typepal__chip" type="button" data-type-filter="display">Display</button>
-      <button class="typepal__chip" type="button" data-type-filter="mono">Mono</button>
-      <button class="typepal__chip" type="button" data-type-filter="humanist">Humanist</button>
-      <button class="typepal__chip" type="button" data-type-filter="luxury">Luxury</button>
-    </div>
-  </div>
-  <div class="typepal__scroll" data-type-grid></div>
-  <p class="typepal__note mono">Specimens load from Google Fonts when this panel opens — nothing else on the site ever does. Blocked or offline, the cards fall back to the same category of system face.</p>
-</div>
 <!-- ───────────────────────── INDEX OVERLAY ───────────────────────── -->
 <div class="index" id="index" data-index aria-hidden="true">
   <div class="index__inner">
@@ -607,6 +580,5 @@
 <script src="main.js"></script>
 <script src="motion.js"></script>
 <script src="fluid.js"></script>
-<script src="palettes.js"></script>
 </body>
 </html>
