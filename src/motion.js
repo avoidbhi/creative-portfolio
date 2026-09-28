@@ -160,7 +160,7 @@
     // 9:16 film take the same room). v8.3: the spacing PACKS ITSELF (see drumPack) — as close as this card set
     // allows on this screen, on both axes, with no two lit cards ever touching, and it re-solves for any new set of work.
     const room = roomBottom - roomTop, midY = (roomTop + roomBottom) / 2;
-    const perTurn = mobile ? 5 : 6.5;                                                 // cards per turn: a fractional count keeps successive turns from lining up in columns
+    const perTurn = 5;                                                          // cards per turn (laptop + phone): 5 packs the lit arc ~35 % narrower than 6.5 — the spacing solver (drumPack) proves no two lit cards touch at any angle; the per-card jy/jr jitter keeps successive turns from lining up in columns
     const aRef = cards.map((_, i) => cw[i] * ch[i]).sort((a, b) => a - b)[n >> 1];    // the reference area: the median card (a 4:5 static)
     const kFront = P / (P - (1 - 0.2) * W * 0.44);                                   // phone: how much the perspective magnifies the front card (its z = (1 − zoff)·R)
     const s = mobile ? 1.15 / kFront : clamp(room / 1080 * 1.25, 0.6, 0.85);         // common size, from the room height: the front card ≈ 40 % of the room tall, like the reference; the phone keeps its approved front-card size now that depth is real
@@ -192,7 +192,7 @@
      at rest and never intersects under the lean — unless the one behind is a half-lit shoulder card (< .75) tucked
      behind an opaque one (real depth order, so it is simply occluded, like a stack of prints); two shoulder cards
      (< .7) and the dark far side are free. ~30–50 ms, once per resize (nothing runs in the frame loop). */
-  const DRUM_GAP = 12, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first
+  const DRUM_GAP = 4, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first · 4 px rest clearance: the v8.3 default of 12 read as "spread out" on laptops — the pack is 15–25 % tighter
   const boxes = [];                                                                    // scratch: projected boxes of the lit cards at one phase
   function drumPack(apply, room) {
     const RxMin = W * 0.14, RxMax = Math.min(W * 0.36, room * 0.9);
