@@ -1,5 +1,5 @@
 /* ───────────── about ───────────── */
-.about__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--group) var(--col); align-items: start; }
+.about__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
 .about__side { display: grid; gap: var(--group); }
 
 /* tilt artifacts */
@@ -24,11 +24,19 @@
 .is-in .card__circle path, .no-js .card__circle path { stroke-dashoffset: 0; }
 .card__foot { color: var(--red); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
 
-/* ───────────── case chapters ───────────── */
-.case__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: var(--group) var(--col); align-items: start; }
-.case__meta { position: sticky; top: calc(var(--hud-h) + var(--s4)); padding-top: var(--s1); }
+/* ───────────── case chapters — single-column editorial ─────────────
+   One centred column per chapter: kicker, headline, a compact meta line, then the body.
+   The side rail and the ghost numerals are gone; the meta dl collapses to one wrapped line. */
+.case__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
+.case__meta { position: static; }
 .case__grid + .case__grid { margin-top: var(--section); }
 .case__body { display: grid; gap: var(--group); }
+
+/* the meta dl as one compact line: "CLIENT — value · ROLE — value · …" (works for the about chapter too) */
+.case__meta .meta, .about__side .meta { display: flex; flex-wrap: wrap; gap: .55rem 2.5rem; }
+.case__meta .meta div, .about__side .meta div { display: flex; gap: .6rem; border-top: 0; padding-top: 0; }
+.case__meta .meta dt, .about__side .meta dt { min-width: auto; }
+.case__meta .meta dd, .about__side .meta dd { padding-right: 0; }
 
 /* the WWC roster — ten players, numbered */
 .players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 48rem; }

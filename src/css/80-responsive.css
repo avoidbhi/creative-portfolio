@@ -10,8 +10,7 @@
   .epilogue__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
-  .about__grid, .case__grid { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
-  .case__meta { position: static; }
+  .about__grid, .case__grid { gap: var(--s5); }
   .hud__chapter { display: none; }
   .hud__bar .hud__name .mono { display: none; }
   .hud__bar .hud__name .serif-i { font-size: 1.3rem; }
@@ -51,7 +50,6 @@
   .redpen__row { grid-template-columns: 1fr; }
   .redpen__btn { justify-self: start; }
   .card { transform: none; }
-  .chapter__num { font-size: 9rem; }
   .hud__bar .hud__btn { padding: 0 .8rem; }
 }
 

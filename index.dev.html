@@ -166,13 +166,7 @@ main { position: relative; z-index: 2; background: transparent; color: var(--fg)
 
 /* the boundary is a hairline, not a void: 11rem/10rem of padding stacked on a 5.5rem head
    margin and up to 7rem of trailing block margin meant ~400px of nothing between chapters */
-.chapter { position: relative; overflow: visible clip; /* y clipped for the numerals */ padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: var(--max); margin-inline: auto; }
-.chapter__num {
-  position: absolute; top: -.05em; right: calc(var(--gutter) - .06em);
-  font-size: clamp(9rem, 26vw, 24rem); line-height: 1;
-  color: var(--fg); opacity: .1; pointer-events: none; user-select: none;
-  will-change: transform;
-}
+.chapter { position: relative; overflow: visible clip; padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: min(var(--max), 68rem); margin-inline: auto; }   /* single-column editorial width: the chapters read as essays, not spreads */
 .chapter__head { position: relative; display: grid; gap: var(--s3); margin-bottom: var(--group); }
 [data-depth] { will-change: transform, opacity; transform-origin: 50% 100%; }          /* scroll-derived arrival (translate/scale/opacity), one writer: the page loop */
 .js [data-depth] { opacity: 0; }                                                       /* until the loop's first write (never under reduced motion / reveal-all) */
@@ -247,7 +241,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .index__foot { color: rgba(255,255,255,.7); margin-top: var(--s5); }
 
 /* ───────────── about ───────────── */
-.about__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--group) var(--col); align-items: start; }
+.about__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
 .about__side { display: grid; gap: var(--group); }
 
 /* tilt artifacts */
@@ -272,11 +266,19 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .is-in .card__circle path, .no-js .card__circle path { stroke-dashoffset: 0; }
 .card__foot { color: var(--red); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
 
-/* ───────────── case chapters ───────────── */
-.case__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: var(--group) var(--col); align-items: start; }
-.case__meta { position: sticky; top: calc(var(--hud-h) + var(--s4)); padding-top: var(--s1); }
+/* ───────────── case chapters — single-column editorial ─────────────
+   One centred column per chapter: kicker, headline, a compact meta line, then the body.
+   The side rail and the ghost numerals are gone; the meta dl collapses to one wrapped line. */
+.case__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
+.case__meta { position: static; }
 .case__grid + .case__grid { margin-top: var(--section); }
 .case__body { display: grid; gap: var(--group); }
+
+/* the meta dl as one compact line: "CLIENT — value · ROLE — value · …" (works for the about chapter too) */
+.case__meta .meta, .about__side .meta { display: flex; flex-wrap: wrap; gap: .55rem 2.5rem; }
+.case__meta .meta div, .about__side .meta div { display: flex; gap: .6rem; border-top: 0; padding-top: 0; }
+.case__meta .meta dt, .about__side .meta dt { min-width: auto; }
+.case__meta .meta dd, .about__side .meta dd { padding-right: 0; }
 
 /* the WWC roster — ten players, numbered */
 .players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 48rem; }
@@ -602,8 +604,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .epilogue__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
-  .about__grid, .case__grid { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
-  .case__meta { position: static; }
+  .about__grid, .case__grid { gap: var(--s5); }
   .hud__chapter { display: none; }
   .hud__bar .hud__name .mono { display: none; }
   .hud__bar .hud__name .serif-i { font-size: 1.3rem; }
@@ -643,7 +644,6 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .redpen__row { grid-template-columns: 1fr; }
   .redpen__btn { justify-self: start; }
   .card { transform: none; }
-  .chapter__num { font-size: 9rem; }
   .hud__bar .hud__btn { padding: 0 .8rem; }
 }
 
@@ -894,7 +894,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 01 · ABOUT ───────────────────────── -->
 <section class="chapter about" id="ch1" data-theme="paper" data-chapter="01 · The brief before the brief">
-  <span class="chapter__num serif-i" aria-hidden="true">01</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 01 <span class="kicker__sep">/</span> The brief before the brief</p>
     <h2 class="display" data-split>Hi. I’m Abhijeet. Before I write a word, <em>I read a few thousand.</em></h2>
@@ -929,7 +928,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 02 · ICC ───────────────────────── -->
 <section class="chapter case" id="ch2" data-theme="ink" data-chapter="02 · ICC Champions Trophy 2025">
-  <span class="chapter__num serif-i" aria-hidden="true">02</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 02 <span class="kicker__sep">/</span> ICC Men’s Champions Trophy 2025 · Zoo Media · Campaign</p>
     <h2 class="display" data-split>The format was dying. <em>So we put everything on the line.</em></h2>
@@ -971,7 +969,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 03 · SURF EXCEL ───────────────────────── -->
 <section class="chapter case" id="ch3" data-theme="sand" data-chapter="03 · Surf Excel">
-  <span class="chapter__num serif-i" aria-hidden="true">03</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 03 <span class="kicker__sep">/</span> Surf Excel × Zoo Media · Social strategy pitch · 2025</p>
     <h2 class="display" data-split>Nobody wants to be sold detergent <em>while they’re scrolling.</em></h2>
@@ -1012,7 +1009,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 04 · GOBOULT ───────────────────────── -->
 <section class="chapter case" id="ch4" data-theme="graphite" data-chapter="04 · GoBoult">
-  <span class="chapter__num serif-i" aria-hidden="true">04</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 04 <span class="kicker__sep">/</span> GoBoult × Zoo Media · Rebrand pitch · September 2025</p>
     <h2 class="display" data-split>People bought Boult. <em>They never believed in it.</em></h2>
@@ -1058,7 +1054,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 05 · DHL ───────────────────────── -->
 <section class="chapter case" id="ch5" data-theme="paper" data-chapter="05 · DHL × Mumbai Indians">
-  <span class="chapter__num serif-i" aria-hidden="true">05</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · IPL 2025 · Case film for the Clio Awards</p>
     <h2 class="display" data-split>While other brands shouted, <em>DHL had a conversation.</em></h2>
@@ -1102,7 +1097,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 06 · ICC WOMEN'S WORLD CUP ───────────────────────── -->
 <section class="chapter case" id="ch6" data-theme="ink" data-chapter="06 · ICC Women's World Cup">
-  <span class="chapter__num serif-i" aria-hidden="true">06</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 06 <span class="kicker__sep">/</span> ICC Women’s World Cup 2025 · Zoo Media · Player stories</p>
     <h2 class="display" data-split>Ten players, one tournament — <em>and ten different scripts.</em></h2>
@@ -1136,7 +1130,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 07 · THE HOOK LAB ───────────────────────── -->
 <section class="chapter case" id="ch7" data-theme="graphite" data-chapter="07 · The hook lab">
-  <span class="chapter__num serif-i" aria-hidden="true">07</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 07 <span class="kicker__sep">/</span> Short‑form scripts · six‑ and seven‑figure creators · 2025</p>
     <h2 class="display" data-split>The first line isn’t the intro. <em>It’s the whole reel.</em></h2>
@@ -1196,7 +1189,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 08 · THE REST OF THE DESK ───────────────────────── -->
 <section class="chapter case desk" id="ch8" data-theme="sand" data-chapter="08 · The rest of the desk">
-  <span class="chapter__num serif-i" aria-hidden="true">08</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 08 <span class="kicker__sep">/</span> Bajaj Electricals · Always‑on social · 2025–26 — and the side quests</p>
     <h2 class="display" data-split>912 minutes singing in the shower. <em>Yes, we counted.</em></h2>
@@ -1264,7 +1256,6 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 09 · HOW I WORK ───────────────────────── -->
 <section class="chapter process" id="ch9" data-theme="paper" data-chapter="09 · How I work">
-  <span class="chapter__num serif-i" aria-hidden="true">09</span>
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 09 <span class="kicker__sep">/</span> How I work</p>
     <h2 class="display" data-split>The method is research. <em>The output is a line.</em></h2>
