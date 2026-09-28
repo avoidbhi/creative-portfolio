@@ -1,0 +1,62 @@
+/* ───────────── home sections — card grids with a "See all" (from the Suite template) ─────────────
+   The page stays one black surface; the cards are the new furniture: rounded, hairline-bordered,
+   a touch of lift on hover. Everything else — kicker, display, mono — is the system's own. */
+
+/* section head: heading left, a pill "See all" right */
+.work__head, .notes__head { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--col); align-items: end; }
+.work__all, .notes__all {
+  display: inline-block; padding: .62rem 1.15rem; border: 1px solid var(--line); border-radius: 999px;
+  color: var(--muted); text-decoration: none; white-space: nowrap;
+  transition: color .3s, border-color .3s, transform .35s var(--ease-out);
+}
+.work__all:hover, .notes__all:hover { color: var(--paper); border-color: rgba(var(--fg-rgb), .55); transform: translateY(-1px); }
+
+/* 0a · selected work — six briefs, one click each */
+.work__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
+.work__card {
+  display: block; color: inherit; text-decoration: none;
+  border: 1px solid var(--line); border-radius: 1rem; background: rgba(var(--fg-rgb), .035); overflow: hidden;
+  transition: border-color .35s, transform .5s var(--ease-out);
+}
+.work__card:hover { border-color: rgba(var(--fg-rgb), .5); transform: translateY(-3px); }
+.work__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+.work__img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scale(1.015); transition: transform 1.2s var(--ease-out);
+}
+.work__card:hover .work__img img { transform: scale(1.055); }
+.work__body { display: grid; gap: .5rem; padding: 1.1rem 1.2rem 1.3rem; }
+.work__cat { color: var(--muted); }
+.work__title { font-family: var(--font-serif); font-size: clamp(1.3rem, 1.9vw, 1.6rem); line-height: 1.18; letter-spacing: -.01em; }
+.work__cta { color: rgba(var(--fg-rgb), .55); margin-top: .3rem; }
+.work__card:hover .work__cta { color: var(--red); }
+.work__arrow { display: inline-block; transition: transform .45s var(--ease-out); }
+.work__card:hover .work__arrow { transform: translateX(.35em); }
+
+/* 0b · notes — the hook lab, four opening lines */
+.notes__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+.note__card {
+  display: grid; gap: .9rem; align-content: start; min-height: 15rem;
+  border: 1px solid var(--line); border-radius: 1rem; background: rgba(var(--fg-rgb), .035);
+  padding: 1.3rem 1.3rem 1.4rem; transition: border-color .35s, transform .5s var(--ease-out);
+}
+.note__card:hover { border-color: rgba(var(--fg-rgb), .5); transform: translateY(-3px); }
+.note__tag { color: var(--muted); }
+.note__line { font-family: var(--font-serif); font-size: clamp(1.3rem, 1.8vw, 1.55rem); line-height: 1.22; letter-spacing: -.01em; }
+.note__foot { color: rgba(var(--fg-rgb), .5); margin-top: auto; padding-top: .7rem; border-top: 1px solid var(--line); }
+
+/* stay updated — one rounded card, one honest promise */
+.ping__card {
+  display: grid; gap: var(--s5); justify-items: start;
+  border: 1px solid var(--line); border-radius: 1.4rem; background: rgba(var(--fg-rgb), .035);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4.5vw, 4rem);
+}
+.ping__title { margin-top: .4rem; max-width: 24ch; }
+.ping__body { max-width: 54ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; color: rgba(var(--fg-rgb), .8); }
+.ping__btn {
+  display: inline-grid; place-items: center; height: 2.9rem; padding: 0 1.6rem; margin-top: .4rem;
+  border-radius: 999px; background: var(--red); color: var(--white); text-decoration: none;
+  transition: transform .25s var(--ease-out), background-color .25s, color .25s;
+}
+.ping__btn:hover { background: var(--paper); color: var(--ink); }
+.ping__btn:active { transform: scale(.97); }

@@ -437,6 +437,68 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .side__big { font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 1.8rem); line-height: 1.12; letter-spacing: -.01em; }
 .side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
 .side__tag { color: var(--muted); }
+/* ───────────── home sections — card grids with a "See all" (from the Suite template) ─────────────
+   The page stays one black surface; the cards are the new furniture: rounded, hairline-bordered,
+   a touch of lift on hover. Everything else — kicker, display, mono — is the system's own. */
+
+/* section head: heading left, a pill "See all" right */
+.work__head, .notes__head { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--col); align-items: end; }
+.work__all, .notes__all {
+  display: inline-block; padding: .62rem 1.15rem; border: 1px solid var(--line); border-radius: 999px;
+  color: var(--muted); text-decoration: none; white-space: nowrap;
+  transition: color .3s, border-color .3s, transform .35s var(--ease-out);
+}
+.work__all:hover, .notes__all:hover { color: var(--paper); border-color: rgba(var(--fg-rgb), .55); transform: translateY(-1px); }
+
+/* 0a · selected work — six briefs, one click each */
+.work__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
+.work__card {
+  display: block; color: inherit; text-decoration: none;
+  border: 1px solid var(--line); border-radius: 1rem; background: rgba(var(--fg-rgb), .035); overflow: hidden;
+  transition: border-color .35s, transform .5s var(--ease-out);
+}
+.work__card:hover { border-color: rgba(var(--fg-rgb), .5); transform: translateY(-3px); }
+.work__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+.work__img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scale(1.015); transition: transform 1.2s var(--ease-out);
+}
+.work__card:hover .work__img img { transform: scale(1.055); }
+.work__body { display: grid; gap: .5rem; padding: 1.1rem 1.2rem 1.3rem; }
+.work__cat { color: var(--muted); }
+.work__title { font-family: var(--font-serif); font-size: clamp(1.3rem, 1.9vw, 1.6rem); line-height: 1.18; letter-spacing: -.01em; }
+.work__cta { color: rgba(var(--fg-rgb), .55); margin-top: .3rem; }
+.work__card:hover .work__cta { color: var(--red); }
+.work__arrow { display: inline-block; transition: transform .45s var(--ease-out); }
+.work__card:hover .work__arrow { transform: translateX(.35em); }
+
+/* 0b · notes — the hook lab, four opening lines */
+.notes__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+.note__card {
+  display: grid; gap: .9rem; align-content: start; min-height: 15rem;
+  border: 1px solid var(--line); border-radius: 1rem; background: rgba(var(--fg-rgb), .035);
+  padding: 1.3rem 1.3rem 1.4rem; transition: border-color .35s, transform .5s var(--ease-out);
+}
+.note__card:hover { border-color: rgba(var(--fg-rgb), .5); transform: translateY(-3px); }
+.note__tag { color: var(--muted); }
+.note__line { font-family: var(--font-serif); font-size: clamp(1.3rem, 1.8vw, 1.55rem); line-height: 1.22; letter-spacing: -.01em; }
+.note__foot { color: rgba(var(--fg-rgb), .5); margin-top: auto; padding-top: .7rem; border-top: 1px solid var(--line); }
+
+/* stay updated — one rounded card, one honest promise */
+.ping__card {
+  display: grid; gap: var(--s5); justify-items: start;
+  border: 1px solid var(--line); border-radius: 1.4rem; background: rgba(var(--fg-rgb), .035);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4.5vw, 4rem);
+}
+.ping__title { margin-top: .4rem; max-width: 24ch; }
+.ping__body { max-width: 54ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; color: rgba(var(--fg-rgb), .8); }
+.ping__btn {
+  display: inline-grid; place-items: center; height: 2.9rem; padding: 0 1.6rem; margin-top: .4rem;
+  border-radius: 999px; background: var(--red); color: var(--white); text-decoration: none;
+  transition: transform .25s var(--ease-out), background-color .25s, color .25s;
+}
+.ping__btn:hover { background: var(--paper); color: var(--ink); }
+.ping__btn:active { transform: scale(.97); }
 /* ───────────── 00 · the orbit — the opening screen ─────────────
    Every slide, static, script and film on two counter-turning rings.
    Default markup = headline + captioned grid (no JS, GSAP blocked,
@@ -608,6 +670,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .results--proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .epilogue__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .work__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .notes__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
   .about__grid, .case__grid { gap: var(--s5); }
@@ -631,6 +695,10 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 @media (max-width: 600px) {
   .results { grid-template-columns: 1fr; }
   .results--proof, .side__list { grid-template-columns: 1fr; }
+  .work__grid, .notes__grid { grid-template-columns: 1fr; }
+  .work__head, .notes__head { grid-template-columns: 1fr; }
+  .work__all, .notes__all { justify-self: start; }
+  .note__card { min-height: 0; }
   .stage.is-3d .stage__hud { bottom: 7.4rem; }
   .hud__bar { width: min(calc(100vw - 1.5rem), 34rem); padding: .35rem .35rem .35rem .9rem; }
   .stage.is-3d .stage__title { top: 7.4rem; transform: translateX(-50%); width: 92vw; font-size: 1.75rem; text-align: center; }  .stage.is-3d .stage__foot { grid-template-columns: 1fr; gap: var(--s2); bottom: 4.1rem; }
@@ -703,6 +771,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     <p class="mono index__label">Index — one orbit, eight chapters, one red pen</p>
     <ol class="index__list">
       <li><a href="#orbit" data-index-link><span class="mono">00</span><span class="index__title">The orbit</span><span class="mono index__meta">32 pieces of work · scatter / grid / orbit</span></a></li>
+      <li><a href="#work" data-index-link><span class="mono">0a</span><span class="index__title">Selected work</span><span class="mono index__meta">Six briefs · one click</span></a></li>
+      <li><a href="#notes" data-index-link><span class="mono">0b</span><span class="index__title">Notes — the hook lab</span><span class="mono index__meta">Four lines that open reels</span></a></li>
       <li><a href="#ch1" data-index-link><span class="mono">01</span><span class="index__title">The brief before the brief</span><span class="mono index__meta">About</span></a></li>
       <li><a href="#ch2" data-index-link><span class="mono">02</span><span class="index__title">ICC Champions Trophy</span><span class="mono index__meta">All on the Line · 2025</span></a></li>
       <li><a href="#ch3" data-index-link><span class="mono">03</span><span class="index__title">Surf Excel</span><span class="mono index__meta">Cleanliness Paglus · 2025</span></a></li>
@@ -776,6 +846,112 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     <p class="stage__line" data-stage-line aria-live="polite"><span class="stage__k" data-stage-k>32 pieces of work, 2025–26</span><span class="stage__q serif-i" data-stage-q></span><a class="stage__more" data-stage-more href="#ch1" hidden>Read the chapter ↓</a></p>
     <p class="stage__links"><a href="mailto:abhi.insider@gmail.com" data-cursor="write">Email</a><a href="tel:+919930915975" data-cursor="call">Call</a><a href="#ch1">About</a></p>
   </div>
+</section>
+
+<!-- ───────────────────────── 0a · SELECTED WORK — six briefs, one click each ───────────────────────── -->
+<section class="chapter work" id="work" data-theme="ink" data-chapter="0a · Selected work" aria-label="Selected work — six briefs, one click each">
+  <div class="chapter__head work__head" data-depth>
+    <div>
+      <p class="kicker mono" data-reveal>0a <span class="kicker__sep">/</span> Selected work</p>
+      <h2 class="display" data-split>Six briefs. <em>One click each.</em></h2>
+    </div>
+    <a class="work__all mono" href="#orbit" data-reveal>See all — 32 in the orbit ↑</a>
+  </div>
+  <ul class="work__grid">
+    <li data-reveal>
+      <a class="work__card" href="#ch3" data-cursor="open">
+        <span class="work__img"><img src="assets/work/plates/surf-24-paglus.webp" alt="Surf Excel pitch slide: We are Cleanliness Paglus." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
+        <span class="work__body">
+          <span class="mono work__cat">Social identity · 2025</span>
+          <span class="work__title">Surf Excel — “We are Cleanliness Paglus.”</span>
+          <span class="mono work__cta">View project <span class="work__arrow" aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+    <li data-reveal style="--d:.06s">
+      <a class="work__card" href="#ch4" data-cursor="open">
+        <span class="work__img"><img src="assets/work/plates/boult-25-mouth.webp" alt="GoBoult pitch slide: LESSSGOOO written on a mouth, the logo below." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
+        <span class="work__body">
+          <span class="mono work__cat">Rebrand · 2025</span>
+          <span class="work__title">GoBoult — “Lesssgooo!!”</span>
+          <span class="mono work__cta">View project <span class="work__arrow" aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+    <li data-reveal style="--d:.12s">
+      <a class="work__card" href="#ch8" data-cursor="open">
+        <span class="work__img"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower." width="720" height="900" loading="lazy" decoding="async" draggable="false"></span>
+        <span class="work__body">
+          <span class="mono work__cat">Always-on · 2025–26</span>
+          <span class="work__title">Bajaj Electricals — “Your Wrapped 2025 is incomplete.”</span>
+          <span class="mono work__cta">View project <span class="work__arrow" aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+    <li data-reveal style="--d:.18s">
+      <a class="work__card" href="#ch7" data-cursor="open">
+        <span class="work__img"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: 15 reel scripts for a real-estate creator." width="761" height="1075" loading="lazy" decoding="async" draggable="false"></span>
+        <span class="work__body">
+          <span class="mono work__cat">Short form · 2025</span>
+          <span class="work__title">The hook lab — 15 reels, four creators.</span>
+          <span class="mono work__cta">View project <span class="work__arrow" aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+    <li data-reveal style="--d:.24s">
+      <a class="work__card" href="#side" data-cursor="open">
+        <span class="work__img"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir." width="899" height="518" loading="lazy" decoding="async" draggable="false"></span>
+        <span class="work__body">
+          <span class="mono work__cat">Spec · web · 2025</span>
+          <span class="work__title">Vanilla Noir — “The Forbidden Orchid Elixir.”</span>
+          <span class="mono work__cta">View project <span class="work__arrow" aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+    <li data-reveal style="--d:.3s">
+      <a class="work__card" href="#side" data-cursor="open">
+        <span class="work__img"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"></span>
+        <span class="work__body">
+          <span class="mono work__cat">Founder email · 2025</span>
+          <span class="work__title">Luna by Khush — “Ignited by a glow from within.”</span>
+          <span class="mono work__cta">View project <span class="work__arrow" aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+  </ul>
+</section>
+
+<!-- ───────────────────────── 0b · NOTES — the hook lab, four opening lines ───────────────────────── -->
+<section class="chapter notes" id="notes" data-theme="ink" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
+  <div class="chapter__head notes__head" data-depth>
+    <div>
+      <p class="kicker mono" data-reveal>0b <span class="kicker__sep">/</span> Notes — from the hook lab</p>
+      <h2 class="display" data-split>The lines that <em>stop the scroll.</em></h2>
+    </div>
+    <a class="notes__all mono" href="#ch7" data-reveal>See all — chapter 07 ↓</a>
+  </div>
+  <ul class="notes__grid">
+    <li class="note__card" data-reveal>
+      <span class="mono note__tag">Hook · real estate</span>
+      <p class="note__line">“Do not give your house to your kids.”</p>
+      <span class="mono note__foot">0–3 s · the fear, then the fix</span>
+    </li>
+    <li class="note__card" data-reveal style="--d:.08s">
+      <span class="mono note__tag">Hook · careers</span>
+      <p class="note__line">“The interview question 90% of people know — and always answer wrong.”</p>
+      <span class="mono note__foot">one question · three reframes</span>
+    </li>
+    <li class="note__card" data-reveal style="--d:.16s">
+      <span class="mono note__tag">Hook · personal finance</span>
+      <p class="note__line">“Is ₹1 lakh enough for an emergency fund?”</p>
+      <span class="mono note__foot">the number, before the advice</span>
+    </li>
+    <li class="note__card" data-reveal style="--d:.24s">
+      <span class="mono note__tag">Hook · fitness</span>
+      <p class="note__line">“This is a 2.5 kg dumbbell. Here’s what everyone, including me, was doing wrong.”</p>
+      <span class="mono note__foot">the mistake, admitted first</span>
+    </li>
+  </ul>
 </section>
 
 <!-- ───────────────────────── CHAPTER 01 · ABOUT ───────────────────────── -->
@@ -1181,6 +1357,16 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   </div>
 </section>
 
+<!-- ───────────────────────── STAY UPDATED — one card, one honest promise ───────────────────────── -->
+<section class="chapter ping" id="ping" data-theme="ink" data-chapter="Stay updated" aria-label="Stay updated — get a note when new work ships">
+  <div class="ping__card" data-reveal>
+    <p class="kicker mono">Stay updated</p>
+    <h2 class="display ping__title" data-split>New work drops as it ships. <em>Get the note first.</em></h2>
+    <p class="ping__body">No machine behind it. When a campaign, film or teardown leaves the desk, you’ll get one short note — and that’s the whole list.</p>
+    <a class="ping__btn" href="mailto:abhi.insider@gmail.com?subject=Keep%20me%20posted" data-cursor="write"><span class="mono">Keep me posted →</span></a>
+  </div>
+</section>
+
 </main>
 
 <!-- ───────────────────────── EPILOGUE / FOOTER (reveals from beneath) ───────────────────────── -->
@@ -1216,6 +1402,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
       </div>
       <div>
         <p class="mono">Set in Instrument Serif &amp; Sans</p>
+        <p class="mono">Stack — Docs · Grammarly · Figma · Notion · Loom</p>
         <p class="mono">Agency work shown with Zoo Media, 2024–26</p>
       </div>
       <div>
