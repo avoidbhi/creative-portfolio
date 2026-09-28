@@ -2366,16 +2366,20 @@ html.tp-open { overflow: hidden; }
     S.layoutProgress = progress;
   }
 
-  /* ── the idle tour: orbit → scatter → grid → orbit once, only while nobody is looking closely ── */
-  const TOUR = ['scatter', 'grid', 'orbit']; let tourI = 0;
+  /* ── the standing opening: orbit → grid → scatter → orbit, on the loop —
+     10 s in orbit, 5 s in grid, 5 s in scatter. The site always opens on orbit (laptop and
+     phone alike). It pauses while nobody is looking closely (hover, drag, focus, hidden tab,
+     scrolled away, mid-fling) and any direct interaction still switches it off, as before. ── */
+  const TOUR = ['grid', 'scatter', 'orbit']; let tourI = 0;
+  const TOUR_DWELL = [10, 5, 5];                                              // seconds in the mode the tour is sitting in: orbit, grid, scatter
   function tourStep(dt) {
     if (!tour) return;
     if (S.hold || S.hovered >= 0 || S.focused >= 0 || S.dragging || document.hidden || S.scrollProgress > 0.25 || Math.abs(S.scrollVelocity) > 80) { S.idle = 0; return; }
     S.idle += dt;
-    if (S.idle < (tourI === 0 ? 12 : 6)) return;
+    if (S.idle < TOUR_DWELL[tourI]) return;
     S.idle = 0;
     setMode(TOUR[tourI]);
-    if (++tourI >= TOUR.length) tour = false;
+    tourI = (tourI + 1) % TOUR.length;                                        // loops: orbit → grid → scatter → orbit …
   }
 
   /* ── visibility: the stage in view → active (films resume), out of view → idle ── */
@@ -2408,7 +2412,6 @@ html.tp-open { overflow: hidden; }
   say(KLINE.orbit, '', null);
   title.style.opacity = '0';
   measure();
-  if (mobile) { tour = false; setMode('scatter'); }                                   // on a phone the rings pack 32 cards to < 50 px — the drum is the phone's arrangement; Orbit stays one tap away
   cards.forEach((c, i) => { poseRing(i, cur[i]); cur[i].z = -1600; cur[i].o = 0; cur[i].s *= 0.6; c.style.opacity = '0'; });
   const start = () => {
     measure();
