@@ -45,10 +45,10 @@
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 0.8, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,
     SPLAT_RADIUS: 0.25, SPLAT_FORCE: 3000,
-    BRIGHTNESS: 0.12, COLOR_UPDATE_SPEED: 10,                     // hue cycles 10×/s; .15 is the reference's neon, .12 keeps the type first
+    BRIGHTNESS: 0.08, COLOR_UPDATE_SPEED: 10,                     // one grey tone, a whisper under the type (was 0.12, full spectrum)
     SHADING: true,
-    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.65, BLOOM_THRESHOLD: 0.6, BLOOM_SOFT_KNEE: 0.7,
-    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 1.0,
+    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.35, BLOOM_THRESHOLD: 0.25, BLOOM_SOFT_KNEE: 0.7,   // only the opening burst reaches the glow, softly
+    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 0.4,
     IMMEDIATE: true, SLEEP_AFTER: 4, MAX_DPR: 1, GUARD: true,        // MAX_DPR 1: the dye is a 512 px texture — extra display pixels add cost, not detail
   }, window.AK_FLUID_CONFIG || {});
 
@@ -279,11 +279,7 @@
   /* ───────────── pointers: window-level, passive — the canvas is never in the hit-test ───────────── */
   const pointers = new Map();
   let splatStack = [], colorTimer = 0, lastInput = -1e9, awake = false;
-  const HSVtoRGB = (h, s, v) => {
-    const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
-    switch (i % 6) { case 0: return [v, t, p]; case 1: return [q, v, p]; case 2: return [p, v, t]; case 3: return [p, q, v]; case 4: return [t, p, v]; default: return [v, p, q]; }
-  };
-  const generateColor = () => HSVtoRGB(Math.random(), 1, 1).map((c) => c * C.BRIGHTNESS);
+  const generateColor = () => { const g = C.BRIGHTNESS; return [g, g, g]; };   // monochrome: one tone, no hue roll (the old neon rainbow)
   const aspect = () => canvas.width / canvas.height;
   const correctDeltaX = (d) => (aspect() < 1 ? d * aspect() : d);
   const correctDeltaY = (d) => (aspect() > 1 ? d / aspect() : d);
@@ -325,7 +321,7 @@
   }
   function multipleSplats(amount) {
     for (let i = 0; i < amount; i++) {
-      const c = generateColor().map((v) => v * 5);                // the opening burst: brighter than a trail, gone in ~3 s (the reference uses 10× — too much under the orbit)
+      const c = generateColor().map((v) => v * 3.5);             // the opening burst: brighter than a trail, gone in ~3 s — a grey pulse, not a flash
       splat(Math.random(), Math.random(), 1000 * (Math.random() - 0.5), 1000 * (Math.random() - 0.5), c);
     }
   }

@@ -80,7 +80,7 @@
   const captions = cards.map((c) => ($('figcaption', c) || {}).textContent || '');
   const kinds = cards.map((c) => c.dataset.k || '');
   const hrefs = cards.map((c) => c.dataset.href || '#ch1');
-  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: '34 pieces of work, 2025–26' };
+  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: lineK ? lineK.textContent.trim() : '32 pieces of work, 2025–26' };   // the count lives in the markup, once
   const order = cards.map((_, i) => (i * 7) % n);                       // stable pseudo-random stagger order
 
   /* ── sceneState — the single source of truth ── */
@@ -110,8 +110,11 @@
        caption band), so the top band is just breathing room and the bottom band is measured from the
        mode row down. In the stacked (≤600px) layout the headline sits above the rings and reserves its own height. */
     const band = stacked ? 118 : 108;                                                          // the caption band, as before
-    const hudTop = hud ? hud.getBoundingClientRect().top - stage.getBoundingClientRect().top : H - band;
-    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : 20;
+    const rectTop = stage.getBoundingClientRect().top;
+    const hudTop = hud ? hud.getBoundingClientRect().top - rectTop : H - band;
+    const bar = $('.hud__bar');                                                                 // the fixed glass nav pill: the ring's top pass must clear it, not duck under it
+    const barBottom = bar ? bar.getBoundingClientRect().bottom - rectTop : 0;
+    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : Math.max(20, barBottom + 14);
     const below = Math.max(band, H - hudTop + 12);                                             // everything the mode row + foot occupy
     CY = above + (H - above - below) / 2;                                 // the scene's centre, in stage px
     roomTop = above - CY; roomBottom = H - below - CY;                    // the room, relative to that centre
@@ -131,7 +134,7 @@
     if (!r.width || !r.height) return;
     const half = Math.hypot(r.width, r.height) / 2;                        // the farthest glyph from the centre, at scale 1
     const hole = ring.inner - 8;                                           // ring.inner already keeps 6 px from the innermost card edge
-    const fit = clamp(hole / half, 0.55, 1);
+    const fit = clamp(hole / half, 0.42, 1);                       // short 16:9 windows: the headline shrinks to clear the hole instead of over the cards
     if (fit < 0.995) stage.style.setProperty('--title-fit', fit.toFixed(3));
   }
   const sumW = (idx) => idx.reduce((a, i) => a + cw[i], 0);
@@ -344,7 +347,7 @@
     if (more) { more.hidden = !href; if (href) more.setAttribute('href', href); }
     document.dispatchEvent(new Event('cursor:refresh'));
   };
-  const titleWanted = () => (S.mode === 'orbit' && S.focused < 0 ? 1 : 0);   // the headline lives in the still centre of the rings only
+  const titleWanted = () => ((stacked || S.mode === 'orbit') && S.focused < 0 ? 1 : 0);   // in the hole of the rings only — on phones it sits above them, so it stays up
 
   /* ── mode changes: the same cards travel to the next arrangement ── */
   let lead = -1;
@@ -611,6 +614,7 @@
   say(KLINE.orbit, '', null);
   title.style.opacity = '0';
   measure();
+  if (mobile) { tour = false; setMode('scatter'); }                                   // on a phone the rings pack 32 cards to < 50 px — the drum is the phone's arrangement; Orbit stays one tap away
   cards.forEach((c, i) => { poseRing(i, cur[i]); cur[i].z = -1600; cur[i].o = 0; cur[i].s *= 0.6; c.style.opacity = '0'; });
   const start = () => {
     measure();

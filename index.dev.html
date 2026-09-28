@@ -1194,7 +1194,7 @@ html.tp-open { overflow: hidden; }
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 07 · THE REST OF THE DESK ───────────────────────── -->
+<!-- ───────────────────────── CHAPTER 08 · THE REST OF THE DESK ───────────────────────── -->
 <section class="chapter case desk" id="ch8" data-theme="sand" data-chapter="08 · The rest of the desk">
   <span class="chapter__num serif-i" aria-hidden="true">08</span>
   <div class="chapter__head" data-depth>
@@ -1211,6 +1211,7 @@ html.tp-open { overflow: hidden; }
       </dl>
     </aside>
     <div class="case__body">
+      <p class="prose" data-reveal>Bajaj’s feed has no off-season — festive statics, product posts, a five-part Wrapped series and three films, all in the same kitchen-table voice.</p>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="bajaj-wrapped-2">Ten statics and two films are in the orbit <span aria-hidden="true">↑</span></a></p>
       <div class="side" id="side">
         <p class="kicker mono" data-reveal>Side quests <span class="kicker__sep">/</span> long‑form, web &amp; email</p>
@@ -1261,7 +1262,7 @@ html.tp-open { overflow: hidden; }
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 08 · HOW I WORK ───────────────────────── -->
+<!-- ───────────────────────── CHAPTER 09 · HOW I WORK ───────────────────────── -->
 <section class="chapter process" id="ch9" data-theme="paper" data-chapter="09 · How I work">
   <span class="chapter__num serif-i" aria-hidden="true">09</span>
   <div class="chapter__head" data-depth>
@@ -1882,7 +1883,7 @@ html.tp-open { overflow: hidden; }
   const captions = cards.map((c) => ($('figcaption', c) || {}).textContent || '');
   const kinds = cards.map((c) => c.dataset.k || '');
   const hrefs = cards.map((c) => c.dataset.href || '#ch1');
-  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: '34 pieces of work, 2025–26' };
+  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: lineK ? lineK.textContent.trim() : '32 pieces of work, 2025–26' };   // the count lives in the markup, once
   const order = cards.map((_, i) => (i * 7) % n);                       // stable pseudo-random stagger order
 
   /* ── sceneState — the single source of truth ── */
@@ -1912,8 +1913,11 @@ html.tp-open { overflow: hidden; }
        caption band), so the top band is just breathing room and the bottom band is measured from the
        mode row down. In the stacked (≤600px) layout the headline sits above the rings and reserves its own height. */
     const band = stacked ? 118 : 108;                                                          // the caption band, as before
-    const hudTop = hud ? hud.getBoundingClientRect().top - stage.getBoundingClientRect().top : H - band;
-    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : 20;
+    const rectTop = stage.getBoundingClientRect().top;
+    const hudTop = hud ? hud.getBoundingClientRect().top - rectTop : H - band;
+    const bar = $('.hud__bar');                                                                 // the fixed glass nav pill: the ring's top pass must clear it, not duck under it
+    const barBottom = bar ? bar.getBoundingClientRect().bottom - rectTop : 0;
+    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : Math.max(20, barBottom + 14);
     const below = Math.max(band, H - hudTop + 12);                                             // everything the mode row + foot occupy
     CY = above + (H - above - below) / 2;                                 // the scene's centre, in stage px
     roomTop = above - CY; roomBottom = H - below - CY;                    // the room, relative to that centre
@@ -1933,7 +1937,7 @@ html.tp-open { overflow: hidden; }
     if (!r.width || !r.height) return;
     const half = Math.hypot(r.width, r.height) / 2;                        // the farthest glyph from the centre, at scale 1
     const hole = ring.inner - 8;                                           // ring.inner already keeps 6 px from the innermost card edge
-    const fit = clamp(hole / half, 0.55, 1);
+    const fit = clamp(hole / half, 0.42, 1);                       // short 16:9 windows: the headline shrinks to clear the hole instead of over the cards
     if (fit < 0.995) stage.style.setProperty('--title-fit', fit.toFixed(3));
   }
   const sumW = (idx) => idx.reduce((a, i) => a + cw[i], 0);
@@ -2146,7 +2150,7 @@ html.tp-open { overflow: hidden; }
     if (more) { more.hidden = !href; if (href) more.setAttribute('href', href); }
     document.dispatchEvent(new Event('cursor:refresh'));
   };
-  const titleWanted = () => (S.mode === 'orbit' && S.focused < 0 ? 1 : 0);   // the headline lives in the still centre of the rings only
+  const titleWanted = () => ((stacked || S.mode === 'orbit') && S.focused < 0 ? 1 : 0);   // in the hole of the rings only — on phones it sits above them, so it stays up
 
   /* ── mode changes: the same cards travel to the next arrangement ── */
   let lead = -1;
@@ -2413,6 +2417,7 @@ html.tp-open { overflow: hidden; }
   say(KLINE.orbit, '', null);
   title.style.opacity = '0';
   measure();
+  if (mobile) { tour = false; setMode('scatter'); }                                   // on a phone the rings pack 32 cards to < 50 px — the drum is the phone's arrangement; Orbit stays one tap away
   cards.forEach((c, i) => { poseRing(i, cur[i]); cur[i].z = -1600; cur[i].o = 0; cur[i].s *= 0.6; c.style.opacity = '0'; });
   const start = () => {
     measure();
@@ -2490,10 +2495,10 @@ html.tp-open { overflow: hidden; }
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 0.8, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,
     SPLAT_RADIUS: 0.25, SPLAT_FORCE: 3000,
-    BRIGHTNESS: 0.12, COLOR_UPDATE_SPEED: 10,                     // hue cycles 10×/s; .15 is the reference's neon, .12 keeps the type first
+    BRIGHTNESS: 0.08, COLOR_UPDATE_SPEED: 10,                     // one grey tone, a whisper under the type (was 0.12, full spectrum)
     SHADING: true,
-    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.65, BLOOM_THRESHOLD: 0.6, BLOOM_SOFT_KNEE: 0.7,
-    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 1.0,
+    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.35, BLOOM_THRESHOLD: 0.25, BLOOM_SOFT_KNEE: 0.7,   // only the opening burst reaches the glow, softly
+    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 0.4,
     IMMEDIATE: true, SLEEP_AFTER: 4, MAX_DPR: 1, GUARD: true,        // MAX_DPR 1: the dye is a 512 px texture — extra display pixels add cost, not detail
   }, window.AK_FLUID_CONFIG || {});
 
@@ -2724,11 +2729,7 @@ html.tp-open { overflow: hidden; }
   /* ───────────── pointers: window-level, passive — the canvas is never in the hit-test ───────────── */
   const pointers = new Map();
   let splatStack = [], colorTimer = 0, lastInput = -1e9, awake = false;
-  const HSVtoRGB = (h, s, v) => {
-    const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
-    switch (i % 6) { case 0: return [v, t, p]; case 1: return [q, v, p]; case 2: return [p, v, t]; case 3: return [p, q, v]; case 4: return [t, p, v]; default: return [v, p, q]; }
-  };
-  const generateColor = () => HSVtoRGB(Math.random(), 1, 1).map((c) => c * C.BRIGHTNESS);
+  const generateColor = () => { const g = C.BRIGHTNESS; return [g, g, g]; };   // monochrome: one tone, no hue roll (the old neon rainbow)
   const aspect = () => canvas.width / canvas.height;
   const correctDeltaX = (d) => (aspect() < 1 ? d * aspect() : d);
   const correctDeltaY = (d) => (aspect() > 1 ? d / aspect() : d);
@@ -2770,7 +2771,7 @@ html.tp-open { overflow: hidden; }
   }
   function multipleSplats(amount) {
     for (let i = 0; i < amount; i++) {
-      const c = generateColor().map((v) => v * 5);                // the opening burst: brighter than a trail, gone in ~3 s (the reference uses 10× — too much under the orbit)
+      const c = generateColor().map((v) => v * 3.5);             // the opening burst: brighter than a trail, gone in ~3 s — a grey pulse, not a flash
       splat(Math.random(), Math.random(), 1000 * (Math.random() - 0.5), 1000 * (Math.random() - 0.5), c);
     }
   }
