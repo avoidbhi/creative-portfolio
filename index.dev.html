@@ -437,67 +437,92 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .side__big { font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 1.8rem); line-height: 1.12; letter-spacing: -.01em; }
 .side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
 .side__tag { color: var(--muted); }
-/* ───────────── home sections — card grids with a "See all" (from the Suite template) ─────────────
-   The page stays one black surface; the cards are the new furniture: rounded, hairline-bordered,
-   a touch of lift on hover. Everything else — kicker, display, mono — is the system's own. */
+/* ───────────── home sections — the Suite template's look, in the system's own hands ─────────────
+   The reference (Suite, Framer marketplace) is a white, image-first, card-led design: off-white
+   sections, near-black type, white rounded cards with soft shadows, one accent. We bring that
+   look in as a full-bleed paper band right under the orbit, so the page visibly carries the
+   template's design — the dark case-file world resumes at chapter 01. The orbit, the dark base
+   and the type system are untouched. */
 
-/* section head: heading left, a pill "See all" right */
-.work__head, .notes__head { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--col); align-items: end; }
-.work__all, .notes__all {
-  display: inline-block; padding: .62rem 1.15rem; border: 1px solid var(--line); border-radius: 999px;
-  color: var(--muted); text-decoration: none; white-space: nowrap;
-  transition: color .3s, border-color .3s, transform .35s var(--ease-out);
+/* the light band — full-bleed paper, content centred to the editorial column */
+.work, .notes {
+  max-width: none;
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 0;
+  padding-block: clamp(3.5rem, 6.5vw, 5.5rem);
 }
-.work__all:hover, .notes__all:hover { color: var(--paper); border-color: rgba(var(--fg-rgb), .55); transform: translateY(-1px); }
+.work > *, .notes > * { max-width: min(var(--max), 68rem); margin-inline: auto; }
+.notes { border-top: 1px solid rgba(0, 0, 0, .1); }
+
+/* type on paper */
+.work .kicker, .notes .kicker { color: rgba(0, 0, 0, .5); }
+.work .display, .notes .display { color: var(--ink); }
+.work .display em, .notes .display em { color: var(--red); }
+
+/* the "See all" pill — dark on paper, inverts on hover */
+.work__all, .notes__all {
+  display: inline-block; padding: .62rem 1.15rem; border: 1px solid rgba(0, 0, 0, .25); border-radius: 999px;
+  color: var(--ink); text-decoration: none; white-space: nowrap;
+  transition: background-color .3s, color .3s, border-color .3s, transform .35s var(--ease-out);
+}
+.work__all:hover, .notes__all:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); transform: translateY(-1px); }
 
 /* 0a · selected work — six briefs, one click each */
-.work__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
+.work__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
 .work__card {
   display: block; color: inherit; text-decoration: none;
-  border: 1px solid var(--line); border-radius: 1rem; background: rgba(var(--fg-rgb), .035); overflow: hidden;
-  transition: border-color .35s, transform .5s var(--ease-out);
+  background: var(--white); border: 1px solid rgba(0, 0, 0, .07); border-radius: 14px; overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 14px 34px -20px rgba(0, 0, 0, .2);
+  transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out);
 }
-.work__card:hover { border-color: rgba(var(--fg-rgb), .5); transform: translateY(-3px); }
-.work__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+.work__card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(0, 0, 0, .05), 0 26px 50px -22px rgba(0, 0, 0, .3); }
+.work__img { display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid rgba(0, 0, 0, .06); }
 .work__img img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   transform: scale(1.015); transition: transform 1.2s var(--ease-out);
 }
 .work__card:hover .work__img img { transform: scale(1.055); }
-.work__body { display: grid; gap: .5rem; padding: 1.1rem 1.2rem 1.3rem; }
-.work__cat { color: var(--muted); }
-.work__title { font-family: var(--font-serif); font-size: clamp(1.3rem, 1.9vw, 1.6rem); line-height: 1.18; letter-spacing: -.01em; }
-.work__cta { color: rgba(var(--fg-rgb), .55); margin-top: .3rem; }
+.work__body { display: grid; gap: .5rem; padding: 1.15rem 1.25rem 1.35rem; }
+.work__cat { color: rgba(0, 0, 0, .45); }
+.work__title { color: var(--ink); font-family: var(--font-serif); font-size: clamp(1.3rem, 1.9vw, 1.6rem); line-height: 1.18; letter-spacing: -.01em; }
+.work__cta { color: rgba(0, 0, 0, .5); margin-top: .3rem; }
 .work__card:hover .work__cta { color: var(--red); }
 .work__arrow { display: inline-block; transition: transform .45s var(--ease-out); }
 .work__card:hover .work__arrow { transform: translateX(.35em); }
 
 /* 0b · notes — the hook lab, four opening lines */
-.notes__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
+.notes__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
 .note__card {
   display: grid; gap: .9rem; align-content: start; min-height: 15rem;
-  border: 1px solid var(--line); border-radius: 1rem; background: rgba(var(--fg-rgb), .035);
-  padding: 1.3rem 1.3rem 1.4rem; transition: border-color .35s, transform .5s var(--ease-out);
+  background: var(--white); border: 1px solid rgba(0, 0, 0, .07); border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 14px 34px -20px rgba(0, 0, 0, .2);
+  padding: 1.35rem 1.35rem 1.45rem;
+  transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out);
 }
-.note__card:hover { border-color: rgba(var(--fg-rgb), .5); transform: translateY(-3px); }
-.note__tag { color: var(--muted); }
-.note__line { font-family: var(--font-serif); font-size: clamp(1.3rem, 1.8vw, 1.55rem); line-height: 1.22; letter-spacing: -.01em; }
-.note__foot { color: rgba(var(--fg-rgb), .5); margin-top: auto; padding-top: .7rem; border-top: 1px solid var(--line); }
+.note__card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(0, 0, 0, .05), 0 26px 50px -22px rgba(0, 0, 0, .3); }
+.note__tag { color: rgba(0, 0, 0, .45); }
+.note__line { color: var(--ink); font-family: var(--font-serif); font-size: clamp(1.3rem, 1.8vw, 1.55rem); line-height: 1.22; letter-spacing: -.01em; }
+.note__foot { color: rgba(0, 0, 0, .45); margin-top: auto; padding-top: .7rem; border-top: 1px solid rgba(0, 0, 0, .1); }
 
-/* stay updated — one rounded card, one honest promise */
+/* stay updated — the same white panel, set on the dark base */
 .ping__card {
   display: grid; gap: var(--s5); justify-items: start;
-  border: 1px solid var(--line); border-radius: 1.4rem; background: rgba(var(--fg-rgb), .035);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid rgba(0, 0, 0, .06); border-radius: 1.4rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 30px 60px -30px rgba(0, 0, 0, .55);
   padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4.5vw, 4rem);
 }
-.ping__title { margin-top: .4rem; max-width: 24ch; }
-.ping__body { max-width: 54ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; color: rgba(var(--fg-rgb), .8); }
+.ping__card .kicker { color: rgba(0, 0, 0, .5); }
+.ping__title { margin-top: .4rem; max-width: 24ch; color: var(--ink); }
+.ping__title em { color: var(--red); }
+.ping__body { max-width: 54ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; color: rgba(0, 0, 0, .65); }
 .ping__btn {
   display: inline-grid; place-items: center; height: 2.9rem; padding: 0 1.6rem; margin-top: .4rem;
   border-radius: 999px; background: var(--red); color: var(--white); text-decoration: none;
   transition: transform .25s var(--ease-out), background-color .25s, color .25s;
 }
-.ping__btn:hover { background: var(--paper); color: var(--ink); }
+.ping__btn:hover { background: var(--ink); color: var(--paper); }
 .ping__btn:active { transform: scale(.97); }
 /* ───────────── 00 · the orbit — the opening screen ─────────────
    Every slide, static, script and film on two counter-turning rings.
@@ -849,7 +874,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── 0a · SELECTED WORK — six briefs, one click each ───────────────────────── -->
-<section class="chapter work" id="work" data-theme="ink" data-chapter="0a · Selected work" aria-label="Selected work — six briefs, one click each">
+<section class="chapter work" id="work" data-theme="paper" data-chapter="0a · Selected work" aria-label="Selected work — six briefs, one click each">
   <div class="chapter__head work__head" data-depth>
     <div>
       <p class="kicker mono" data-reveal>0a <span class="kicker__sep">/</span> Selected work</p>
@@ -922,7 +947,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── 0b · NOTES — the hook lab, four opening lines ───────────────────────── -->
-<section class="chapter notes" id="notes" data-theme="ink" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
+<section class="chapter notes" id="notes" data-theme="paper" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
   <div class="chapter__head notes__head" data-depth>
     <div>
       <p class="kicker mono" data-reveal>0b <span class="kicker__sep">/</span> Notes — from the hook lab</p>
