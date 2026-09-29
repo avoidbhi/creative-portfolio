@@ -2562,9 +2562,9 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 0.8, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,
     SPLAT_RADIUS: 0.25, SPLAT_FORCE: 3000,
-    BRIGHTNESS: 0.08, COLOR_UPDATE_SPEED: 10,                     // one grey tone, a whisper under the type (was 0.12, full spectrum)
+    BRIGHTNESS: 0.05, COLOR_UPDATE_SPEED: 10,                     // one grey tone, a whisper under the type (was 0.12 → 0.08, full spectrum)
     SHADING: true,
-    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.35, BLOOM_THRESHOLD: 0.25, BLOOM_SOFT_KNEE: 0.7,   // only the opening burst reaches the glow, softly
+    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.2, BLOOM_THRESHOLD: 0.25, BLOOM_SOFT_KNEE: 0.7,   // only the opening burst reaches the glow, softly
     SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 0.4,
     IMMEDIATE: true, SLEEP_AFTER: 4, MAX_DPR: 1, GUARD: true,        // MAX_DPR 1: the dye is a 512 px texture — extra display pixels add cost, not detail
   }, window.AK_FLUID_CONFIG || {});
@@ -2838,7 +2838,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   }
   function multipleSplats(amount) {
     for (let i = 0; i < amount; i++) {
-      const c = generateColor().map((v) => v * 3.5);             // the opening burst: brighter than a trail, gone in ~3 s — a grey pulse, not a flash
+      const c = generateColor().map((v) => v * 5.5);             // the opening burst: brighter than a trail, gone in ~3 s — 5.5 × 0.05 = 0.275, just over the bloom threshold
       splat(Math.random(), Math.random(), 1000 * (Math.random() - 0.5), 1000 * (Math.random() - 0.5), c);
     }
   }
