@@ -81,6 +81,9 @@
   /* document offsets are measured once per layout change, never per frame → the loop performs no layout reads */
   const docTop = (el) => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
   const themed = $$('[data-theme][data-chapter]').map((el) => ({ el, top: 0, bottom: 0 }));
+  const homeLinks = $$('[data-home-link]').map((a) => ({ a, id: a.getAttribute('href') }));
+  let homeActive = '';
+  const homeSetActive = (id) => { if (id === homeActive) return; homeActive = id; homeLinks.forEach((l) => l.a.classList.toggle('is-active', l.id === '#' + id)); };
   const nums = $$('.chapter__num').map((el) => ({ el, top: 0, h: 0, last: NaN }));
   const depths = $$('[data-depth]').map((el) => ({ el, top: 0, h: 0, last: NaN, extra: '' }));   // data-depth may carry a resting transform (the index card's tilt) — read in measure()
   const mainEl = $('[data-main]');
@@ -133,8 +136,8 @@
     const mid = y + vh * 0.5;
     let active = null;
     for (const s of themed) if (s.top <= mid && s.bottom > mid) active = s.el;
-    if (active) { setTheme(active.dataset.theme); setChapter(active.dataset.chapter); }
-    else if (mainEl && mainBottom <= mid) { setTheme('ink'); setChapter('Epilogue'); }
+    if (active) { setTheme(active.dataset.theme); setChapter(active.dataset.chapter); homeSetActive(active.id || ''); }
+    else if (mainEl && mainBottom <= mid) { setTheme('ink'); setChapter('Epilogue'); homeSetActive('epilogue'); }
     if (swapping && performance.now() - swapAt > 1200) { swapping = false; chapterLabel.textContent = currentChapter; hudChapter.classList.remove('is-swapping'); }   // label hidden (no transition ran) → settle it
     // big chapter numerals drift slower than the page (ambient layer)
     if (reduce) return;
@@ -324,7 +327,7 @@
   }
 
   /* ───────────── index overlay ───────────── */
-  const index = $('[data-index]'), indexBtn = $('[data-index-toggle]'), indexLabel = $('[data-index-label]');
+  const index = $('[data-index]'), indexBtns = $$('[data-index-toggle]'), indexLabel = $('[data-index-label]');
   $$('.index__list li').forEach((li, i) => li.style.setProperty('--i', i));
   let indexOpen = false;
   function toggleIndex(force) {
@@ -332,20 +335,21 @@
     index.classList.toggle('is-open', indexOpen);
     index.setAttribute('aria-hidden', String(!indexOpen));
     html.classList.toggle('index-open', indexOpen);
-    indexBtn.setAttribute('aria-expanded', String(indexOpen));
+    indexBtns.forEach((b) => b.setAttribute('aria-expanded', String(indexOpen)));
     indexLabel.textContent = indexOpen ? 'Close' : 'Index';
     html.style.overflow = indexOpen ? 'hidden' : '';
     if (indexOpen && reduce) $('[data-index-link]')?.focus({ preventScroll: true });
   }
-  if (index && indexBtn) {
-    indexBtn.addEventListener('click', () => toggleIndex());
+  if (index && indexBtns.length) {
+    indexBtns.forEach((b) => b.addEventListener('click', () => toggleIndex()));
     index.addEventListener('transitionend', (e) => { if (e.target === index && e.propertyName === 'transform' && indexOpen) $('[data-index-link]')?.focus({ preventScroll: true }); });   // focus once the panel has arrived
     $$('[data-index-link]').forEach((a) => a.addEventListener('click', () => toggleIndex(false)));
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && indexOpen) { toggleIndex(false); indexBtn.focus(); } });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && indexOpen) { toggleIndex(false); indexBtns[0].focus(); } });
+    addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); toggleIndex(); } });   // ⌘K — the sidebar's search chip keeps its promise
   }
 
   /* ───────────── in-page links: native smooth scroll (never hijacked) ───────────── */
-  $$('[data-index-link], .hud__name, .hud__btn--solid, .services__list a, .stage__links a[href^="#"], [data-stage-more], .orbit-link a:not([data-orbit-open])').forEach((a) => {
+  $$('[data-index-link], [data-home-link], .hud__name, .hud__btn--solid, .services__list a, .stage__links a[href^="#"], [data-stage-more], .orbit-link a:not([data-orbit-open])').forEach((a) => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
       if (!id || !id.startsWith('#')) return;
