@@ -35,6 +35,10 @@
   .home__grid { grid-template-columns: 1fr; }
   .home__actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
   .hcard--note { min-height: 0; }
+  .home__head { align-items: flex-start; flex-wrap: wrap; }
+  .home__seeall { order: 3; }
+  .home__pingcard { flex-direction: column; align-items: flex-start; }
+  .home__pingcard .home__btn { width: 100%; }
   .stage.is-3d .stage__hud { bottom: 7.4rem; }
   .hud__bar { width: min(calc(100vw - 1.5rem), 34rem); padding: .35rem .35rem .35rem .9rem; }
   .stage.is-3d .stage__title { top: 7.4rem; transform: translateX(-50%); width: 92vw; font-size: 1.75rem; text-align: center; }  .stage.is-3d .stage__foot { grid-template-columns: 1fr; gap: var(--s2); bottom: 4.1rem; }
