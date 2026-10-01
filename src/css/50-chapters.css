@@ -103,7 +103,7 @@
 /* poster */
 .artifact--poster { max-width: 24rem; min-width: 0; }   /* a grid item's min-width:auto would let the 3:4 poster's content height widen the column (overflow at 320 px) */
 .poster {
-  aspect-ratio: 3 / 4; background: var(--paper); color: var(--ink);
+  aspect-ratio: 3 / 4; background: var(--surface); color: var(--ink);   /* one paper stock, page-wide: the same cream as the notecard */
   padding: 1.4rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
   box-shadow: 0 30px 60px -28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
 }

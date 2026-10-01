@@ -363,7 +363,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 /* poster */
 .artifact--poster { max-width: 24rem; min-width: 0; }   /* a grid item's min-width:auto would let the 3:4 poster's content height widen the column (overflow at 320 px) */
 .poster {
-  aspect-ratio: 3 / 4; background: var(--paper); color: var(--ink);
+  aspect-ratio: 3 / 4; background: var(--surface); color: var(--ink);   /* one paper stock, page-wide: the same cream as the notecard */
   padding: 1.4rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
   box-shadow: 0 30px 60px -28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
 }
@@ -690,7 +690,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
   transition: color .25s, border-color .25s, background-color .25s;
 }
 .stage__mode:hover { color: var(--paper); }
-.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); }
+.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); background: rgba(var(--fg-rgb), .08); }
 .stage__mode:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .stage__title {
   position: relative; z-index: 2; margin: 0 auto clamp(2rem, 5vw, 4rem); max-width: 14ch; text-align: center;
@@ -707,8 +707,9 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: var(--s4); align-items: end; margin-top: var(--s5); color: var(--muted); }
 .stage__foot p { margin: 0; }
 .stage__role { line-height: 1.6; max-width: 30ch; }
+.stage__role .serif-i { display: block; font-size: 1.05rem; line-height: 1.4; color: var(--fg); margin-bottom: .35rem; }
 .stage__line { text-align: center; display: grid; gap: .35rem; justify-items: center; text-transform: none; letter-spacing: 0; }
-.stage__k { text-transform: uppercase; letter-spacing: .02em; }
+.stage__k { text-transform: uppercase; letter-spacing: .08em; }
 .stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--paper); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
 .stage__q:empty { display: none; }
 .stage__more { color: var(--red); text-transform: uppercase; letter-spacing: .02em; border-bottom: 1px solid transparent; }
@@ -1025,7 +1026,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
     </div>
   </div>
   <div class="stage__foot mono">
-    <p class="stage__role">Copywriter &amp; creative strategist<br>Mumbai · available for briefs</p>
+    <p class="stage__role"><span class="serif-i">Copywriter &amp; creative strategist</span><br><span>Mumbai · available for briefs</span></p>
     <p class="stage__line" data-stage-line aria-live="polite"><span class="stage__k" data-stage-k>32 pieces of work, 2025–26</span><span class="stage__q serif-i" data-stage-q></span><a class="stage__more" data-stage-more href="#ch1" hidden>Read the chapter ↓</a></p>
     <p class="stage__links"><a href="mailto:abhi.insider@gmail.com" data-cursor="write">Email</a><a href="tel:+919930915975" data-cursor="call">Call</a><a href="#ch1">About</a></p>
   </div>
@@ -1175,7 +1176,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
       <section class="home__block" id="notes" data-theme="ink" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
         <div class="home__head" data-depth>
           <div>
-            <p class="kicker mono" data-reveal>0b <span class="kicker__sep">/</span> Notes — the hook lab</p>
+            <p class="kicker mono" data-reveal>0b <span class="kicker__sep">/</span> Notes</p>
             <h2 class="display home__display" data-split>The lines that <em>stop the scroll.</em></h2>
           </div>
           <a class="home__seeall mono" href="#ch7" data-reveal>See all — chapter 07</a>
@@ -1229,7 +1230,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 01 · ABOUT ───────────────────────── -->
 <section class="chapter about" id="ch1" data-theme="ink" data-chapter="01 · The brief before the brief">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 01 <span class="kicker__sep">/</span> The brief before the brief</p>
+    <p class="kicker mono" data-reveal>01 <span class="kicker__sep">/</span> The brief before the brief</p>
     <h2 class="display" data-split>Hi. I’m Abhijeet. Before I write a word, <em>I read a few thousand.</em></h2>
   </div>
   <div class="about__grid">
@@ -1263,7 +1264,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 02 · ICC ───────────────────────── -->
 <section class="chapter case" id="ch2" data-theme="ink" data-chapter="02 · ICC Champions Trophy 2025">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 02 <span class="kicker__sep">/</span> ICC Men’s Champions Trophy 2025 · Zoo Media · Campaign</p>
+    <p class="kicker mono" data-reveal>02 <span class="kicker__sep">/</span> ICC Champions Trophy · 2025</p>
     <h2 class="display" data-split>The format was dying. <em>So we put everything on the line.</em></h2>
   </div>
   <div class="case__grid">
@@ -1304,7 +1305,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 03 · SURF EXCEL ───────────────────────── -->
 <section class="chapter case" id="ch3" data-theme="ink" data-chapter="03 · Surf Excel">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 03 <span class="kicker__sep">/</span> Surf Excel × Zoo Media · Social strategy pitch · 2025</p>
+    <p class="kicker mono" data-reveal>03 <span class="kicker__sep">/</span> Surf Excel · 2025</p>
     <h2 class="display" data-split>Nobody wants to be sold detergent <em>while they’re scrolling.</em></h2>
   </div>
   <div class="case__grid">
@@ -1344,7 +1345,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 04 · GOBOULT ───────────────────────── -->
 <section class="chapter case" id="ch4" data-theme="ink" data-chapter="04 · GoBoult">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 04 <span class="kicker__sep">/</span> GoBoult × Zoo Media · Rebrand pitch · September 2025</p>
+    <p class="kicker mono" data-reveal>04 <span class="kicker__sep">/</span> GoBoult · September 2025</p>
     <h2 class="display" data-split>People bought Boult. <em>They never believed in it.</em></h2>
   </div>
   <div class="case__grid">
@@ -1389,7 +1390,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 05 · DHL ───────────────────────── -->
 <section class="chapter case" id="ch5" data-theme="ink" data-chapter="05 · DHL × Mumbai Indians">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · IPL 2025 · Case film for the Clio Awards</p>
+    <p class="kicker mono" data-reveal>05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · 2025</p>
     <h2 class="display" data-split>While other brands shouted, <em>DHL had a conversation.</em></h2>
   </div>
   <div class="case__grid">
@@ -1432,7 +1433,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 06 · ICC WOMEN'S WORLD CUP ───────────────────────── -->
 <section class="chapter case" id="ch6" data-theme="ink" data-chapter="06 · ICC Women's World Cup">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 06 <span class="kicker__sep">/</span> ICC Women’s World Cup 2025 · Zoo Media · Player stories</p>
+    <p class="kicker mono" data-reveal>06 <span class="kicker__sep">/</span> ICC Women’s World Cup · 2025</p>
     <h2 class="display" data-split>Ten players, one tournament — <em>and ten different scripts.</em></h2>
   </div>
   <div class="case__grid">
@@ -1465,7 +1466,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 07 · THE HOOK LAB ───────────────────────── -->
 <section class="chapter case" id="ch7" data-theme="ink" data-chapter="07 · The hook lab">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 07 <span class="kicker__sep">/</span> Short‑form scripts · six‑ and seven‑figure creators · 2025</p>
+    <p class="kicker mono" data-reveal>07 <span class="kicker__sep">/</span> The hook lab · 2025</p>
     <h2 class="display" data-split>The first line isn’t the intro. <em>It’s the whole reel.</em></h2>
   </div>
   <div class="case__grid">
@@ -1522,9 +1523,9 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 08 · THE REST OF THE DESK ───────────────────────── -->
-<section class="chapter case desk" id="ch8" data-theme="ink" data-chapter="08 · The rest of the desk">
+<section class="chapter case desk" id="ch8" data-theme="ink" data-chapter="08 · Bajaj Electricals">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 08 <span class="kicker__sep">/</span> Bajaj Electricals · Always‑on social · 2025–26 — and the side quests</p>
+    <p class="kicker mono" data-reveal>08 <span class="kicker__sep">/</span> Bajaj Electricals · 2025–26</p>
     <h2 class="display" data-split>912 minutes singing in the shower. <em>Yes, we counted.</em></h2>
   </div>
   <div class="case__grid">
@@ -1591,7 +1592,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 <!-- ───────────────────────── CHAPTER 09 · HOW I WORK ───────────────────────── -->
 <section class="chapter process" id="ch9" data-theme="ink" data-chapter="09 · How I work">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 09 <span class="kicker__sep">/</span> How I work</p>
+    <p class="kicker mono" data-reveal>09 <span class="kicker__sep">/</span> How I work</p>
     <h2 class="display" data-split>The method is research. <em>The output is a line.</em></h2>
   </div>
   <ol class="steps">
