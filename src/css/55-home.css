@@ -5,7 +5,8 @@
    Content format per 50-portfolio research: work = a numbered editorial index (the copy
    is the cover), notes = a wall of big serif hook lines, hero = a hairline client marquee. */
 
-.home { padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
+.home { position: relative; padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
+.home::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; max-width: var(--max); border-top: 1px solid var(--line); }
 .home__shell {
   max-width: min(var(--max), var(--page)); margin-inline: auto;
   display: grid; grid-template-columns: 248px minmax(0, 1fr);
@@ -58,32 +59,27 @@
 /* ── main column ── */
 .home__main { display: grid; gap: var(--group); min-width: 0; }
 
-/* the hero card */
-.home__hero { background: rgba(var(--fg-rgb), .03); border: 1px solid var(--line); border-radius: 1.4rem; overflow: hidden; }
-.home__banner {
-  position: relative; height: clamp(6.5rem, 15vw, 9.5rem); display: grid; place-items: center;
+/* the opening — no card: the statement runs edge to edge on the page's own light */
+.home__hero {
+  position: relative;
   background:
-    radial-gradient(58% 130% at 20% 25%, rgba(255, 59, 48, .3), transparent 62%),
-    radial-gradient(48% 120% at 72% 20%, rgba(96, 124, 255, .2), transparent 64%),
-    radial-gradient(42% 110% at 52% 95%, rgba(177, 140, 255, .16), transparent 62%),
-    #08080A;
+    radial-gradient(55% 240% at 18% -20%, rgba(255, 59, 48, .13), transparent 60%),
+    radial-gradient(45% 220% at 68% -30%, rgba(96, 124, 255, .09), transparent 58%);
 }
-.home__banner::after { content: ''; position: absolute; inset: auto 0 0 0; height: 1px; background: var(--line); }
-.home__pill {
-  display: inline-flex; align-items: center; gap: .55rem;
-  background: var(--paper); color: var(--ink); border-radius: 999px;
-  padding: .5rem 1.05rem; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .65);
-}
+/* the desk line — mono metadata, live IST clock */
+.home__herohead { display: flex; align-items: center; gap: .9rem; margin: 0 0 var(--group); font-size: .64rem; letter-spacing: .18em; color: var(--muted); }
+.home__herosep { opacity: .4; }
 .home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .home__herobody {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
-  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  padding: 0 0 clamp(2.2rem, 4vw, 3.2rem);
+  border-bottom: 1px solid var(--line);
 }
 .home__herotext { max-width: 46ch; display: grid; gap: 1.1rem; }
 .home__title {
   font-family: var(--font-serif); font-weight: 400;
-  font-size: clamp(2.2rem, 4.6vw, 4rem); line-height: 1.0; letter-spacing: -.02em;
+  font-size: clamp(2.6rem, 6.2vw, 6.6rem); line-height: .98; letter-spacing: -.02em;
   text-wrap: balance;
 }
 .home__title em { font-style: italic; color: var(--red); }
@@ -122,11 +118,14 @@
 .home__head {
   position: relative; display: flex; align-items: flex-end; justify-content: space-between;
   gap: 1rem 2rem; margin-bottom: var(--group);
+  border-bottom: 1px solid var(--line); padding-bottom: var(--s3);
 }
 .home__head > div { min-width: 0; }
 .home__head .kicker { margin-bottom: var(--s3); }
-/* the section heads are the same display scale as the chapters — one type system, page-wide */
-.home__display { max-width: 12ch; }
+/* the type hierarchy — one scale, five roles:
+   S1 statement (chapters, epilogue) 7.2rem · S2 opening (hero) 6.6rem ·
+   S3 section heads (here) 3.6rem · S4 items (work titles 2.6 / hooks 2.8) · S5 mono meta */
+.home__display { max-width: 12ch; font-size: clamp(2.1rem, 3.8vw, 3.6rem); line-height: 1; }
 .home__seeall {
   color: var(--muted); text-decoration: none; white-space: nowrap; padding-bottom: .45rem;
   border-bottom: 1px solid transparent; transition: color .25s, border-color .25s;
@@ -138,8 +137,8 @@
 .worklist__row {
   position: relative;
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) 12.5rem 9.5rem 1.6rem;
-  gap: 1.3rem;
+  grid-template-columns: 2.4rem minmax(0, 1fr) 9.5rem 1.6rem;
+  gap: 1.1rem;
   align-items: center;
   padding: 1.45rem .6rem;
   border-top: 1px solid var(--line);
@@ -151,11 +150,11 @@
 .worklist__body { display: grid; gap: .45rem; min-width: 0; }
 .worklist__title {
   font-family: var(--font-serif); font-weight: 400;
-  font-size: clamp(1.45rem, 2.5vw, 2.25rem); line-height: 1.05; letter-spacing: -.015em;
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem); line-height: 1.05; letter-spacing: -.015em;
   transition: transform .5s var(--ease-out);
 }
 .worklist__desc { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 52ch; }
-.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); text-align: right; }
+.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); }
 .worklist__still {
   display: block; aspect-ratio: 16 / 10;
   overflow: hidden;

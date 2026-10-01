@@ -178,7 +178,12 @@ main { position: relative; z-index: 2; background: transparent; color: var(--fg)
 
 /* the boundary is a hairline, not a void: 11rem/10rem of padding stacked on a 5.5rem head
    margin and up to 7rem of trailing block margin meant ~400px of nothing between chapters */
-.chapter { position: relative; overflow: visible clip; padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: min(var(--max), var(--page)); margin-inline: auto; }   /* the page's one column (var(--page)); the prose measure — 58ch — keeps the essay width */
+.chapter { position: relative; overflow: visible clip; padding: var(--section) var(--gutter) var(--group); max-width: min(var(--max), var(--page)); margin-inline: auto; }   /* the page's one column (var(--page)); the prose measure — 58ch — keeps the essay width */
+.chapter::before {   /* the rule runs edge to edge — the page reads as a bound volume */
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 100vw; max-width: var(--max);
+  border-top: 1px solid var(--line);
+}
 .chapter__head { position: relative; display: grid; gap: var(--s3); margin-bottom: var(--group); }
 [data-depth] { will-change: transform, opacity; transform-origin: 50% 100%; }          /* scroll-derived arrival (translate/scale/opacity), one writer: the page loop */
 .js [data-depth] { opacity: 0; }                                                       /* until the loop's first write (never under reduced motion / reveal-all) */
@@ -456,7 +461,8 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
    Content format per 50-portfolio research: work = a numbered editorial index (the copy
    is the cover), notes = a wall of big serif hook lines, hero = a hairline client marquee. */
 
-.home { padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
+.home { position: relative; padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
+.home::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; max-width: var(--max); border-top: 1px solid var(--line); }
 .home__shell {
   max-width: min(var(--max), var(--page)); margin-inline: auto;
   display: grid; grid-template-columns: 248px minmax(0, 1fr);
@@ -509,32 +515,27 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 /* ── main column ── */
 .home__main { display: grid; gap: var(--group); min-width: 0; }
 
-/* the hero card */
-.home__hero { background: rgba(var(--fg-rgb), .03); border: 1px solid var(--line); border-radius: 1.4rem; overflow: hidden; }
-.home__banner {
-  position: relative; height: clamp(6.5rem, 15vw, 9.5rem); display: grid; place-items: center;
+/* the opening — no card: the statement runs edge to edge on the page's own light */
+.home__hero {
+  position: relative;
   background:
-    radial-gradient(58% 130% at 20% 25%, rgba(255, 59, 48, .3), transparent 62%),
-    radial-gradient(48% 120% at 72% 20%, rgba(96, 124, 255, .2), transparent 64%),
-    radial-gradient(42% 110% at 52% 95%, rgba(177, 140, 255, .16), transparent 62%),
-    #08080A;
+    radial-gradient(55% 240% at 18% -20%, rgba(255, 59, 48, .13), transparent 60%),
+    radial-gradient(45% 220% at 68% -30%, rgba(96, 124, 255, .09), transparent 58%);
 }
-.home__banner::after { content: ''; position: absolute; inset: auto 0 0 0; height: 1px; background: var(--line); }
-.home__pill {
-  display: inline-flex; align-items: center; gap: .55rem;
-  background: var(--paper); color: var(--ink); border-radius: 999px;
-  padding: .5rem 1.05rem; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .65);
-}
+/* the desk line — mono metadata, live IST clock */
+.home__herohead { display: flex; align-items: center; gap: .9rem; margin: 0 0 var(--group); font-size: .64rem; letter-spacing: .18em; color: var(--muted); }
+.home__herosep { opacity: .4; }
 .home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .home__herobody {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
-  padding: clamp(1.6rem, 3.5vw, 2.6rem);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  padding: 0 0 clamp(2.2rem, 4vw, 3.2rem);
+  border-bottom: 1px solid var(--line);
 }
 .home__herotext { max-width: 46ch; display: grid; gap: 1.1rem; }
 .home__title {
   font-family: var(--font-serif); font-weight: 400;
-  font-size: clamp(2.2rem, 4.6vw, 4rem); line-height: 1.0; letter-spacing: -.02em;
+  font-size: clamp(2.6rem, 6.2vw, 6.6rem); line-height: .98; letter-spacing: -.02em;
   text-wrap: balance;
 }
 .home__title em { font-style: italic; color: var(--red); }
@@ -573,11 +574,14 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .home__head {
   position: relative; display: flex; align-items: flex-end; justify-content: space-between;
   gap: 1rem 2rem; margin-bottom: var(--group);
+  border-bottom: 1px solid var(--line); padding-bottom: var(--s3);
 }
 .home__head > div { min-width: 0; }
 .home__head .kicker { margin-bottom: var(--s3); }
-/* the section heads are the same display scale as the chapters — one type system, page-wide */
-.home__display { max-width: 12ch; }
+/* the type hierarchy — one scale, five roles:
+   S1 statement (chapters, epilogue) 7.2rem · S2 opening (hero) 6.6rem ·
+   S3 section heads (here) 3.6rem · S4 items (work titles 2.6 / hooks 2.8) · S5 mono meta */
+.home__display { max-width: 12ch; font-size: clamp(2.1rem, 3.8vw, 3.6rem); line-height: 1; }
 .home__seeall {
   color: var(--muted); text-decoration: none; white-space: nowrap; padding-bottom: .45rem;
   border-bottom: 1px solid transparent; transition: color .25s, border-color .25s;
@@ -589,8 +593,8 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .worklist__row {
   position: relative;
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) 12.5rem 9.5rem 1.6rem;
-  gap: 1.3rem;
+  grid-template-columns: 2.4rem minmax(0, 1fr) 9.5rem 1.6rem;
+  gap: 1.1rem;
   align-items: center;
   padding: 1.45rem .6rem;
   border-top: 1px solid var(--line);
@@ -602,11 +606,11 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .worklist__body { display: grid; gap: .45rem; min-width: 0; }
 .worklist__title {
   font-family: var(--font-serif); font-weight: 400;
-  font-size: clamp(1.45rem, 2.5vw, 2.25rem); line-height: 1.05; letter-spacing: -.015em;
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem); line-height: 1.05; letter-spacing: -.015em;
   transition: transform .5s var(--ease-out);
 }
 .worklist__desc { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 52ch; }
-.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); text-align: right; }
+.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); }
 .worklist__still {
   display: block; aspect-ratio: 16 / 10;
   overflow: hidden;
@@ -766,7 +770,12 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue {
   position: relative; min-height: 100svh; background: transparent; color: var(--paper); display: grid; align-items: end;
 }
-.epilogue__inner { width: 100%; min-height: 100svh; max-width: min(var(--max), var(--page)); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group); border-top: 1px solid var(--line);
+.epilogue__inner::before {   /* the rule runs edge to edge, like every chapter's */
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 100vw; max-width: var(--max);
+  border-top: 1px solid var(--line);
+}
+.epilogue__inner { width: 100%; min-height: 100svh; max-width: min(var(--max), var(--page)); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group);
   display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; gap: var(--flow) var(--col); align-content: start;
 }
 .epilogue__inner > .kicker { grid-column: 1 / -1; }
@@ -777,7 +786,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 /* the closer wears the page's display scale, like every other head */
 .epilogue__title { max-width: 16ch; }
 .epilogue__mail {
-  justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 6.4vw, 6.4rem); line-height: 1; letter-spacing: -.02em;
+  justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 5.4vw, 5.4rem); line-height: 1; letter-spacing: -.02em;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% .06em; background-position: 0 92%;
   transition: color .3s, background-size .5s var(--ease-out); will-change: transform; display: inline-block;
 }
@@ -853,8 +862,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .index__list a { grid-template-columns: 2.2rem 1fr; }
   .index__meta { display: none; }  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--s4); padding-bottom: var(--s6); }
   .epilogue__inner > *, .epilogue__title, .epilogue__mail, .redpen, .epilogue__meta { grid-column: 1; grid-row: auto; }
-  .worklist__row { grid-template-columns: 2.4rem minmax(0, 1fr) 1.4rem; }
-  .worklist__meta, .worklist__still { display: none; }
+  .worklist__row { grid-template-columns: 2rem minmax(0, 1fr) 1.2rem; gap: .8rem; }
+  .worklist__still { display: none; }
   .hookwall__item { grid-template-columns: 9rem minmax(0, 1fr); gap: .8rem 1.1rem; }
 }
 @media (max-width: 360px) {
@@ -1060,7 +1069,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 
     <div class="home__main">
       <div class="home__hero" data-reveal>
-        <div class="home__banner" aria-hidden="true"><span class="home__pill mono"><span class="home__dot"></span>the desk</span></div>
+        <p class="home__herohead mono"><span class="home__dot"></span>the desk<span class="home__herosep">/</span>abhijeet kanase<span class="home__herosep">/</span>mumbai · <span data-clock>--:--</span> ist</p>
         <div class="home__herobody">
           <div class="home__herotext">
             <h2 class="home__title">Every line I’ve shipped, <em>in one place.</em></h2>
@@ -1094,8 +1103,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
               <span class="worklist__body">
                 <span class="worklist__title">Surf Excel — “We are Cleanliness Paglus.”</span>
                 <span class="worklist__desc">Nobody wants to be sold detergent while they’re scrolling.</span>
+                <span class="mono worklist__meta">Surf Excel · social identity · 2025</span>
               </span>
-              <span class="mono worklist__meta">Surf Excel · social identity · 2025</span>
               <span class="worklist__still"><img src="assets/work/plates/surf-24-paglus.webp" alt="Surf Excel pitch slide: We are Cleanliness Paglus." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
               <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
@@ -1106,8 +1115,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
               <span class="worklist__body">
                 <span class="worklist__title">GoBoult — “Lesssgooo!!”</span>
                 <span class="worklist__desc">People bought Boult. They never believed in it.</span>
+                <span class="mono worklist__meta">Boult · rebrand pitch · 2025</span>
               </span>
-              <span class="mono worklist__meta">Boult · rebrand pitch · 2025</span>
               <span class="worklist__still"><img src="assets/work/plates/boult-25-mouth.webp" alt="GoBoult pitch slide: LESSSGOOO written on a mouth, the logo below." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
               <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
@@ -1118,8 +1127,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
               <span class="worklist__body">
                 <span class="worklist__title">Bajaj Electricals — “Your Wrapped 2025 is incomplete.”</span>
                 <span class="worklist__desc">912 minutes singing in the shower. Yes, we counted.</span>
+                <span class="mono worklist__meta">Bajaj · always-on + films · 2025–26</span>
               </span>
-              <span class="mono worklist__meta">Bajaj · always-on + films · 2025–26</span>
               <span class="worklist__still"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower." width="720" height="900" loading="lazy" decoding="async" draggable="false"></span>
               <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
@@ -1130,8 +1139,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
               <span class="worklist__body">
                 <span class="worklist__title">The hook lab — 15 reels, four creators.</span>
                 <span class="worklist__desc">The first line isn’t the intro. It’s the whole reel.</span>
+                <span class="mono worklist__meta">Reels · scripts · 2025</span>
               </span>
-              <span class="mono worklist__meta">Reels · scripts · 2025</span>
               <span class="worklist__still"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: 15 reel scripts for a real-estate creator." width="761" height="1075" loading="lazy" decoding="async" draggable="false"></span>
               <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
@@ -1142,8 +1151,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
               <span class="worklist__body">
                 <span class="worklist__title">Vanilla Noir — “The Forbidden Orchid Elixir.”</span>
                 <span class="worklist__desc">A spec sales page — plus the ten-page teardown of why it works.</span>
+                <span class="mono worklist__meta">Spec · web + teardown · 2025</span>
               </span>
-              <span class="mono worklist__meta">Spec · web + teardown · 2025</span>
               <span class="worklist__still"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir." width="899" height="518" loading="lazy" decoding="async" draggable="false"></span>
               <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
@@ -1154,8 +1163,8 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
               <span class="worklist__body">
                 <span class="worklist__title">Luna by Khush — “Ignited by a glow from within.”</span>
                 <span class="worklist__desc">“The lotus roots itself in the mud. It grows in the dark.”</span>
+                <span class="mono worklist__meta">Founder email · 2025</span>
               </span>
-              <span class="mono worklist__meta">Founder email · 2025</span>
               <span class="worklist__still"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"></span>
               <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>

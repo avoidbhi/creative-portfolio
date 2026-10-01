@@ -23,8 +23,8 @@
   .index__list a { grid-template-columns: 2.2rem 1fr; }
   .index__meta { display: none; }  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--s4); padding-bottom: var(--s6); }
   .epilogue__inner > *, .epilogue__title, .epilogue__mail, .redpen, .epilogue__meta { grid-column: 1; grid-row: auto; }
-  .worklist__row { grid-template-columns: 2.4rem minmax(0, 1fr) 1.4rem; }
-  .worklist__meta, .worklist__still { display: none; }
+  .worklist__row { grid-template-columns: 2rem minmax(0, 1fr) 1.2rem; gap: .8rem; }
+  .worklist__still { display: none; }
   .hookwall__item { grid-template-columns: 9rem minmax(0, 1fr); gap: .8rem 1.1rem; }
 }
 @media (max-width: 360px) {
