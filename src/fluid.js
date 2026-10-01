@@ -43,8 +43,8 @@
 
   const C = Object.assign({
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
-    DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 0.8, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,
-    SPLAT_RADIUS: 0.25, SPLAT_FORCE: 3000,
+    DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 1.4, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,   // 1.4: the jet dies sooner, so the flow stays near the cursor
+    SPLAT_RADIUS: 0.12, SPLAT_FORCE: 1800,   // smaller radius: the flow keeps its shape but stays close to the pointer (was 0.25 / 3000)
     BRIGHTNESS: 0.05, COLOR_UPDATE_SPEED: 10,                     // one grey tone, a whisper under the type (was 0.12 → 0.08, full spectrum)
     SHADING: true,
     BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.2, BLOOM_THRESHOLD: 0.25, BLOOM_SOFT_KNEE: 0.7,   // only the opening burst reaches the glow, softly
