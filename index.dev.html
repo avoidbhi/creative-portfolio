@@ -449,9 +449,11 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
 .side__tag { color: var(--muted); }
 /* ───────────── home — the desk, in the site's own cinematic language ─────────────
-   The app-shell structure (sticky sidebar · hero card · two-column grids) re-skinned into the
-   dark editorial world: hairlines, mono kickers, serif display, the red pen. The page is one
-   piece from the orbit to the epilogue. */
+   The app-shell structure (sticky sidebar · hero card · index rows · hook wall) in the
+   dark editorial world: hairlines, mono kickers, serif display, the red pen. The page is
+   one piece from the orbit to the epilogue.
+   Content format per 50-portfolio research: work = a numbered editorial index (the copy
+   is the cover), notes = a wall of big serif hook lines, hero = a hairline client marquee. */
 
 .home { padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
 .home__shell {
@@ -522,7 +524,8 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
   background: var(--paper); color: var(--ink); border-radius: 999px;
   padding: .5rem 1.05rem; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .65);
 }
-.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); }
+.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .home__herobody {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
   padding: clamp(1.6rem, 3.5vw, 2.6rem);
@@ -546,7 +549,26 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .home__btn--ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
 .home__btn--ghost:hover { background: rgba(var(--fg-rgb), .06); border-color: rgba(var(--fg-rgb), .35); color: var(--fg); }
 
+/* the client line — a hairline marquee; the work speaks in names */
+.clientline {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding: .9rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.clientline__track { display: flex; width: max-content; animation: clientline 48s linear infinite; }
+.clientline__track > span {
+  display: inline-flex; align-items: center;
+  font-size: .64rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
+}
+.clientline__track i { font-style: normal; margin: 0 1.9rem; color: rgba(var(--fg-rgb), .28); }
+@keyframes clientline { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .clientline__track { animation: none; } }
+
 /* section blocks: the site's own header language — kicker, serif display, a See-all */
+.home__block { scroll-margin-top: calc(var(--hud-h) + 1rem); }
 .home__head {
   position: relative; display: flex; align-items: flex-end; justify-content: space-between;
   gap: 1rem 2rem; margin-bottom: var(--s5);
@@ -560,35 +582,79 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 }
 .home__seeall:hover { color: var(--red); border-color: var(--red); }
 
-.home__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
-
-/* work cards — image, then title · view-project · category */
-.hcard {
-  display: block; background: rgba(var(--fg-rgb), .035); border: 1px solid var(--line); border-radius: 1rem;
-  color: inherit; text-decoration: none; overflow: hidden;
-  transition: transform .45s var(--ease-out), border-color .3s, background-color .3s;
+/* selected work — a numbered editorial index; the copy is the cover */
+.worklist { list-style: none; margin: 0; padding: 0; }
+.worklist__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 12.5rem 9.5rem 1.6rem;
+  gap: 1.3rem;
+  align-items: center;
+  padding: 1.45rem .6rem;
+  border-top: 1px solid var(--line);
+  color: inherit; text-decoration: none;
+  transition: background-color .3s;
 }
-.hcard:hover { transform: translateY(-3px); border-color: rgba(var(--fg-rgb), .34); background: rgba(var(--fg-rgb), .055); }
-.hcard__img { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--line); }
-.hcard__img img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.01); transition: transform 1.1s var(--ease-out); }
-.hcard:hover .hcard__img img { transform: scale(1.05); }
-.hcard__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1.05rem 1.2rem .3rem; }
-.hcard__title {
-  font-family: var(--font-serif); font-size: clamp(1.3rem, 2vw, 1.6rem); line-height: 1.15; letter-spacing: -.01em;
+.worklist > li:last-child .worklist__row { border-bottom: 1px solid var(--line); }
+.worklist__num { font-size: .7rem; opacity: 1; color: var(--muted); transition: color .3s; }
+.worklist__body { display: grid; gap: .45rem; min-width: 0; }
+.worklist__title {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.45rem, 2.5vw, 2.25rem); line-height: 1.05; letter-spacing: -.015em;
   transition: transform .5s var(--ease-out);
 }
-.hcard:hover .hcard__title { transform: translateX(.2em); }
-.hcard__link { color: var(--muted); font-size: .68rem; white-space: nowrap; transition: color .25s; }
-.hcard:hover .hcard__link { color: var(--red); }
-.hcard__cat { display: block; padding: 0 1.2rem 1.15rem; color: var(--muted); font-size: .68rem; }
+.worklist__desc { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 52ch; }
+.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); text-align: right; }
+.worklist__still {
+  display: block; aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line); border-radius: .55rem;
+}
+.worklist__still img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scale(1.02);
+  filter: saturate(.9) brightness(.9);
+  transition: transform 1.1s var(--ease-out), filter .5s;
+}
+.worklist__arrow { font-size: 1.05rem; color: var(--muted); transition: transform .4s var(--ease-out), color .3s; }
+.worklist__row:hover { background: rgba(var(--fg-rgb), .035); }
+.worklist__row:hover .worklist__num { color: var(--red); }
+.worklist__row:hover .worklist__title { transform: translateX(.35em); }
+.worklist__row:hover .worklist__still img { transform: scale(1.07); filter: saturate(1) brightness(1); }
+.worklist__row:hover .worklist__arrow { transform: translateX(.35em); color: var(--red); }
 
-/* note cards — tag, line, foot */
-.hcard--note { display: grid; grid-template-rows: auto 1fr auto; gap: .85rem; padding: 1.35rem 1.3rem 1.4rem; min-height: 13rem; align-content: start; }
-.hcard__tag { color: var(--muted); }
-.hcard__line { font-family: var(--font-serif); font-size: clamp(1.35rem, 2vw, 1.65rem); line-height: 1.2; letter-spacing: -.01em; }
-.hcard__foot { color: var(--muted); margin-top: auto; padding-top: .8rem; border-top: 1px solid var(--line); }
+/* notes — the hook wall: the lines themselves, big as they need to be, staggered */
+.hookwall { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.7rem; }
+.hookwall__item {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1rem 1.6rem;
+  align-items: baseline;
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+}
+.hookwall > li:last-child .hookwall__item { border-bottom: 1px solid var(--line); }
+.hookwall__tag {
+  display: grid; gap: .55rem;
+  font-size: .66rem; letter-spacing: .1em;
+  color: var(--muted);
+}
+.hookwall__foot { opacity: .7; }
+.hookwall__line {
+  margin: 0;
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.6rem, 3.3vw, 2.8rem); line-height: 1.08; letter-spacing: -.015em;
+  max-width: 26ch;
+  transition: transform .5s var(--ease-out);
+}
+.hookwall__line em { font-style: italic; color: var(--red); }
+.hookwall__item:hover .hookwall__line { transform: translateX(.4em); }
+.hookwall__item:nth-child(2) { margin-left: clamp(0rem, 6vw, 4.5rem); }
+.hookwall__item:nth-child(3) { margin-left: clamp(0rem, 12vw, 9rem); }
+.hookwall__item:nth-child(4) { margin-left: clamp(0rem, 4vw, 2.5rem); }
 
 /* stay updated — one wide card */
+.home__ping { margin-top: calc(var(--group) * .4); }
 .home__pingcard {
   display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
   background: rgba(var(--fg-rgb), .035); border: 1px solid var(--line); border-radius: 1.2rem;
@@ -785,6 +851,9 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .index__list a { grid-template-columns: 2.2rem 1fr; }
   .index__meta { display: none; }  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--s4); padding-bottom: var(--s6); }
   .epilogue__inner > *, .epilogue__title, .epilogue__mail, .redpen, .epilogue__meta { grid-column: 1; grid-row: auto; }
+  .worklist__row { grid-template-columns: 2.4rem minmax(0, 1fr) 1.4rem; }
+  .worklist__meta, .worklist__still { display: none; }
+  .hookwall__item { grid-template-columns: 9rem minmax(0, 1fr); gap: .8rem 1.1rem; }
 }
 @media (max-width: 360px) {
   .hud__bar { padding: .3rem .3rem .3rem .7rem; }
@@ -794,9 +863,10 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 @media (max-width: 600px) {
   .results { grid-template-columns: 1fr; }
   .results--proof, .side__list { grid-template-columns: 1fr; }
-  .home__grid { grid-template-columns: 1fr; }
   .home__actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
-  .hcard--note { min-height: 0; }
+  .worklist__row { grid-template-columns: 2rem minmax(0, 1fr) 1.2rem; gap: .8rem; padding: 1.2rem .2rem; }
+  .hookwall__item { grid-template-columns: 1fr; gap: .6rem; }
+  .hookwall__item:nth-child(2), .hookwall__item:nth-child(3), .hookwall__item:nth-child(4) { margin-left: 0; }
   .home__head { align-items: flex-start; flex-wrap: wrap; }
   .home__seeall { order: 3; }
   .home__pingcard { flex-direction: column; align-items: flex-start; }
@@ -1001,6 +1071,12 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
         </div>
       </div>
 
+      <div class="clientline" aria-hidden="true">
+        <div class="clientline__track">
+          <span class="mono">bajaj electricals<i>·</i>surf excel<i>·</i>boult audio<i>·</i>zoo media<i>·</i>wwc<i>·</i>kokoonlabs<i>·</i>luna by khush<i>·</i>vanilla noir<i>·</i></span><span class="mono">bajaj electricals<i>·</i>surf excel<i>·</i>boult audio<i>·</i>zoo media<i>·</i>wwc<i>·</i>kokoonlabs<i>·</i>luna by khush<i>·</i>vanilla noir<i>·</i></span>
+        </div>
+      </div>
+
       <section class="home__block" id="work" data-theme="ink" data-chapter="0a · Selected work" aria-label="Selected work — six briefs">
         <div class="home__head" data-depth>
           <div>
@@ -1009,68 +1085,80 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
           </div>
           <a class="home__seeall mono" href="#orbit" data-reveal>See all — 32 in the orbit</a>
         </div>
-        <ul class="home__grid home__grid--work">
+                <ol class="worklist">
           <li data-reveal>
-            <a class="hcard" href="#ch3" data-cursor="open">
-              <span class="hcard__img"><img src="assets/work/plates/surf-24-paglus.webp" alt="Surf Excel pitch slide: We are Cleanliness Paglus." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
-              <span class="hcard__row">
-                <span class="hcard__title">Surf Excel — “We are Cleanliness Paglus.”</span>
-                <span class="hcard__link mono">View project <span aria-hidden="true">→</span></span>
+            <a class="worklist__row" href="#ch3" data-cursor="open" aria-label="Surf Excel">
+              <span class="mono worklist__num">01</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Surf Excel — “We are Cleanliness Paglus.”</span>
+                <span class="worklist__desc">Nobody wants to be sold detergent while they’re scrolling.</span>
               </span>
-              <span class="hcard__cat mono">Social identity · 2025</span>
+              <span class="mono worklist__meta">Surf Excel · social identity · 2025</span>
+              <span class="worklist__still"><img src="assets/work/plates/surf-24-paglus.webp" alt="Surf Excel pitch slide: We are Cleanliness Paglus." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
           </li>
-          <li data-reveal style="--d:.05s">
-            <a class="hcard" href="#ch4" data-cursor="open">
-              <span class="hcard__img"><img src="assets/work/plates/boult-25-mouth.webp" alt="GoBoult pitch slide: LESSSGOOO written on a mouth, the logo below." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
-              <span class="hcard__row">
-                <span class="hcard__title">GoBoult — “Lesssgooo!!”</span>
-                <span class="hcard__link mono">View project <span aria-hidden="true">→</span></span>
+          <li data-reveal style="--d:0.05s">
+            <a class="worklist__row" href="#ch4" data-cursor="open" aria-label="GoBoult">
+              <span class="mono worklist__num">02</span>
+              <span class="worklist__body">
+                <span class="worklist__title">GoBoult — “Lesssgooo!!”</span>
+                <span class="worklist__desc">People bought Boult. They never believed in it.</span>
               </span>
-              <span class="hcard__cat mono">Rebrand · 2025</span>
+              <span class="mono worklist__meta">Boult · rebrand pitch · 2025</span>
+              <span class="worklist__still"><img src="assets/work/plates/boult-25-mouth.webp" alt="GoBoult pitch slide: LESSSGOOO written on a mouth, the logo below." width="1120" height="630" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
           </li>
-          <li data-reveal style="--d:.1s">
-            <a class="hcard" href="#ch8" data-cursor="open">
-              <span class="hcard__img"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower." width="720" height="900" loading="lazy" decoding="async" draggable="false"></span>
-              <span class="hcard__row">
-                <span class="hcard__title">Bajaj Electricals — “Your Wrapped 2025 is incomplete.”</span>
-                <span class="hcard__link mono">View project <span aria-hidden="true">→</span></span>
+          <li data-reveal style="--d:0.10s">
+            <a class="worklist__row" href="#ch8" data-cursor="open" aria-label="Bajaj">
+              <span class="mono worklist__num">03</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Bajaj Electricals — “Your Wrapped 2025 is incomplete.”</span>
+                <span class="worklist__desc">912 minutes singing in the shower. Yes, we counted.</span>
               </span>
-              <span class="hcard__cat mono">Always-on · 2025–26</span>
+              <span class="mono worklist__meta">Bajaj · always-on + films · 2025–26</span>
+              <span class="worklist__still"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower." width="720" height="900" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
           </li>
-          <li data-reveal style="--d:.15s">
-            <a class="hcard" href="#ch7" data-cursor="open">
-              <span class="hcard__img"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: 15 reel scripts for a real-estate creator." width="761" height="1075" loading="lazy" decoding="async" draggable="false"></span>
-              <span class="hcard__row">
-                <span class="hcard__title">The hook lab — 15 reels, four creators.</span>
-                <span class="hcard__link mono">View project <span aria-hidden="true">→</span></span>
+          <li data-reveal style="--d:0.15s">
+            <a class="worklist__row" href="#ch7" data-cursor="open" aria-label="Hooks">
+              <span class="mono worklist__num">04</span>
+              <span class="worklist__body">
+                <span class="worklist__title">The hook lab — 15 reels, four creators.</span>
+                <span class="worklist__desc">The first line isn’t the intro. It’s the whole reel.</span>
               </span>
-              <span class="hcard__cat mono">Short form · 2025</span>
+              <span class="mono worklist__meta">Reels · scripts · 2025</span>
+              <span class="worklist__still"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: 15 reel scripts for a real-estate creator." width="761" height="1075" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
           </li>
-          <li data-reveal style="--d:.2s">
-            <a class="hcard" href="#side" data-cursor="open">
-              <span class="hcard__img"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir." width="899" height="518" loading="lazy" decoding="async" draggable="false"></span>
-              <span class="hcard__row">
-                <span class="hcard__title">Vanilla Noir — “The Forbidden Orchid Elixir.”</span>
-                <span class="hcard__link mono">View project <span aria-hidden="true">→</span></span>
+          <li data-reveal style="--d:0.20s">
+            <a class="worklist__row" href="#side" data-cursor="open" aria-label="Noir">
+              <span class="mono worklist__num">05</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Vanilla Noir — “The Forbidden Orchid Elixir.”</span>
+                <span class="worklist__desc">A spec sales page — plus the ten-page teardown of why it works.</span>
               </span>
-              <span class="hcard__cat mono">Spec · web · 2025</span>
+              <span class="mono worklist__meta">Spec · web + teardown · 2025</span>
+              <span class="worklist__still"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir." width="899" height="518" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
           </li>
-          <li data-reveal style="--d:.25s">
-            <a class="hcard" href="#side" data-cursor="open">
-              <span class="hcard__img"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"></span>
-              <span class="hcard__row">
-                <span class="hcard__title">Luna by Khush — “Ignited by a glow from within.”</span>
-                <span class="hcard__link mono">View project <span aria-hidden="true">→</span></span>
+          <li data-reveal style="--d:0.25s">
+            <a class="worklist__row" href="#side" data-cursor="open" aria-label="Luna">
+              <span class="mono worklist__num">06</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Luna by Khush — “Ignited by a glow from within.”</span>
+                <span class="worklist__desc">“The lotus roots itself in the mud. It grows in the dark.”</span>
               </span>
-              <span class="hcard__cat mono">Founder email · 2025</span>
+              <span class="mono worklist__meta">Founder email · 2025</span>
+              <span class="worklist__still"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
             </a>
           </li>
-        </ul>
+        </ol>
       </section>
 
       <section class="home__block" id="notes" data-theme="ink" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
@@ -1081,28 +1169,36 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
           </div>
           <a class="home__seeall mono" href="#ch7" data-reveal>See all — chapter 07</a>
         </div>
-        <ul class="home__grid home__grid--notes">
-          <li class="hcard hcard--note" data-reveal>
-            <span class="hcard__tag mono">Hook · real estate</span>
-            <p class="hcard__line">“Do not give your house to your kids.”</p>
-            <span class="hcard__foot mono">0–3 s · the fear, then the fix</span>
+                <ol class="hookwall">
+          <li class="hookwall__item" data-reveal>
+            <span class="hookwall__tag mono">
+              Hook · real estate
+              <span class="hookwall__foot">0–3 s · the fear, then the fix</span>
+            </span>
+            <p class="hookwall__line">“Do not give your house to <em>your kids.</em>”</p>
           </li>
-          <li class="hcard hcard--note" data-reveal style="--d:.08s">
-            <span class="hcard__tag mono">Hook · careers</span>
-            <p class="hcard__line">“The interview question 90% of people know — and always answer wrong.”</p>
-            <span class="hcard__foot mono">one question · three reframes</span>
+          <li class="hookwall__item" data-reveal style="--d:0.08s">
+            <span class="hookwall__tag mono">
+              Hook · careers
+              <span class="hookwall__foot">one question · three reframes</span>
+            </span>
+            <p class="hookwall__line">“The interview question 90% of people know — and <em>always</em> answer wrong.”</p>
           </li>
-          <li class="hcard hcard--note" data-reveal style="--d:.16s">
-            <span class="hcard__tag mono">Hook · personal finance</span>
-            <p class="hcard__line">“Is ₹1 lakh enough for an emergency fund?”</p>
-            <span class="hcard__foot mono">the number, before the advice</span>
+          <li class="hookwall__item" data-reveal style="--d:0.16s">
+            <span class="hookwall__tag mono">
+              Hook · personal finance
+              <span class="hookwall__foot">the number, before the advice</span>
+            </span>
+            <p class="hookwall__line">“Is <em>₹1 lakh</em> enough for an emergency fund?”</p>
           </li>
-          <li class="hcard hcard--note" data-reveal style="--d:.24s">
-            <span class="hcard__tag mono">Hook · fitness</span>
-            <p class="hcard__line">“This is a 2.5 kg dumbbell. Here’s what everyone, including me, was doing wrong.”</p>
-            <span class="hcard__foot mono">the mistake, admitted first</span>
+          <li class="hookwall__item" data-reveal style="--d:0.24s">
+            <span class="hookwall__tag mono">
+              Hook · fitness
+              <span class="hookwall__foot">the mistake, admitted first</span>
+            </span>
+            <p class="hookwall__line">“This is a 2.5 kg dumbbell. Here’s what <em>everyone</em>, including me, was doing wrong.”</p>
           </li>
-        </ul>
+        </ol>
       </section>
 
       <section class="home__block home__ping" id="ping" data-theme="ink" data-chapter="Stay updated" aria-label="Stay updated — get a note when new work ships">
@@ -1563,7 +1659,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
         <p class="mono">Agency work shown with Zoo Media, 2024–26</p>
       </div>
       <div>
-        <p class="mono">© 2026 Abhijeet Kanase</p>
+        <p class="mono">© 2026 Abhijeet Kanase · updated october 2026</p>
         <p class="mono epilogue__disclaimer">Campaign figures as reported by clients &amp; the ICC</p>
       </div>
     </div>

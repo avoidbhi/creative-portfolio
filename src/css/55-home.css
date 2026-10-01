@@ -1,7 +1,9 @@
 /* ───────────── home — the desk, in the site's own cinematic language ─────────────
-   The app-shell structure (sticky sidebar · hero card · two-column grids) re-skinned into the
-   dark editorial world: hairlines, mono kickers, serif display, the red pen. The page is one
-   piece from the orbit to the epilogue. */
+   The app-shell structure (sticky sidebar · hero card · index rows · hook wall) in the
+   dark editorial world: hairlines, mono kickers, serif display, the red pen. The page is
+   one piece from the orbit to the epilogue.
+   Content format per 50-portfolio research: work = a numbered editorial index (the copy
+   is the cover), notes = a wall of big serif hook lines, hero = a hairline client marquee. */
 
 .home { padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
 .home__shell {
@@ -72,7 +74,8 @@
   background: var(--paper); color: var(--ink); border-radius: 999px;
   padding: .5rem 1.05rem; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .65);
 }
-.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); }
+.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .home__herobody {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
   padding: clamp(1.6rem, 3.5vw, 2.6rem);
@@ -96,7 +99,26 @@
 .home__btn--ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
 .home__btn--ghost:hover { background: rgba(var(--fg-rgb), .06); border-color: rgba(var(--fg-rgb), .35); color: var(--fg); }
 
+/* the client line — a hairline marquee; the work speaks in names */
+.clientline {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding: .9rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.clientline__track { display: flex; width: max-content; animation: clientline 48s linear infinite; }
+.clientline__track > span {
+  display: inline-flex; align-items: center;
+  font-size: .64rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
+}
+.clientline__track i { font-style: normal; margin: 0 1.9rem; color: rgba(var(--fg-rgb), .28); }
+@keyframes clientline { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .clientline__track { animation: none; } }
+
 /* section blocks: the site's own header language — kicker, serif display, a See-all */
+.home__block { scroll-margin-top: calc(var(--hud-h) + 1rem); }
 .home__head {
   position: relative; display: flex; align-items: flex-end; justify-content: space-between;
   gap: 1rem 2rem; margin-bottom: var(--s5);
@@ -110,35 +132,79 @@
 }
 .home__seeall:hover { color: var(--red); border-color: var(--red); }
 
-.home__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
-
-/* work cards — image, then title · view-project · category */
-.hcard {
-  display: block; background: rgba(var(--fg-rgb), .035); border: 1px solid var(--line); border-radius: 1rem;
-  color: inherit; text-decoration: none; overflow: hidden;
-  transition: transform .45s var(--ease-out), border-color .3s, background-color .3s;
+/* selected work — a numbered editorial index; the copy is the cover */
+.worklist { list-style: none; margin: 0; padding: 0; }
+.worklist__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 12.5rem 9.5rem 1.6rem;
+  gap: 1.3rem;
+  align-items: center;
+  padding: 1.45rem .6rem;
+  border-top: 1px solid var(--line);
+  color: inherit; text-decoration: none;
+  transition: background-color .3s;
 }
-.hcard:hover { transform: translateY(-3px); border-color: rgba(var(--fg-rgb), .34); background: rgba(var(--fg-rgb), .055); }
-.hcard__img { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--line); }
-.hcard__img img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.01); transition: transform 1.1s var(--ease-out); }
-.hcard:hover .hcard__img img { transform: scale(1.05); }
-.hcard__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1.05rem 1.2rem .3rem; }
-.hcard__title {
-  font-family: var(--font-serif); font-size: clamp(1.3rem, 2vw, 1.6rem); line-height: 1.15; letter-spacing: -.01em;
+.worklist > li:last-child .worklist__row { border-bottom: 1px solid var(--line); }
+.worklist__num { font-size: .7rem; opacity: 1; color: var(--muted); transition: color .3s; }
+.worklist__body { display: grid; gap: .45rem; min-width: 0; }
+.worklist__title {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.45rem, 2.5vw, 2.25rem); line-height: 1.05; letter-spacing: -.015em;
   transition: transform .5s var(--ease-out);
 }
-.hcard:hover .hcard__title { transform: translateX(.2em); }
-.hcard__link { color: var(--muted); font-size: .68rem; white-space: nowrap; transition: color .25s; }
-.hcard:hover .hcard__link { color: var(--red); }
-.hcard__cat { display: block; padding: 0 1.2rem 1.15rem; color: var(--muted); font-size: .68rem; }
+.worklist__desc { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 52ch; }
+.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); text-align: right; }
+.worklist__still {
+  display: block; aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line); border-radius: .55rem;
+}
+.worklist__still img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scale(1.02);
+  filter: saturate(.9) brightness(.9);
+  transition: transform 1.1s var(--ease-out), filter .5s;
+}
+.worklist__arrow { font-size: 1.05rem; color: var(--muted); transition: transform .4s var(--ease-out), color .3s; }
+.worklist__row:hover { background: rgba(var(--fg-rgb), .035); }
+.worklist__row:hover .worklist__num { color: var(--red); }
+.worklist__row:hover .worklist__title { transform: translateX(.35em); }
+.worklist__row:hover .worklist__still img { transform: scale(1.07); filter: saturate(1) brightness(1); }
+.worklist__row:hover .worklist__arrow { transform: translateX(.35em); color: var(--red); }
 
-/* note cards — tag, line, foot */
-.hcard--note { display: grid; grid-template-rows: auto 1fr auto; gap: .85rem; padding: 1.35rem 1.3rem 1.4rem; min-height: 13rem; align-content: start; }
-.hcard__tag { color: var(--muted); }
-.hcard__line { font-family: var(--font-serif); font-size: clamp(1.35rem, 2vw, 1.65rem); line-height: 1.2; letter-spacing: -.01em; }
-.hcard__foot { color: var(--muted); margin-top: auto; padding-top: .8rem; border-top: 1px solid var(--line); }
+/* notes — the hook wall: the lines themselves, big as they need to be, staggered */
+.hookwall { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.7rem; }
+.hookwall__item {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1rem 1.6rem;
+  align-items: baseline;
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+}
+.hookwall > li:last-child .hookwall__item { border-bottom: 1px solid var(--line); }
+.hookwall__tag {
+  display: grid; gap: .55rem;
+  font-size: .66rem; letter-spacing: .1em;
+  color: var(--muted);
+}
+.hookwall__foot { opacity: .7; }
+.hookwall__line {
+  margin: 0;
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.6rem, 3.3vw, 2.8rem); line-height: 1.08; letter-spacing: -.015em;
+  max-width: 26ch;
+  transition: transform .5s var(--ease-out);
+}
+.hookwall__line em { font-style: italic; color: var(--red); }
+.hookwall__item:hover .hookwall__line { transform: translateX(.4em); }
+.hookwall__item:nth-child(2) { margin-left: clamp(0rem, 6vw, 4.5rem); }
+.hookwall__item:nth-child(3) { margin-left: clamp(0rem, 12vw, 9rem); }
+.hookwall__item:nth-child(4) { margin-left: clamp(0rem, 4vw, 2.5rem); }
 
 /* stay updated — one wide card */
+.home__ping { margin-top: calc(var(--group) * .4); }
 .home__pingcard {
   display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
   background: rgba(var(--fg-rgb), .035); border: 1px solid var(--line); border-radius: 1.2rem;
