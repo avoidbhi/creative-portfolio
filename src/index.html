@@ -13,10 +13,10 @@
 <link rel="stylesheet" href="css/30-layout.css">
 <link rel="stylesheet" href="css/40-hud.css">
 <link rel="stylesheet" href="css/50-chapters.css">
+<link rel="stylesheet" href="css/55-home.css">
 <link rel="stylesheet" href="css/60-orbit.css">
 <link rel="stylesheet" href="css/70-epilogue.css">
 <link rel="stylesheet" href="css/80-responsive.css">
-<link rel="stylesheet" href="css/90-palettes.css">
 </head>
 <body>
 <div class="bg" aria-hidden="true"></div>
@@ -42,49 +42,26 @@
   <p class="hud__chapter mono" aria-live="polite"><span data-chapter-label>Prologue</span></p>
   <div class="hud__corner">
     <p class="hud__progress mono"><span data-progress-num>00</span><span class="hud__pct">%</span><span class="hud__read"> read</span></p>
-    <button class="hud__type mono" type="button" data-type-toggle aria-controls="typepal" aria-expanded="false" aria-label="Type palettes" title="Type palettes — click to open the list">
-      <span class="hud__type__aa" aria-hidden="true">Aa</span><span class="hud__type__lbl" data-pal-label>Instrument</span>
-    </button>
   </div>
 </header>
 
-<!-- ───────────────────────── TYPE PALETTES — 40 pairings, click to apply ───────────────────────── -->
-<div class="typepal" id="typepal" data-typepal role="dialog" aria-label="Type palettes" hidden>
-  <div class="typepal__head">
-    <p class="typepal__label mono">Type palettes · 40 settings, from the typography that keeps winning on Awwwards</p>
-    <h2 class="typepal__title">Pick the voice. <em>The page re-types instantly.</em></h2>
-    <div class="typepal__row">
-      <span class="typepal__hint mono">Every card is live · click to apply · Esc closes · kept on this device</span>
-      <button class="typepal__reset" type="button" data-type-reset>Reset</button>
-      <button class="typepal__x" type="button" data-type-close>Close</button>
-    </div>
-    <div class="typepal__row">
-      <button class="typepal__chip is-on" type="button" data-type-filter="all">All 40</button>
-      <button class="typepal__chip" type="button" data-type-filter="editorial">Editorial</button>
-      <button class="typepal__chip" type="button" data-type-filter="grotesk">Grotesk</button>
-      <button class="typepal__chip" type="button" data-type-filter="display">Display</button>
-      <button class="typepal__chip" type="button" data-type-filter="mono">Mono</button>
-      <button class="typepal__chip" type="button" data-type-filter="humanist">Humanist</button>
-      <button class="typepal__chip" type="button" data-type-filter="luxury">Luxury</button>
-    </div>
-  </div>
-  <div class="typepal__scroll" data-type-grid></div>
-  <p class="typepal__note mono">Specimens load from Google Fonts when this panel opens — nothing else on the site ever does. Blocked or offline, the cards fall back to the same category of system face.</p>
-</div>
 <!-- ───────────────────────── INDEX OVERLAY ───────────────────────── -->
 <div class="index" id="index" data-index aria-hidden="true">
   <div class="index__inner">
     <p class="mono index__label">Index — one orbit, eight chapters, one red pen</p>
     <ol class="index__list">
-      <li><a href="#orbit" data-index-link><span class="mono">00</span><span class="index__title">The orbit</span><span class="mono index__meta">34 pieces of work · scatter / grid / orbit</span></a></li>
+      <li><a href="#orbit" data-index-link><span class="mono">00</span><span class="index__title">The orbit</span><span class="mono index__meta">32 pieces of work · scatter / grid / orbit</span></a></li>
+      <li><a href="#work" data-index-link><span class="mono">0a</span><span class="index__title">Selected work</span><span class="mono index__meta">Six briefs · one click</span></a></li>
+      <li><a href="#notes" data-index-link><span class="mono">0b</span><span class="index__title">Notes — the hook lab</span><span class="mono index__meta">Four lines that open reels</span></a></li>
       <li><a href="#ch1" data-index-link><span class="mono">01</span><span class="index__title">The brief before the brief</span><span class="mono index__meta">About</span></a></li>
       <li><a href="#ch2" data-index-link><span class="mono">02</span><span class="index__title">ICC Champions Trophy</span><span class="mono index__meta">All on the Line · 2025</span></a></li>
       <li><a href="#ch3" data-index-link><span class="mono">03</span><span class="index__title">Surf Excel</span><span class="mono index__meta">Cleanliness Paglus · 2025</span></a></li>
       <li><a href="#ch4" data-index-link><span class="mono">04</span><span class="index__title">GoBoult</span><span class="mono index__meta">Lesssgooo · 2025</span></a></li>
       <li><a href="#ch5" data-index-link><span class="mono">05</span><span class="index__title">DHL × Mumbai Indians</span><span class="mono index__meta">Clio case film · IPL 2025</span></a></li>
-      <li><a href="#ch6" data-index-link><span class="mono">06</span><span class="index__title">The hook lab</span><span class="mono index__meta">Creator scripts · 3–5×</span></a></li>
-      <li><a href="#ch7" data-index-link><span class="mono">07</span><span class="index__title">The rest of the desk</span><span class="mono index__meta">Bajaj · web · email</span></a></li>
-      <li><a href="#ch8" data-index-link><span class="mono">08</span><span class="index__title">How I work</span><span class="mono index__meta">Method &amp; proof</span></a></li>
+      <li><a href="#ch6" data-index-link><span class="mono">06</span><span class="index__title">ICC Women’s World Cup</span><span class="mono index__meta">#WillToWin · 10 scripts</span></a></li>
+      <li><a href="#ch7" data-index-link><span class="mono">07</span><span class="index__title">The hook lab</span><span class="mono index__meta">Creator scripts · 3–5×</span></a></li>
+      <li><a href="#ch8" data-index-link><span class="mono">08</span><span class="index__title">The rest of the desk</span><span class="mono index__meta">Bajaj · web · email</span></a></li>
+      <li><a href="#ch9" data-index-link><span class="mono">09</span><span class="index__title">How I work</span><span class="mono index__meta">Method &amp; proof</span></a></li>
       <li><a href="#epilogue" data-index-link><span class="mono">∞</span><span class="index__title">Epilogue</span><span class="mono index__meta">Say hello</span></a></li>
     </ol>
     <p class="mono index__foot">abhi.insider@gmail.com · Mumbai, IN · <span data-clock>--:--</span> IST</p>
@@ -94,49 +71,47 @@
 <main data-main>
 
 <!-- ───────────────────────── 00 · THE ORBIT — the whole desk, turning ─────────────────────────
-     Andrianjaka Tony's card system (recent.design/i/75uqgzu) as the opening screen: every slide, static, script and
-     film on two counter-turning rings; Scatter / Grid are the other two arrangements. motion.js §8 adds .is-3d;
-     without it (no JS, GSAP blocked, reduced motion) this is a captioned grid under the headline. -->
+     Every slide, static, script and film on two counter-turning rings; Scatter / Grid are the other
+     two arrangements. motion.js adds .is-3d; without it (no JS, reduced motion) this is a captioned
+     grid under the headline. -->
 <section class="stage" id="orbit" data-stage data-theme="ink" data-chapter="00 · The orbit" aria-label="Selected work — every slide, static, script and film, in orbit">
   <h1 class="stage__title" data-stage-title>The audience wrote the brief. <em>I write the line.</em></h1>
   <div class="stage__space" data-stage-space>
     <div class="stage__ring" data-ring="in">
-      <figure class="stage__card" data-stage-card data-card-id="surf-24-paglus" data-k="Surf Excel × Zoo Media · Social pitch, slide 24 of 74 · 2025" data-href="#ch3"><img src="../assets/work/plates/surf-24-paglus.webp" alt="Pitch slide: We are Cleanliness Paglus. We love things clean. We find it therapeutic to clean, not just clothes but everything in the house." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“We are Cleanliness Paglus.” — the identity, in full</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-28-stain-story" data-k="Surf Excel × Zoo Media · Social pitch, slide 28 of 74 · 2025" data-href="#ch3"><img src="../assets/work/plates/surf-28-stain-story.webp" alt="Pitch slide: Every Stain Tells a Story — a carousel of three stains, each captioned “Every stain tells a story.”" width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Every stain tells a story.” — the comments write the story</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-38-horoscopes" data-k="Surf Excel × Zoo Media · Social pitch, slide 38 of 74 · 2025" data-href="#ch3"><img src="../assets/work/plates/surf-38-horoscopes.webp" alt="Pitch slide: Stain Horoscopes carousel — Taurus, curry stains; Aries, paint stains; Gemini, mud stains." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Stain Horoscopes — “Taurus: curry stains.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-39-stain-bios" data-k="Surf Excel × Zoo Media · Social pitch, slide 39 of 74 · 2025" data-href="#ch3"><img src="../assets/work/plates/surf-39-stain-bios.webp" alt="Pitch slide: If Stains Had Instagram Bios — carousel static of stain profiles." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">If Stains Had Instagram Bios</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-40-this-or-that" data-k="Surf Excel × Zoo Media · Social pitch, slide 40 of 74 · 2025" data-href="#ch3"><img src="../assets/work/plates/surf-40-this-or-that.webp" alt="Pitch slide: This or That — Instagram Stories poll: air dry or machine dry, folding clothes neatly or shoving in the closet." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">This or That — a Stories poll</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-65-bingo" data-k="Surf Excel × Zoo Media · Social pitch, slide 65 of 74 · 2025" data-href="#ch3"><img src="../assets/work/plates/surf-65-bingo.webp" alt="Pitch slide: Laundry Break Bingo — what did you tick off during your Surf Excel Matic laundry break?" width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Laundry Break Bingo — Surf Excel Matic</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-25-mouth" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 25 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-25-mouth.webp" alt="Pitch slide: a close-up of a mouth with LESSSGOOO on the teeth, the GoBoult logo below." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Lesssgooo!!” — the word, before the logo</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-08-name-hides" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 8 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-08-name-hides.webp" alt="Pitch slide: What the Name Hides — GO equals speed, momentum, action; Boult equals energy, boldness, power." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">What the name hides — GO + Boult</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-27-posters" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 27 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-27-posters.webp" alt="Pitch slide: two key visuals — Lesssgooo Viral with a cat in headphones, Lesssgooo Crazy with a hand holding a speaker." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lesssgooo Viral · Lesssgooo Crazy — key visuals</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-30-billboard-viral" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 30 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-30-billboard-viral.webp" alt="Pitch slide: the Lesssgooo Viral key visual on a billboard above a Mumbai street." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Out of home, Mumbai</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-45-roar-thump" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 45 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-45-roar-thump.webp" alt="Pitch slide: two product posts — Lesssgooo Roaaaarrrr with a gaming headset, Lesssgooo Thump with earbuds." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Product posts — Roaaaarrrr · Thump</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-54-team-belly" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 54 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-54-team-belly.webp" alt="Pitch slide: a contextual billboard reading Team Conrad, Team Jeremiah, Team Belly with a tick, next to a smartwatch." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contextual billboards — “Team Belly ✓”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-55-sirf-fein" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 55 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-55-sirf-fein.webp" alt="Pitch slide: a billboard reading Sirf Fein sunne ke liye 15,000 ki ticket leli, with gold earbuds." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Sirf Fein sunne ke liye 15,000 ki ticket leli.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-56-eras-tour" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 56 of 61 · 2025" data-href="#ch4"><img src="../assets/work/plates/boult-56-eras-tour.webp" alt="Pitch slide: a night billboard reading Aa maru Eras Tour che, with mint earbuds." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Aa maru Eras Tour che.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-24-paglus" data-k="Surf Excel × Zoo Media · Social pitch, slide 24 of 74 · 2025" data-href="pieces/surf-24-paglus.html"><img src="../assets/work/plates/surf-24-paglus.webp" alt="Pitch slide: We are Cleanliness Paglus. We love things clean. We find it therapeutic to clean, not just clothes but everything in the house." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“We are Cleanliness Paglus.” — the identity, in full</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-28-stain-story" data-k="Surf Excel × Zoo Media · Social pitch, slide 28 of 74 · 2025" data-href="pieces/surf-28-stain-story.html"><img src="../assets/work/plates/surf-28-stain-story.webp" alt="Pitch slide: Every Stain Tells a Story — a carousel of three stains, each captioned “Every stain tells a story.”" width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Every stain tells a story.” — the comments write the story</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-38-horoscopes" data-k="Surf Excel × Zoo Media · Social pitch, slide 38 of 74 · 2025" data-href="pieces/surf-38-horoscopes.html"><img src="../assets/work/plates/surf-38-horoscopes.webp" alt="Pitch slide: Stain Horoscopes carousel — Taurus, curry stains; Aries, paint stains; Gemini, mud stains." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Stain Horoscopes — “Taurus: curry stains.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-39-stain-bios" data-k="Surf Excel × Zoo Media · Social pitch, slide 39 of 74 · 2025" data-href="pieces/surf-39-stain-bios.html"><img src="../assets/work/plates/surf-39-stain-bios.webp" alt="Pitch slide: If Stains Had Instagram Bios — carousel static of stain profiles." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">If Stains Had Instagram Bios</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-40-this-or-that" data-k="Surf Excel × Zoo Media · Social pitch, slide 40 of 74 · 2025" data-href="pieces/surf-40-this-or-that.html"><img src="../assets/work/plates/surf-40-this-or-that.webp" alt="Pitch slide: This or That — Instagram Stories poll: air dry or machine dry, folding clothes neatly or shoving in the closet." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">This or That — a Stories poll</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-65-bingo" data-k="Surf Excel × Zoo Media · Social pitch, slide 65 of 74 · 2025" data-href="pieces/surf-65-bingo.html"><img src="../assets/work/plates/surf-65-bingo.webp" alt="Pitch slide: Laundry Break Bingo — what did you tick off during your Surf Excel Matic laundry break?" width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Laundry Break Bingo — Surf Excel Matic</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-25-mouth" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 25 of 61 · 2025" data-href="pieces/boult-25-mouth.html"><img src="../assets/work/plates/boult-25-mouth.webp" alt="Pitch slide: a close-up of a mouth with LESSSGOOO on the teeth, the GoBoult logo below." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Lesssgooo!!” — the word, before the logo</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-08-name-hides" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 8 of 61 · 2025" data-href="pieces/boult-08-name-hides.html"><img src="../assets/work/plates/boult-08-name-hides.webp" alt="Pitch slide: What the Name Hides — GO equals speed, momentum, action; Boult equals energy, boldness, power." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">What the name hides — GO + Boult</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-27-posters" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 27 of 61 · 2025" data-href="pieces/boult-27-posters.html"><img src="../assets/work/plates/boult-27-posters.webp" alt="Pitch slide: two key visuals — Lesssgooo Viral with a cat in headphones, Lesssgooo Crazy with a hand holding a speaker." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lesssgooo Viral · Lesssgooo Crazy — key visuals</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-30-billboard-viral" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 30 of 61 · 2025" data-href="pieces/boult-30-billboard-viral.html"><img src="../assets/work/plates/boult-30-billboard-viral.webp" alt="Pitch slide: the Lesssgooo Viral key visual on a billboard above a Mumbai street." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Out of home, Mumbai</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-45-roar-thump" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 45 of 61 · 2025" data-href="pieces/boult-45-roar-thump.html"><img src="../assets/work/plates/boult-45-roar-thump.webp" alt="Pitch slide: two product posts — Lesssgooo Roaaaarrrr with a gaming headset, Lesssgooo Thump with earbuds." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Product posts — Roaaaarrrr · Thump</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-54-team-belly" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 54 of 61 · 2025" data-href="pieces/boult-54-team-belly.html"><img src="../assets/work/plates/boult-54-team-belly.webp" alt="Pitch slide: a contextual billboard reading Team Conrad, Team Jeremiah, Team Belly with a tick, next to a smartwatch." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contextual billboards — “Team Belly ✓”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-55-sirf-fein" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 55 of 61 · 2025" data-href="pieces/boult-55-sirf-fein.html"><img src="../assets/work/plates/boult-55-sirf-fein.webp" alt="Pitch slide: a billboard reading Sirf Fein sunne ke liye 15,000 ki ticket leli, with gold earbuds." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Sirf Fein sunne ke liye 15,000 ki ticket leli.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-56-eras-tour" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 56 of 61 · 2025" data-href="pieces/boult-56-eras-tour.html"><img src="../assets/work/plates/boult-56-eras-tour.webp" alt="Pitch slide: a night billboard reading Aa maru Eras Tour che, with mint earbuds." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Aa maru Eras Tour che.”</figcaption></figure>
     </div>
     <div class="stage__ring" data-ring="out">
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-lohri" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="#ch7"><img src="../assets/work/bajaj-lohri.jpg" alt="Bajaj Electricals Lohri post: a bonfire in a courtyard" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lohri — “As the fire glows brighter, warmth finds its way home.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="derek-01" data-k="Creator scripts · Real estate · 15 reels · 2025" data-href="#ch6"><img src="../assets/work/plates/derek-01.webp" alt="Script document, page 1: Day 1 – 15 reel scripts for a real-estate creator; B-roll video, viral audio link, filming notes in red, text on screen, editor notes in green." width="761" height="1075" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Real estate, p.1 — B‑roll, viral audio, one number</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-sankranti" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="#ch7"><img src="../assets/work/bajaj-sankranti.jpg" alt="Bajaj Electricals Makar Sankranti post: a child flying a kite from a pile of til laddoos beside a mixer grinder" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-auto-shut-off" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="../assets/work/films/bajaj-auto-shut-off.webp" width="432" height="768" aria-label="Bajaj Auto Shut Off water heater film"><source src="../assets/work/films/bajaj-auto-shut-off.mp4" type="video/mp4"></video><figcaption class="mono">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-summer" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="../assets/work/bajaj-summer.jpg" alt="Bajaj Majesty RX10 room heater post: a man sunbathing indoors while it snows outside" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Majesty RX10 — “It’s always summer with Bajaj.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="vanilla-noir" data-k="Vanilla Noir · Spec sales page + teardown · 2025" data-href="#side"><img src="../assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours" width="899" height="518" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-kettle" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="../assets/work/bajaj-kettle.jpg" alt="Bajaj KTP electric kettle post: a chef reaching past a kettle for a pizza" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">KTP kettle — “Indulgence that never gets in your way.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="harshit-01" data-k="Creator scripts · Fitness · storytelling · 2025" data-href="#ch6"><img src="../assets/work/plates/harshit-01.webp" alt="Script document, page 1: fitness storytelling script beginning “This is a 2.5 kg dumbbell”, with camera directions highlighted." width="761" height="1075" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“This is a 2.5 kg dumbbell.” — the fitness script</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-gracio" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="../assets/work/bajaj-gracio.jpg" alt="Bajaj Gracio water heater post: a cutaway showing the anti-corrosion magnesium anode" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Gracio — “Corrosion doesn’t stand a chance.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-new-year" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="../assets/work/films/bajaj-new-year.webp" width="432" height="768" aria-label="Bajaj New Year film"><source src="../assets/work/films/bajaj-new-year.mp4" type="video/mp4"></video><figcaption class="mono">New Year — “When lights guide your way, every glow becomes a brighter step.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-contempo" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="../assets/work/bajaj-contempo.jpg" alt="Bajaj Contempo water heater post: two children playing in a bathtub under a protective dome" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contempo — “Joy in every splash, safety in every moment.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="nyc-01" data-k="Not Your College · Website copy, v1 · 2026" data-href="#side"><img src="../assets/work/plates/nyc-01.webp" alt="Not Your College website, hero: Build the skills, projects, and proof you need — before graduation." width="1120" height="792" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Build the skills, projects, and proof you need — before graduation.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-1" data-k="Bajaj Electricals × Zoo Media · Wrapped series 1/5 · 2025" data-href="#ch7"><img src="../assets/work/bajaj-wrapped-1.jpg" alt="Bajaj Wrapped 2025 post: Your Spotify Wrapped is incomplete" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-2" data-k="Bajaj Electricals × Zoo Media · Wrapped series 2/5 · 2025" data-href="#ch7"><img src="../assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “912 minutes singing in the shower.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="jobcoach-01" data-k="Creator scripts · Careers · talking‑head · 2025" data-href="#ch6"><img src="../assets/work/plates/jobcoach-01.webp" alt="Script document, page 1: talking-head script about the interview question 90% of people answer wrong, with three reframes in red." width="760" height="1074" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The interview question 90% of people answer wrong.” — three reframes</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-3" data-k="Bajaj Electricals × Zoo Media · Wrapped series 3/5 · 2025" data-href="#ch7"><img src="../assets/work/bajaj-wrapped-3.jpg" alt="Bajaj Wrapped 2025 post: 643 minutes to look fresh, with a Splendora iron" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “643 minutes to look fresh.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-home-stories" data-k="Bajaj Electricals × Zoo Media · Year‑end film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="../assets/work/films/bajaj-home-stories.webp" width="432" height="768" aria-label="Bajaj A Home Full of Stories film"><source src="../assets/work/films/bajaj-home-stories.mp4" type="video/mp4"></video><figcaption class="mono">Year‑end — “What makes your home a home? … A home full of stories.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-4" data-k="Bajaj Electricals × Zoo Media · Wrapped series 4/5 · 2025" data-href="#ch7"><img src="../assets/work/bajaj-wrapped-4.jpg" alt="Bajaj Wrapped 2025 post: 1526 minutes of mastering the art of cooking" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="luna-01" data-k="Luna by Khush · Founder‑led brand story email · 2025" data-href="#side"><img src="../assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, with the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Ignited by a glow from within.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-5" data-k="Bajaj Electricals × Zoo Media · Wrapped series 5/5 · 2025" data-href="#ch7"><img src="../assets/work/bajaj-wrapped-5.jpg" alt="Bajaj Wrapped 2025 post: Your top products in 2025 — Pentacle Digi water heater, Splendora iron, ICX 190 FS induction" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your top products in 2025.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-lohri" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="pieces/bajaj-lohri.html"><img src="../assets/work/bajaj-lohri.jpg" alt="Bajaj Electricals Lohri post: a bonfire in a courtyard" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lohri — “As the fire glows brighter, warmth finds its way home.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="derek-01" data-k="Creator scripts · Real estate · 15 reels · 2025" data-href="pieces/derek-01.html"><img src="../assets/work/plates/derek-01.webp" alt="Script document, page 1: Day 1 – 15 reel scripts for a real-estate creator; B-roll video, viral audio link, filming notes in red, text on screen, editor notes in green." width="1075" height="761" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Real estate, p.1 — B‑roll, viral audio, one number</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-sankranti" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="pieces/bajaj-sankranti.html"><img src="../assets/work/bajaj-sankranti.jpg" alt="Bajaj Electricals Makar Sankranti post: a child flying a kite from a pile of til laddoos beside a mixer grinder" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-auto-shut-off" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="pieces/bajaj-auto-shut-off.html"><video muted loop playsinline preload="none" poster="../assets/work/films/bajaj-auto-shut-off.webp" width="432" height="768" aria-label="Bajaj Auto Shut Off water heater film"><source src="../assets/work/films/bajaj-auto-shut-off.mp4" type="video/mp4"></video><figcaption class="mono">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-summer" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="pieces/bajaj-summer.html"><img src="../assets/work/bajaj-summer.jpg" alt="Bajaj Majesty RX10 room heater post: a man sunbathing indoors while it snows outside" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Majesty RX10 — “It’s always summer with Bajaj.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="vanilla-noir" data-k="Vanilla Noir · Spec sales page + teardown · 2025" data-href="pieces/vanilla-noir.html"><img src="../assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours" width="899" height="518" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="harshit-01" data-k="Creator scripts · Fitness · storytelling · 2025" data-href="pieces/harshit-01.html"><img src="../assets/work/plates/harshit-01.webp" alt="Script document, page 1: fitness storytelling script beginning “This is a 2.5 kg dumbbell”, with camera directions highlighted." width="1075" height="761" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“This is a 2.5 kg dumbbell.” — the fitness script</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-gracio" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="pieces/bajaj-gracio.html"><img src="../assets/work/bajaj-gracio.jpg" alt="Bajaj Gracio water heater post: a cutaway showing the anti-corrosion magnesium anode" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Gracio — “Corrosion doesn’t stand a chance.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-new-year" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="pieces/bajaj-new-year.html"><video muted loop playsinline preload="none" poster="../assets/work/films/bajaj-new-year.webp" width="432" height="768" aria-label="Bajaj New Year film"><source src="../assets/work/films/bajaj-new-year.mp4" type="video/mp4"></video><figcaption class="mono">New Year — “When lights guide your way, every glow becomes a brighter step.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-contempo" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="pieces/bajaj-contempo.html"><img src="../assets/work/bajaj-contempo.jpg" alt="Bajaj Contempo water heater post: two children playing in a bathtub under a protective dome" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contempo — “Joy in every splash, safety in every moment.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="nyc-01" data-k="Not Your College · Website copy, v1 · 2026" data-href="pieces/nyc-01.html"><img src="../assets/work/plates/nyc-01.webp" alt="Not Your College website, hero: Build the skills, projects, and proof you need — before graduation." width="792" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Build the skills, projects, and proof you need — before graduation.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-1" data-k="Bajaj Electricals × Zoo Media · Wrapped series 1/5 · 2025" data-href="pieces/bajaj-wrapped-1.html"><img src="../assets/work/bajaj-wrapped-1.jpg" alt="Bajaj Wrapped 2025 post: Your Spotify Wrapped is incomplete" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-2" data-k="Bajaj Electricals × Zoo Media · Wrapped series 2/5 · 2025" data-href="pieces/bajaj-wrapped-2.html"><img src="../assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “912 minutes singing in the shower.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="jobcoach-01" data-k="Creator scripts · Careers · talking‑head · 2025" data-href="pieces/jobcoach-01.html"><img src="../assets/work/plates/jobcoach-01.webp" alt="Script document, page 1: talking-head script about the interview question 90% of people answer wrong, with three reframes in red." width="1074" height="760" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The interview question 90% of people answer wrong.” — three reframes</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-3" data-k="Bajaj Electricals × Zoo Media · Wrapped series 3/5 · 2025" data-href="pieces/bajaj-wrapped-3.html"><img src="../assets/work/bajaj-wrapped-3.jpg" alt="Bajaj Wrapped 2025 post: 643 minutes to look fresh, with a Splendora iron" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “643 minutes to look fresh.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-4" data-k="Bajaj Electricals × Zoo Media · Wrapped series 4/5 · 2025" data-href="pieces/bajaj-wrapped-4.html"><img src="../assets/work/bajaj-wrapped-4.jpg" alt="Bajaj Wrapped 2025 post: 1526 minutes of mastering the art of cooking" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="luna-01" data-k="Luna by Khush · Founder‑led brand story email · 2025" data-href="pieces/luna-01.html"><img src="../assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, with the founder at her stall." width="950" height="760" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Ignited by a glow from within.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-5" data-k="Bajaj Electricals × Zoo Media · Wrapped series 5/5 · 2025" data-href="pieces/bajaj-wrapped-5.html"><img src="../assets/work/bajaj-wrapped-5.jpg" alt="Bajaj Wrapped 2025 post: Your top products in 2025 — Pentacle Digi water heater, Splendora iron, ICX 190 FS induction" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your top products in 2025.”</figcaption></figure>
     </div>
   </div>
   <div class="stage__hud mono">
@@ -147,17 +122,211 @@
     </div>
   </div>
   <div class="stage__foot mono">
-    <p class="stage__role">Copywriter &amp; creative strategist<br>Mumbai · available for briefs</p>
-    <p class="stage__line" data-stage-line aria-live="polite"><span class="stage__k" data-stage-k>34 pieces of work, 2025–26</span><span class="stage__q serif-i" data-stage-q></span><a class="stage__more" data-stage-more href="#ch1" hidden>Read the chapter ↓</a></p>
+    <p class="stage__role"><span class="serif-i">Copywriter &amp; creative strategist</span><br><span>Mumbai · available for briefs</span></p>
+    <p class="stage__line" data-stage-line aria-live="polite"><span class="stage__k" data-stage-k>32 pieces of work, 2025–26</span><span class="stage__q serif-i" data-stage-q></span><a class="stage__more" data-stage-more href="#ch1" hidden>Read the piece →</a></p>
     <p class="stage__links"><a href="mailto:abhi.insider@gmail.com" data-cursor="write">Email</a><a href="tel:+919930915975" data-cursor="call">Call</a><a href="#ch1">About</a></p>
   </div>
 </section>
 
+<!-- ───────────────────────── HOME — the Suite workspace: sidebar · hero · card grids ───────────────────────── -->
+<section class="home" id="home" data-theme="ink" data-chapter="Home" aria-label="The desk — every line shipped, in one place">
+  <div class="home__shell">
+
+    <aside class="home__side" aria-label="Site map">
+      <div class="home__profile" data-reveal>
+        <span class="home__avatar" aria-hidden="true">AK</span>
+        <span class="home__who"><strong>Abhijeet Kanase</strong><small>Copywriter · Mumbai</small></span>
+      </div>
+      <button class="home__search" type="button" data-index-toggle aria-controls="index" data-cursor="open">
+        <svg class="home__searchicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Search the index</span>
+        <span class="home__kbd mono">⌘K</span>
+      </button>
+      <nav class="home__nav" aria-label="Sections">
+        <p class="home__group mono">Main</p>
+        <a class="home__link" href="#orbit" data-home-link><span class="mono home__num">00</span>The orbit</a>
+        <a class="home__link" href="#work" data-home-link><span class="mono home__num">0a</span>Selected work</a>
+        <a class="home__link" href="#notes" data-home-link><span class="mono home__num">0b</span>Notes</a>
+        <a class="home__link" href="#side"><span class="mono home__num">✳</span>Side quests</a>
+        <p class="home__group mono">Chapters</p>
+        <a class="home__link" href="#ch1" data-home-link><span class="mono home__num">01</span>The brief</a>
+        <a class="home__link" href="#ch2" data-home-link><span class="mono home__num">02</span>ICC CT</a>
+        <a class="home__link" href="#ch3" data-home-link><span class="mono home__num">03</span>Surf Excel</a>
+        <a class="home__link" href="#ch4" data-home-link><span class="mono home__num">04</span>GoBoult</a>
+        <a class="home__link" href="#ch5" data-home-link><span class="mono home__num">05</span>DHL × MI</a>
+        <a class="home__link" href="#ch6" data-home-link><span class="mono home__num">06</span>ICC WWC</a>
+        <a class="home__link" href="#ch7" data-home-link><span class="mono home__num">07</span>Hook lab</a>
+        <a class="home__link" href="#ch8" data-home-link><span class="mono home__num">08</span>The desk</a>
+        <a class="home__link" href="#ch9" data-home-link><span class="mono home__num">09</span>How I work</a>
+        <p class="home__group mono">Connect</p>
+        <a class="home__link" href="#ping" data-home-link><span class="mono home__num">∞</span>Stay updated</a>
+        <a class="home__link" href="#epilogue" data-home-link><span class="mono home__num">∞</span>Say hello</a>
+      </nav>
+    </aside>
+
+    <div class="home__main">
+      <div class="home__hero" data-reveal>
+        <p class="home__herohead mono"><span class="home__dot"></span>the desk<span class="home__herosep">/</span>abhijeet kanase<span class="home__herosep">/</span>mumbai · <span data-clock>--:--</span> ist</p>
+        <div class="home__herobody">
+          <div class="home__herotext">
+            <h2 class="home__title">Every line I’ve shipped, <em>in one place.</em></h2>
+            <p class="home__sub">Thirty-two pieces of work, nine chapters and one red pen — campaigns, films, scripts, web and email, from the big briefs to the side quests.</p>
+          </div>
+          <div class="home__actions">
+            <a class="home__btn" href="#epilogue">Say hello</a>
+            <a class="home__btn home__btn--ghost" href="#work">See the work <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="clientline" aria-hidden="true">
+        <div class="clientline__track">
+          <span class="mono">bajaj electricals<i>·</i>surf excel<i>·</i>boult audio<i>·</i>zoo media<i>·</i>wwc<i>·</i>kokoonlabs<i>·</i>luna by khush<i>·</i>vanilla noir<i>·</i></span><span class="mono">bajaj electricals<i>·</i>surf excel<i>·</i>boult audio<i>·</i>zoo media<i>·</i>wwc<i>·</i>kokoonlabs<i>·</i>luna by khush<i>·</i>vanilla noir<i>·</i></span>
+        </div>
+      </div>
+
+      <section class="home__block" id="work" data-theme="ink" data-chapter="0a · Selected work" aria-label="Selected work — six briefs">
+        <div class="home__head" data-depth>
+          <div>
+            <p class="kicker mono" data-reveal>0a <span class="kicker__sep">/</span> Selected work</p>
+            <h2 class="display home__display" data-split>Six briefs. <em>One click each.</em></h2>
+          </div>
+          <a class="home__seeall mono" href="#orbit" data-reveal>See all — 32 in the orbit</a>
+        </div>
+                <ol class="worklist">
+          <li data-reveal>
+            <a class="worklist__row" href="#ch3" data-cursor="open" aria-label="Surf Excel">
+              <span class="mono worklist__num">01</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Surf Excel — “We are Cleanliness Paglus.”</span>
+                <span class="worklist__desc">Nobody wants to be sold detergent while they’re scrolling.</span>
+                <span class="mono worklist__meta">Surf Excel · social identity · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="../assets/work/plates/surf-24-paglus.webp" alt="Surf Excel pitch slide: We are Cleanliness Paglus." width="630" height="1120" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.05s">
+            <a class="worklist__row" href="#ch4" data-cursor="open" aria-label="GoBoult">
+              <span class="mono worklist__num">02</span>
+              <span class="worklist__body">
+                <span class="worklist__title">GoBoult — “Lesssgooo!!”</span>
+                <span class="worklist__desc">People bought Boult. They never believed in it.</span>
+                <span class="mono worklist__meta">Boult · rebrand pitch · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="../assets/work/plates/boult-25-mouth.webp" alt="GoBoult pitch slide: LESSSGOOO written on a mouth, the logo below." width="630" height="1120" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.10s">
+            <a class="worklist__row" href="#ch8" data-cursor="open" aria-label="Bajaj">
+              <span class="mono worklist__num">03</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Bajaj Electricals — “Your Wrapped 2025 is incomplete.”</span>
+                <span class="worklist__desc">912 minutes singing in the shower. Yes, we counted.</span>
+                <span class="mono worklist__meta">Bajaj · always-on + films · 2025–26</span>
+              </span>
+              <span class="worklist__still"><img src="../assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower." width="720" height="900" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.15s">
+            <a class="worklist__row" href="#ch7" data-cursor="open" aria-label="Hooks">
+              <span class="mono worklist__num">04</span>
+              <span class="worklist__body">
+                <span class="worklist__title">The hook lab — 15 reels, four creators.</span>
+                <span class="worklist__desc">The first line isn’t the intro. It’s the whole reel.</span>
+                <span class="mono worklist__meta">Reels · scripts · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="../assets/work/plates/derek-01.webp" alt="Script document, page 1: 15 reel scripts for a real-estate creator." width="1075" height="761" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.20s">
+            <a class="worklist__row" href="#side" data-cursor="open" aria-label="Noir">
+              <span class="mono worklist__num">05</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Vanilla Noir — “The Forbidden Orchid Elixir.”</span>
+                <span class="worklist__desc">A spec sales page — plus the ten-page teardown of why it works.</span>
+                <span class="mono worklist__meta">Spec · web + teardown · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="../assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir." width="899" height="518" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.25s">
+            <a class="worklist__row" href="#side" data-cursor="open" aria-label="Luna">
+              <span class="mono worklist__num">06</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Luna by Khush — “Ignited by a glow from within.”</span>
+                <span class="worklist__desc">“The lotus roots itself in the mud. It grows in the dark.”</span>
+                <span class="mono worklist__meta">Founder email · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="../assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, the founder at her stall." width="950" height="760" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ol>
+      </section>
+
+      <section class="home__block" id="notes" data-theme="ink" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
+        <div class="home__head" data-depth>
+          <div>
+            <p class="kicker mono" data-reveal>0b <span class="kicker__sep">/</span> Notes</p>
+            <h2 class="display home__display" data-split>The lines that <em>stop the scroll.</em></h2>
+          </div>
+          <a class="home__seeall mono" href="#ch7" data-reveal>See all — chapter 07</a>
+        </div>
+                <ol class="hookwall">
+          <li class="hookwall__item" data-reveal>
+            <span class="hookwall__tag mono">
+              Hook · real estate
+              <span class="hookwall__foot">0–3 s · the fear, then the fix</span>
+            </span>
+            <p class="hookwall__line">“Do not give your house to <em>your kids.</em>”</p>
+          </li>
+          <li class="hookwall__item" data-reveal style="--d:0.08s">
+            <span class="hookwall__tag mono">
+              Hook · careers
+              <span class="hookwall__foot">one question · three reframes</span>
+            </span>
+            <p class="hookwall__line">“The interview question 90% of people know — and <em>always</em> answer wrong.”</p>
+          </li>
+          <li class="hookwall__item" data-reveal style="--d:0.16s">
+            <span class="hookwall__tag mono">
+              Hook · personal finance
+              <span class="hookwall__foot">the number, before the advice</span>
+            </span>
+            <p class="hookwall__line">“Is <em>₹1 lakh</em> enough for an emergency fund?”</p>
+          </li>
+          <li class="hookwall__item" data-reveal style="--d:0.24s">
+            <span class="hookwall__tag mono">
+              Hook · fitness
+              <span class="hookwall__foot">the mistake, admitted first</span>
+            </span>
+            <p class="hookwall__line">“This is a 2.5 kg dumbbell. Here’s what <em>everyone</em>, including me, was doing wrong.”</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="home__block home__ping" id="ping" data-theme="ink" data-chapter="Stay updated" aria-label="Stay updated — get a note when new work ships">
+        <div class="home__pingcard" data-reveal>
+          <div class="home__pingtext">
+            <p class="kicker mono">Stay updated</p>
+            <p class="home__pingline">When work leaves the desk, <em>you get the note first.</em></p>
+            <p class="home__pingsub">No machine behind it — a campaign, a film, a teardown. One short note, and that’s the whole list.</p>
+          </div>
+          <a class="home__btn" href="mailto:abhi.insider@gmail.com?subject=Keep%20me%20posted" data-cursor="write">Keep me posted <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
 <!-- ───────────────────────── CHAPTER 01 · ABOUT ───────────────────────── -->
-<section class="chapter about" id="ch1" data-theme="paper" data-chapter="01 · The brief before the brief">
-  <span class="chapter__num serif-i" aria-hidden="true">01</span>
+<section class="chapter about" id="ch1" data-theme="ink" data-chapter="01 · The brief before the brief">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 01 <span class="kicker__sep">/</span> The brief before the brief</p>
+    <p class="kicker mono" data-reveal>01 <span class="kicker__sep">/</span> The brief before the brief</p>
     <h2 class="display" data-split>Hi. I’m Abhijeet. Before I write a word, <em>I read a few thousand.</em></h2>
   </div>
   <div class="about__grid">
@@ -190,9 +359,8 @@
 
 <!-- ───────────────────────── CHAPTER 02 · ICC ───────────────────────── -->
 <section class="chapter case" id="ch2" data-theme="ink" data-chapter="02 · ICC Champions Trophy 2025">
-  <span class="chapter__num serif-i" aria-hidden="true">02</span>
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 02 <span class="kicker__sep">/</span> ICC Men’s Champions Trophy 2025 · Zoo Media · Campaign</p>
+    <p class="kicker mono" data-reveal>02 <span class="kicker__sep">/</span> ICC Champions Trophy · 2025</p>
     <h2 class="display" data-split>The format was dying. <em>So we put everything on the line.</em></h2>
   </div>
   <div class="case__grid">
@@ -231,10 +399,9 @@
 </section>
 
 <!-- ───────────────────────── CHAPTER 03 · SURF EXCEL ───────────────────────── -->
-<section class="chapter case" id="ch3" data-theme="sand" data-chapter="03 · Surf Excel">
-  <span class="chapter__num serif-i" aria-hidden="true">03</span>
+<section class="chapter case" id="ch3" data-theme="ink" data-chapter="03 · Surf Excel">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 03 <span class="kicker__sep">/</span> Surf Excel × Zoo Media · Social strategy pitch · 2025</p>
+    <p class="kicker mono" data-reveal>03 <span class="kicker__sep">/</span> Surf Excel · 2025</p>
     <h2 class="display" data-split>Nobody wants to be sold detergent <em>while they’re scrolling.</em></h2>
   </div>
   <div class="case__grid">
@@ -267,15 +434,61 @@
         <figcaption class="mono">The identity slide, redrawn as a poster. Move your cursor — it leans.</figcaption>
       </figure>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="surf-24-paglus">Six pages from the pitch are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch3:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“We are Cleanliness Paglus.” — the identity, in full</p>
+            <a class="mono caselog__more" href="pieces/surf-24-paglus.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Every stain tells a story.” — the comments write the story</p>
+            <a class="mono caselog__more" href="pieces/surf-28-stain-story.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Stain Horoscopes — “Taurus: curry stains.”</p>
+            <a class="mono caselog__more" href="pieces/surf-38-horoscopes.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">If Stains Had Instagram Bios</p>
+            <a class="mono caselog__more" href="pieces/surf-39-stain-bios.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">This or That — a Stories poll</p>
+            <a class="mono caselog__more" href="pieces/surf-40-this-or-that.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Laundry Break Bingo — Surf Excel Matic</p>
+            <a class="mono caselog__more" href="pieces/surf-65-bingo.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch3:end -->
     </div>
   </div>
 </section>
 
 <!-- ───────────────────────── CHAPTER 04 · GOBOULT ───────────────────────── -->
-<section class="chapter case" id="ch4" data-theme="graphite" data-chapter="04 · GoBoult">
-  <span class="chapter__num serif-i" aria-hidden="true">04</span>
+<section class="chapter case" id="ch4" data-theme="ink" data-chapter="04 · GoBoult">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 04 <span class="kicker__sep">/</span> GoBoult × Zoo Media · Rebrand pitch · September 2025</p>
+    <p class="kicker mono" data-reveal>04 <span class="kicker__sep">/</span> GoBoult · September 2025</p>
     <h2 class="display" data-split>People bought Boult. <em>They never believed in it.</em></h2>
   </div>
   <div class="case__grid">
@@ -313,15 +526,75 @@
         <li><span class="mono">Film 3 · The Artist</span><p>A doodle on a café tissue, posted nervously. Late nights, collabs, and finally a wall the size of a city block.</p></li>
       </ul>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="boult-25-mouth">Eight pages from the pitch are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch4:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Lesssgooo!!” — the word, before the logo</p>
+            <a class="mono caselog__more" href="pieces/boult-25-mouth.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">What the name hides — GO + Boult</p>
+            <a class="mono caselog__more" href="pieces/boult-08-name-hides.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Lesssgooo Viral · Lesssgooo Crazy — key visuals</p>
+            <a class="mono caselog__more" href="pieces/boult-27-posters.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Out of home, Mumbai</p>
+            <a class="mono caselog__more" href="pieces/boult-30-billboard-viral.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Product posts — Roaaaarrrr · Thump</p>
+            <a class="mono caselog__more" href="pieces/boult-45-roar-thump.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Contextual billboards — “Team Belly ✓”</p>
+            <a class="mono caselog__more" href="pieces/boult-54-team-belly.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Sirf Fein sunne ke liye 15,000 ki ticket leli.”</p>
+            <a class="mono caselog__more" href="pieces/boult-55-sirf-fein.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Aa maru Eras Tour che.”</p>
+            <a class="mono caselog__more" href="pieces/boult-56-eras-tour.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch4:end -->
     </div>
   </div>
 </section>
 
 <!-- ───────────────────────── CHAPTER 05 · DHL ───────────────────────── -->
-<section class="chapter case" id="ch5" data-theme="paper" data-chapter="05 · DHL × Mumbai Indians">
-  <span class="chapter__num serif-i" aria-hidden="true">05</span>
+<section class="chapter case" id="ch5" data-theme="ink" data-chapter="05 · DHL × Mumbai Indians">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · IPL 2025 · Case film for the Clio Awards</p>
+    <p class="kicker mono" data-reveal>05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · 2025</p>
     <h2 class="display" data-split>While other brands shouted, <em>DHL had a conversation.</em></h2>
   </div>
   <div class="case__grid">
@@ -361,11 +634,43 @@
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 06 · THE HOOK LAB ───────────────────────── -->
-<section class="chapter case" id="ch6" data-theme="graphite" data-chapter="06 · The hook lab">
-  <span class="chapter__num serif-i" aria-hidden="true">06</span>
+<!-- ───────────────────────── CHAPTER 06 · ICC WOMEN'S WORLD CUP ───────────────────────── -->
+<section class="chapter case" id="ch6" data-theme="ink" data-chapter="06 · ICC Women's World Cup">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 06 <span class="kicker__sep">/</span> Short‑form scripts · six‑ and seven‑figure creators · 2025</p>
+    <p class="kicker mono" data-reveal>06 <span class="kicker__sep">/</span> ICC Women’s World Cup · 2025</p>
+    <h2 class="display" data-split>Ten players, one tournament — <em>and ten different scripts.</em></h2>
+  </div>
+  <div class="case__grid">
+    <aside class="case__meta" data-reveal>
+      <dl class="meta">
+        <div><dt>Client</dt><dd>ICC — Women’s World Cup 2025 · Zoo Media, Mumbai</dd></div>
+        <div><dt>Role</dt><dd>Copywriter — player story scripts</dd></div>
+        <div><dt>Deliverables</dt><dd>10 personalized player scripts · one per player</dd></div>
+        <div><dt>Hashtag</dt><dd>#WillToWin</dd></div>
+      </dl>
+    </aside>
+    <div class="case__body">
+      <p class="prose" data-reveal>For the ICC Women’s World Cup 2025, each player got a story in her own voice — not ten versions of the same line. Smriti Mandhana and Jemimah Rodrigues, Amelia Kerr and Sophie Ecclestone, Harshita Samavikrama and Fatima Sana: ten scripts, one idea — <span class="mono">#WillToWin</span>.</p>
+      <ul class="players" data-reveal>
+        <li><span class="mono">01</span>Smriti Mandhana</li>
+        <li><span class="mono">02</span>Jemimah Rodrigues</li>
+        <li><span class="mono">03</span>Amelia Kerr</li>
+        <li><span class="mono">04</span>Sophie Ecclestone</li>
+        <li><span class="mono">05</span>Ashleigh Gardner</li>
+        <li><span class="mono">06</span>Harshita Samavikrama</li>
+        <li><span class="mono">07</span>Fatima Sana</li>
+        <li><span class="mono">08</span>Laura Wolvaardt</li>
+        <li><span class="mono">09</span>Sarah Glenn</li>
+        <li><span class="mono">10</span>Nigar Sultana Jyoti</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── CHAPTER 07 · THE HOOK LAB ───────────────────────── -->
+<section class="chapter case" id="ch7" data-theme="ink" data-chapter="07 · The hook lab">
+  <div class="chapter__head" data-depth>
+    <p class="kicker mono" data-reveal>07 <span class="kicker__sep">/</span> The hook lab · 2025</p>
     <h2 class="display" data-split>The first line isn’t the intro. <em>It’s the whole reel.</em></h2>
   </div>
   <div class="case__grid">
@@ -417,15 +722,40 @@
         <figcaption class="mono">Five hooks from the folder, each with its own camera direction and editor note.</figcaption>
       </figure>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="derek-01">Three of the scripts, as delivered, are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch7:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Real estate, p.1 — B‑roll, viral audio, one number</p>
+            <a class="mono caselog__more" href="pieces/derek-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“This is a 2.5 kg dumbbell.” — the fitness script</p>
+            <a class="mono caselog__more" href="pieces/harshit-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“The interview question 90% of people answer wrong.” — three reframes</p>
+            <a class="mono caselog__more" href="pieces/jobcoach-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch7:end -->
     </div>
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 07 · THE REST OF THE DESK ───────────────────────── -->
-<section class="chapter case desk" id="ch7" data-theme="sand" data-chapter="07 · The rest of the desk">
-  <span class="chapter__num serif-i" aria-hidden="true">07</span>
+<!-- ───────────────────────── CHAPTER 08 · THE REST OF THE DESK ───────────────────────── -->
+<section class="chapter case desk" id="ch8" data-theme="ink" data-chapter="08 · Bajaj Electricals">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 07 <span class="kicker__sep">/</span> Bajaj Electricals · Always‑on social · 2025 — and the side quests</p>
+    <p class="kicker mono" data-reveal>08 <span class="kicker__sep">/</span> Bajaj Electricals · 2025–26</p>
     <h2 class="display" data-split>912 minutes singing in the shower. <em>Yes, we counted.</em></h2>
   </div>
   <div class="case__grid">
@@ -438,7 +768,97 @@
       </dl>
     </aside>
     <div class="case__body">
-      <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="bajaj-wrapped-2">Eleven statics and three films are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <p class="prose" data-reveal>Bajaj’s feed has no off-season — festive statics, product posts, a five-part Wrapped series and three films, all in the same kitchen-table voice.</p>
+      <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="bajaj-wrapped-2">Ten statics and two films are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch8:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Lohri — “As the fire glows brighter, warmth finds its way home.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-lohri.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-sankranti.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-auto-shut-off.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Majesty RX10 — “It’s always summer with Bajaj.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-summer.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Gracio — “Corrosion doesn’t stand a chance.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-gracio.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">New Year — “When lights guide your way, every glow becomes a brighter step.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-new-year.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Contempo — “Joy in every splash, safety in every moment.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-contempo.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-1.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “912 minutes singing in the shower.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-2.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “643 minutes to look fresh.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-3.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-4.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “Your top products in 2025.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-5.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch8:end -->
       <div class="side" id="side">
         <p class="kicker mono" data-reveal>Side quests <span class="kicker__sep">/</span> long‑form, web &amp; email</p>
         <ul class="side__list">
@@ -457,23 +877,73 @@
             <p class="side__title">“The Lotus roots itself in the mud. It grows in the dark… you are that flower breaking the surface.”</p>
             <p class="mono side__tag">Luna by Khush · founder email · 2025 · <a href="#orbit" data-orbit-open="luna-01">in the orbit ↑</a></p>
           </li>
+          <li class="side__item" data-reveal style="--d:.3s">
+            <p class="side__big">KokoonLabs<span class="dot">.</span></p>
+            <p class="side__title">Website copy — version three.</p>
+            <p class="mono side__tag">Web · v3 · 2026</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.4s">
+            <p class="side__big">LumiCell<span class="dot">.</span></p>
+            <p class="side__title">The Renewal Serum — product page copy.</p>
+            <p class="mono side__tag">Product page · 2025</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.5s">
+            <p class="side__big serif-i">The win-back<span class="dot">.</span></p>
+            <p class="side__title">A re-engagement sequence for a beauty brand.</p>
+            <p class="mono side__tag">Email · beauty · 2026</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.6s">
+            <p class="side__big serif-i">Is your gym diet holding you back?</p>
+            <p class="side__title">A creator email that opens on the question, not the product.</p>
+            <p class="mono side__tag">Email · fitness · 2025</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.7s">
+            <p class="side__big serif-i">Join India’s no. 1 coding community<span class="dot">.</span></p>
+            <p class="side__title">The membership pitch — written to sound like the people in it.</p>
+            <p class="mono side__tag">Email · creators · 2025</p>
+          </li>
         </ul>
       </div>
+      <!-- caselog:side:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">Side quests, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</p>
+            <a class="mono caselog__more" href="pieces/vanilla-noir.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2026</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Build the skills, projects, and proof you need — before graduation.”</p>
+            <a class="mono caselog__more" href="pieces/nyc-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Ignited by a glow from within.”</p>
+            <a class="mono caselog__more" href="pieces/luna-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:side:end -->
     </div>
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 08 · HOW I WORK ───────────────────────── -->
-<section class="chapter process" id="ch8" data-theme="paper" data-chapter="08 · How I work">
-  <span class="chapter__num serif-i" aria-hidden="true">08</span>
+<!-- ───────────────────────── CHAPTER 09 · HOW I WORK ───────────────────────── -->
+<section class="chapter process" id="ch9" data-theme="ink" data-chapter="09 · How I work">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 08 <span class="kicker__sep">/</span> How I work</p>
+    <p class="kicker mono" data-reveal>09 <span class="kicker__sep">/</span> How I work</p>
     <h2 class="display" data-split>The method is research. <em>The output is a line.</em></h2>
   </div>
   <ol class="steps">
     <li class="step" data-reveal><span class="step__num serif-i">01</span><h3 class="step__title">Mine the comments</h3><p class="step__body">Reddit threads, one‑star reviews, YouTube replies. The audience has already written the objections and the desires.</p></li>
     <li class="step" data-reveal style="--d:.08s"><span class="step__num serif-i">02</span><h3 class="step__title">Study the winners</h3><p class="step__body">50+ Cannes and Clio winners, reverse‑engineered. Which structures survive a change of medium?</p></li>
-    <li class="step" data-reveal style="--d:.16s"><span class="step__num serif-i">03</span><h3 class="step__title">Write a hundred</h3><p class="step__body">100–200 concepts per brief, from a research system built on Claude and Lovable. The client sees three.</p></li>
+    <li class="step" data-reveal style="--d:.16s"><span class="step__num serif-i">03</span><h3 class="step__title">Write a hundred</h3><p class="step__body">100–200 concepts per brief. The client sees three.</p></li>
     <li class="step" data-reveal style="--d:.24s"><span class="step__num serif-i">04</span><h3 class="step__title">Write for the ear and the thumb</h3><p class="step__body">A line that can’t survive being said aloud, or scrolled past, isn’t finished.</p></li>
   </ol>
 
@@ -504,6 +974,8 @@
     </svg>
   </div>
 </section>
+
+
 
 </main>
 
@@ -540,10 +1012,11 @@
       </div>
       <div>
         <p class="mono">Set in Instrument Serif &amp; Sans</p>
+        <p class="mono">Stack — Docs · Grammarly · Figma · Notion · Loom</p>
         <p class="mono">Agency work shown with Zoo Media, 2024–26</p>
       </div>
       <div>
-        <p class="mono">© 2026 Abhijeet Kanase</p>
+        <p class="mono">© 2026 Abhijeet Kanase · updated october 2026</p>
         <p class="mono epilogue__disclaimer">Campaign figures as reported by clients &amp; the ICC</p>
       </div>
     </div>
@@ -557,6 +1030,5 @@
 <script src="main.js"></script>
 <script src="motion.js"></script>
 <script src="fluid.js"></script>
-<script src="palettes.js"></script>
 </body>
 </html>

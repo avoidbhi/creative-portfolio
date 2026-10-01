@@ -51,6 +51,7 @@
 
   --gutter: clamp(1.25rem, 4vw, 4.5rem);
   --max: 1480px;
+  --page: 76rem;   /* ONE content column: home, every chapter, the epilogue — same edges, same hairlines */
   --hud-h: 4.5rem;
 
 }
@@ -76,6 +77,17 @@ html {
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body { margin: 0; min-height: 100svh; }
 .bg { position: fixed; inset: 0; z-index: -1; background: var(--bg-gradient); pointer-events: none; contain: strict; }   /* the single background */
+.bg::before {   /* ambient atmosphere: an ember over the opening, a cool counter-light at the right, warmth at the page's foot — a few percent, never a wash (small soft radials, so no banding) */
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(55rem 38rem at 14% -10%, rgba(255, 59, 48, .07), transparent 62%),
+    radial-gradient(48rem 36rem at 92% 2%, rgba(96, 124, 255, .05), transparent 64%),
+    radial-gradient(64rem 46rem at 50% 122%, rgba(255, 122, 84, .055), transparent 66%);
+}
+.bg::after {   /* film grain: 3 % fractal noise under the content — the type stays crisp, the black gains texture */
+  content: ''; position: absolute; inset: 0; opacity: .03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 .bg__fluid { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 1; transition: opacity .8s var(--ease-out); }   /* fluid.js paints the dye here, transparent over the black; cursor-only, sleeps when clear */
 .bg__fluid.is-gone { opacity: 0; }
 html.has-cursor body { cursor: none; }
@@ -106,9 +118,9 @@ ol, ul { padding: 0; list-style: none; }
 .display {
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(2.6rem, 6.2vw, 6.6rem);
-  line-height: .98;
-  letter-spacing: -.015em;
+  font-size: clamp(2.8rem, 6.8vw, 7.2rem);
+  line-height: .96;
+  letter-spacing: -.02em;
   text-wrap: balance;
   max-width: 14ch;
 }
@@ -166,12 +178,11 @@ main { position: relative; z-index: 2; background: transparent; color: var(--fg)
 
 /* the boundary is a hairline, not a void: 11rem/10rem of padding stacked on a 5.5rem head
    margin and up to 7rem of trailing block margin meant ~400px of nothing between chapters */
-.chapter { position: relative; overflow: visible clip; /* y clipped for the numerals */ padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: var(--max); margin-inline: auto; }
-.chapter__num {
-  position: absolute; top: -.05em; right: calc(var(--gutter) - .06em);
-  font-size: clamp(9rem, 26vw, 24rem); line-height: 1;
-  color: var(--fg); opacity: .1; pointer-events: none; user-select: none;
-  will-change: transform;
+.chapter { position: relative; overflow: visible clip; padding: var(--section) var(--gutter) var(--group); max-width: min(var(--max), var(--page)); margin-inline: auto; }   /* the page's one column (var(--page)); the prose measure — 58ch — keeps the essay width */
+.chapter::before {   /* the rule runs edge to edge — the page reads as a bound volume */
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 100vw; max-width: var(--max);
+  border-top: 1px solid var(--line);
 }
 .chapter__head { position: relative; display: grid; gap: var(--s3); margin-bottom: var(--group); }
 [data-depth] { will-change: transform, opacity; transform-origin: 50% 100%; }          /* scroll-derived arrival (translate/scale/opacity), one writer: the page loop */
@@ -215,6 +226,7 @@ main { position: relative; z-index: 2; background: transparent; color: var(--fg)
 .hud__chapter { bottom: 1.4rem; left: var(--gutter); color: var(--muted); overflow: hidden; padding: .2rem .5rem; margin-left: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__chapter span { display: inline-block; transition: transform .45s var(--ease-out), opacity .45s; }
 .hud__chapter.is-swapping span { transform: translateY(110%); opacity: 0; transition: transform .25s var(--ease-in), opacity .25s; }
+.hud__corner { bottom: 1.4rem; right: var(--gutter); left: auto; display: flex; align-items: center; gap: .55rem; }
 .hud__progress { bottom: 1.4rem; right: var(--gutter); color: var(--muted); font-variant-numeric: tabular-nums; padding: .2rem .5rem; margin-right: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__pct { margin-left: .05em; }
 html.index-open .hud { color: var(--white); }
@@ -247,7 +259,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .index__foot { color: rgba(255,255,255,.7); margin-top: var(--s5); }
 
 /* ───────────── about ───────────── */
-.about__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--group) var(--col); align-items: start; }
+.about__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
 .about__side { display: grid; gap: var(--group); }
 
 /* tilt artifacts */
@@ -272,11 +284,25 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .is-in .card__circle path, .no-js .card__circle path { stroke-dashoffset: 0; }
 .card__foot { color: var(--red); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
 
-/* ───────────── case chapters ───────────── */
-.case__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: var(--group) var(--col); align-items: start; }
-.case__meta { position: sticky; top: calc(var(--hud-h) + var(--s4)); padding-top: var(--s1); }
+/* ───────────── case chapters — single-column editorial ─────────────
+   One centred column per chapter: kicker, headline, a compact meta line, then the body.
+   The side rail and the ghost numerals are gone; the meta dl collapses to one wrapped line. */
+.case__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
+.case__meta { position: static; }
 .case__grid + .case__grid { margin-top: var(--section); }
 .case__body { display: grid; gap: var(--group); }
+
+/* the meta dl as one compact line: "CLIENT — value · ROLE — value · …" (works for the about chapter too) */
+.case__meta .meta, .about__side .meta { display: flex; flex-wrap: wrap; gap: .55rem 2.5rem; }
+.case__meta .meta div, .about__side .meta div { display: flex; gap: .6rem; border-top: 0; padding-top: 0; }
+.case__meta .meta dt, .about__side .meta dt { min-width: auto; }
+.case__meta .meta dd, .about__side .meta dd { padding-right: 0; }
+
+/* the WWC roster — ten players, numbered */
+.players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 48rem; }
+.players li { display: flex; align-items: baseline; gap: 1.1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-family: var(--font-serif); font-size: clamp(1.25rem, 1.7vw, 1.55rem); line-height: 1.15; }
+.players .mono { color: var(--muted); min-width: 2ch; flex: none; }
+@media (max-width: 640px) { .players { grid-template-columns: 1fr; } }
 
 .brief { display: grid; gap: var(--s2); }
 .brief p { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.8vw, 2.7rem); line-height: 1.12; letter-spacing: -.01em; max-width: 24ch; }
@@ -337,7 +363,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 /* poster */
 .artifact--poster { max-width: 24rem; min-width: 0; }   /* a grid item's min-width:auto would let the 3:4 poster's content height widen the column (overflow at 320 px) */
 .poster {
-  aspect-ratio: 3 / 4; background: var(--paper); color: var(--ink);
+  aspect-ratio: 3 / 4; background: var(--surface); color: var(--ink);   /* one paper stock, page-wide: the same cream as the notecard */
   padding: 1.4rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
   box-shadow: 0 30px 60px -28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
 }
@@ -420,11 +446,246 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 /* phone (hook lab) */
 .phone__hero-text--sm { font-size: 1.22rem; line-height: 1.12; }
 
-/* ───────────── the desk: gallery + side quests ───────────── */
+/* ───────────── the desk: side quests ───────────── */
 .desk__intro { max-width: 62ch; margin-bottom: var(--group); }
+.side { display: grid; gap: var(--s5); }
+.side__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; }
+.side__item { display: grid; gap: .45rem; padding: var(--s4) 0; border-top: 1px solid var(--line); align-content: start; }
+.side__big { font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 1.8rem); line-height: 1.12; letter-spacing: -.01em; }
+.side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
+.side__tag { color: var(--muted); }
+
+/* ── caselog — the dated work ledger, generated from src/data/pieces.json by tools/gen_log.py ── */
+.caselog { list-style: none; margin: var(--group) 0 0; padding: 0; border-top: 1px solid var(--line); }
+.caselog__head { border-bottom: 1px solid var(--line); padding-bottom: .7rem; margin: 0; }
+.caselog__head .mono { font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.caselog > li:not(.caselog__head) { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1.2rem; padding: 1.05rem 0; border-bottom: 1px solid var(--line); }
+.caselog__year { font-size: .78rem; letter-spacing: .05em; color: var(--muted); padding-top: .4rem; }
+.caselog__what { font-family: var(--font-serif); font-weight: 400; font-size: 1.3rem; line-height: 1.35; margin: 0 0 .45rem; }
+.caselog__more { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); text-decoration: none; }
+.caselog__more:hover { color: var(--red); }
+@media (max-width: 640px) {
+  .caselog > li:not(.caselog__head) { grid-template-columns: 1fr; gap: .25rem; }
+  .caselog__year { padding-top: 0; }
+}
+/* ───────────── home — the desk, in the site's own cinematic language ─────────────
+   The app-shell structure (sticky sidebar · hero card · index rows · hook wall) in the
+   dark editorial world: hairlines, mono kickers, serif display, the red pen. The page is
+   one piece from the orbit to the epilogue.
+   Content format per 50-portfolio research: work = a numbered editorial index (the copy
+   is the cover), notes = a wall of big serif hook lines, hero = a hairline client marquee. */
+
+.home { position: relative; padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
+.home::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; max-width: var(--max); border-top: 1px solid var(--line); }
+.home__shell {
+  max-width: min(var(--max), var(--page)); margin-inline: auto;
+  display: grid; grid-template-columns: 248px minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem); align-items: start;
+}
+
+/* ── sidebar ── */
+.home__side {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto; scrollbar-width: none;
+  padding: calc(var(--hud-h) + .5rem) var(--s4) 1.5rem 0;
+  border-right: 1px solid var(--line);
+  display: grid; gap: 1.4rem;
+}
+.home__side::-webkit-scrollbar { display: none; }
+.home__profile { display: flex; gap: .75rem; align-items: center; padding: .25rem 0; }
+.home__avatar {
+  width: 2.6rem; height: 2.6rem; border-radius: .8rem; flex: none;
+  background: var(--red); color: var(--ink);
+  display: grid; place-items: center;
+  font-family: var(--font-serif); font-style: italic; font-size: 1.05rem;
+  box-shadow: 0 6px 20px -6px rgba(255, 59, 48, .55);
+}
+.home__who { display: grid; gap: .15rem; min-width: 0; }
+.home__who strong { font-size: .95rem; font-weight: 600; letter-spacing: -.01em; }
+.home__who small { font-size: .75rem; color: var(--muted); }
+.home__search {
+  display: flex; align-items: center; gap: .6rem; width: 100%;
+  background: rgba(var(--fg-rgb), .04); border: 1px solid var(--line); border-radius: .7rem;
+  padding: .68rem .8rem; cursor: pointer; color: var(--muted);
+  font: 400 .85rem/1 var(--font-sans); text-align: left;
+  transition: border-color .25s, background-color .25s, color .25s;
+}
+.home__search:hover { border-color: rgba(var(--fg-rgb), .32); background: rgba(var(--fg-rgb), .07); color: var(--fg); }
+.home__searchicon { width: .95rem; height: .95rem; flex: none; }
+.home__kbd { margin-left: auto; font-size: .62rem; padding: .3rem .45rem; border: 1px solid var(--line); border-radius: .4rem; }
+.home__nav { display: grid; gap: .15rem; }
+.home__group { margin: 1rem .75rem .35rem; font-size: .62rem; color: var(--muted); opacity: .6; }
+.home__nav .home__group:first-child { margin-top: 0; }
+.home__link {
+  display: flex; align-items: center; gap: .7rem; padding: .55rem .75rem; border-radius: .7rem;
+  color: rgba(var(--fg-rgb), .66); text-decoration: none;
+  font: 400 .92rem/1.2 var(--font-sans);
+  transition: background-color .2s, color .2s;
+}
+.home__link:hover { background: rgba(var(--fg-rgb), .06); color: var(--fg); }
+.home__link.is-active { background: rgba(var(--fg-rgb), .07); color: var(--fg); font-weight: 600; }
+.home__link.is-active .home__num { color: var(--red); opacity: 1; }
+.home__num { width: 1.7rem; font-size: .62rem; opacity: .5; flex: none; }
+
+/* ── main column ── */
+.home__main { display: grid; gap: var(--group); min-width: 0; }
+
+/* the opening — no card: the statement runs edge to edge on the page's own light */
+.home__hero {
+  position: relative;
+  background:
+    radial-gradient(55% 240% at 18% -20%, rgba(255, 59, 48, .13), transparent 60%),
+    radial-gradient(45% 220% at 68% -30%, rgba(96, 124, 255, .09), transparent 58%);
+}
+/* the desk line — mono metadata, live IST clock */
+.home__herohead { display: flex; align-items: center; gap: .9rem; margin: 0 0 var(--group); font-size: .64rem; letter-spacing: .18em; color: var(--muted); }
+.home__herosep { opacity: .4; }
+.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.home__herobody {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  padding: 0 0 clamp(2.2rem, 4vw, 3.2rem);
+  border-bottom: 1px solid var(--line);
+}
+.home__herotext { max-width: 46ch; display: grid; gap: 1.1rem; }
+.home__title {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(2.6rem, 6.2vw, 6.6rem); line-height: .98; letter-spacing: -.02em;
+  text-wrap: balance;
+}
+.home__title em { font-style: italic; color: var(--red); }
+.home__sub { color: var(--muted); font-size: 1.02rem; line-height: 1.55; max-width: 52ch; }
+.home__actions { display: flex; flex-direction: column; align-items: stretch; gap: .6rem; }
+.home__btn {
+  display: inline-grid; place-items: center; height: 2.8rem; padding: 0 1.5rem; white-space: nowrap;
+  border-radius: 999px; background: var(--red); color: var(--white); text-decoration: none;
+  font: 600 .92rem/1 var(--font-sans);
+  transition: transform .2s var(--ease-out), background-color .25s, color .25s, border-color .25s;
+}
+.home__btn:hover { background: var(--paper); color: var(--ink); transform: translateY(-1px); }
+.home__btn--ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+.home__btn--ghost:hover { background: rgba(var(--fg-rgb), .06); border-color: rgba(var(--fg-rgb), .35); color: var(--fg); }
+
+/* the client line — a hairline marquee; the work speaks in names */
+.clientline {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding: .9rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.clientline__track { display: flex; width: max-content; animation: clientline 48s linear infinite; }
+.clientline__track > span {
+  display: inline-flex; align-items: center;
+  font-size: .64rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
+}
+.clientline__track i { font-style: normal; margin: 0 1.9rem; color: rgba(var(--fg-rgb), .28); }
+@keyframes clientline { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .clientline__track { animation: none; } }
+
+/* section blocks: the site's own header language — kicker, serif display, a See-all */
+.home__block { scroll-margin-top: calc(var(--hud-h) + 1rem); }
+.home__head {
+  position: relative; display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 1rem 2rem; margin-bottom: var(--group);
+  border-bottom: 1px solid var(--line); padding-bottom: var(--s3);
+}
+.home__head > div { min-width: 0; }
+.home__head .kicker { margin-bottom: var(--s3); }
+/* the type hierarchy — one scale, five roles:
+   S1 statement (chapters, epilogue) 7.2rem · S2 opening (hero) 6.6rem ·
+   S3 section heads (here) 3.6rem · S4 items (work titles 2.6 / hooks 2.8) · S5 mono meta */
+.home__display { max-width: 12ch; font-size: clamp(2.1rem, 3.8vw, 3.6rem); line-height: 1; }
+.home__seeall {
+  color: var(--muted); text-decoration: none; white-space: nowrap; padding-bottom: .45rem;
+  border-bottom: 1px solid transparent; transition: color .25s, border-color .25s;
+}
+.home__seeall:hover { color: var(--red); border-color: var(--red); }
+
+/* selected work — a numbered editorial index; the copy is the cover */
+.worklist { list-style: none; margin: 0; padding: 0; }
+.worklist__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) 9.5rem 1.6rem;
+  gap: 1.1rem;
+  align-items: center;
+  padding: 1.45rem .6rem;
+  border-top: 1px solid var(--line);
+  color: inherit; text-decoration: none;
+  transition: background-color .3s;
+}
+.worklist > li:last-child .worklist__row { border-bottom: 1px solid var(--line); }
+.worklist__num { font-size: .7rem; opacity: 1; color: var(--muted); transition: color .3s; }
+.worklist__body { display: grid; gap: .45rem; min-width: 0; }
+.worklist__title {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem); line-height: 1.05; letter-spacing: -.015em;
+  transition: transform .5s var(--ease-out);
+}
+.worklist__desc { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 52ch; }
+.worklist__meta { font-size: .64rem; line-height: 1.6; letter-spacing: .04em; color: var(--muted); }
+.worklist__still {
+  display: block; aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line); border-radius: .55rem;
+}
+.worklist__still img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transform: scale(1.02);
+  filter: saturate(.9) brightness(.9);
+  transition: transform 1.1s var(--ease-out), filter .5s;
+}
+.worklist__arrow { font-size: 1.05rem; color: var(--muted); transition: transform .4s var(--ease-out), color .3s; }
+.worklist__row:hover { background: rgba(var(--fg-rgb), .035); }
+.worklist__row:hover .worklist__num { color: var(--red); }
+.worklist__row:hover .worklist__title { transform: translateX(.35em); }
+.worklist__row:hover .worklist__still img { transform: scale(1.07); filter: saturate(1) brightness(1); }
+.worklist__row:hover .worklist__arrow { transform: translateX(.35em); color: var(--red); }
+
+/* notes — the hook wall: the lines themselves, big as they need to be, staggered */
+.hookwall { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.7rem; }
+.hookwall__item {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1rem 1.6rem;
+  align-items: baseline;
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+}
+.hookwall > li:last-child .hookwall__item { border-bottom: 1px solid var(--line); }
+.hookwall__tag {
+  display: grid; gap: .55rem;
+  font-size: .66rem; letter-spacing: .1em;
+  color: var(--muted);
+}
+.hookwall__foot { opacity: .7; }
+.hookwall__line {
+  margin: 0;
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.6rem, 3.3vw, 2.8rem); line-height: 1.08; letter-spacing: -.015em;
+  max-width: 26ch;
+  transition: transform .5s var(--ease-out);
+}
+.hookwall__line em { font-style: italic; color: var(--red); }
+.hookwall__item:hover .hookwall__line { transform: translateX(.4em); }
+.hookwall__item:nth-child(2) { margin-left: clamp(0rem, 6vw, 4.5rem); }
+.hookwall__item:nth-child(3) { margin-left: clamp(0rem, 12vw, 9rem); }
+.hookwall__item:nth-child(4) { margin-left: clamp(0rem, 4vw, 2.5rem); }
+
+/* stay updated — one wide card (the grid gap keeps the rhythm uniform) */
+.home__pingcard {
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  background: rgba(var(--fg-rgb), .035); border: 1px solid var(--line); border-radius: 1.2rem;
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+}
+.home__pingtext { max-width: 56ch; display: grid; gap: .8rem; }
+.home__pingline { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.15; letter-spacing: -.01em; }
+.home__pingline em { font-style: italic; color: var(--red); }
+.home__pingsub { color: var(--muted); font-size: .98rem; line-height: 1.55; }
 /* ───────────── 00 · the orbit — the opening screen ─────────────
-   Andrianjaka Tony's card system (recent.design/i/75uqgzu): every slide, static, script and film
-   on two counter-turning rings. Default markup = headline + captioned grid (no JS, GSAP blocked,
+   Every slide, static, script and film on two counter-turning rings.
+   Default markup = headline + captioned grid (no JS, GSAP blocked,
    reduced motion). motion.js §8 adds .is-3d → a 100svh room with perspective; the rings and cards
    are absolutely centred and motion.js's scene loop is the ONLY writer of their transforms. */
 .stage {
@@ -443,7 +704,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
   transition: color .25s, border-color .25s, background-color .25s;
 }
 .stage__mode:hover { color: var(--paper); }
-.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); }
+.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); background: rgba(var(--fg-rgb), .08); }
 .stage__mode:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .stage__title {
   position: relative; z-index: 2; margin: 0 auto clamp(2rem, 5vw, 4rem); max-width: 14ch; text-align: center;
@@ -460,8 +721,9 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: var(--s4); align-items: end; margin-top: var(--s5); color: var(--muted); }
 .stage__foot p { margin: 0; }
 .stage__role { line-height: 1.6; max-width: 30ch; }
+.stage__role .serif-i { display: block; font-size: 1.05rem; line-height: 1.4; color: var(--fg); margin-bottom: .35rem; }
 .stage__line { text-align: center; display: grid; gap: .35rem; justify-items: center; text-transform: none; letter-spacing: 0; }
-.stage__k { text-transform: uppercase; letter-spacing: .02em; }
+.stage__k { text-transform: uppercase; letter-spacing: .08em; }
 .stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--paper); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
 .stage__q:empty { display: none; }
 .stage__more { color: var(--red); text-transform: uppercase; letter-spacing: .02em; border-bottom: 1px solid transparent; }
@@ -523,7 +785,12 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue {
   position: relative; min-height: 100svh; background: transparent; color: var(--paper); display: grid; align-items: end;
 }
-.epilogue__inner { width: 100%; min-height: 100svh; max-width: var(--max); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group); border-top: 1px solid var(--line);
+.epilogue__inner::before {   /* the rule runs edge to edge, like every chapter's */
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 100vw; max-width: var(--max);
+  border-top: 1px solid var(--line);
+}
+.epilogue__inner { width: 100%; min-height: 100svh; max-width: min(var(--max), var(--page)); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group);
   display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; gap: var(--flow) var(--col); align-content: start;
 }
 .epilogue__inner > .kicker { grid-column: 1 / -1; }
@@ -531,9 +798,10 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue__mail { grid-column: 1; grid-row: 3; align-self: start; }
 .redpen { grid-column: 2; grid-row: 2 / 4; align-self: end; }
 .epilogue__meta { grid-column: 1 / -1; }
-.epilogue__title { max-width: 16ch; font-size: clamp(2.3rem, 5.4vw, 5.6rem); }
+/* the closer wears the page's display scale, like every other head */
+.epilogue__title { max-width: 16ch; }
 .epilogue__mail {
-  justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 6.4vw, 6.4rem); line-height: 1; letter-spacing: -.02em;
+  justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 5.4vw, 5.4rem); line-height: 1; letter-spacing: -.02em;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% .06em; background-position: 0 92%;
   transition: color .3s, background-size .5s var(--ease-out); will-change: transform; display: inline-block;
 }
@@ -592,12 +860,12 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 @media (max-width: 1100px) {
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .results--proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .side__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .epilogue__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home__shell { grid-template-columns: minmax(0, 1fr); }
+  .home__side { display: none; }
 }
 @media (max-width: 900px) {
-  .about__grid, .case__grid { grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
-  .case__meta { position: static; }
+  .about__grid, .case__grid { gap: var(--s5); }
   .hud__chapter { display: none; }
   .hud__bar .hud__name .mono { display: none; }
   .hud__bar .hud__name .serif-i { font-size: 1.3rem; }
@@ -609,6 +877,9 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .index__list a { grid-template-columns: 2.2rem 1fr; }
   .index__meta { display: none; }  .epilogue__inner { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: var(--s4); padding-bottom: var(--s6); }
   .epilogue__inner > *, .epilogue__title, .epilogue__mail, .redpen, .epilogue__meta { grid-column: 1; grid-row: auto; }
+  .worklist__row { grid-template-columns: 2rem minmax(0, 1fr) 1.2rem; gap: .8rem; }
+  .worklist__still { display: none; }
+  .hookwall__item { grid-template-columns: 9rem minmax(0, 1fr); gap: .8rem 1.1rem; }
 }
 @media (max-width: 360px) {
   .hud__bar { padding: .3rem .3rem .3rem .7rem; }
@@ -618,6 +889,14 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 @media (max-width: 600px) {
   .results { grid-template-columns: 1fr; }
   .results--proof, .side__list { grid-template-columns: 1fr; }
+  .home__actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
+  .worklist__row { grid-template-columns: 2rem minmax(0, 1fr) 1.2rem; gap: .8rem; padding: 1.2rem .2rem; }
+  .hookwall__item { grid-template-columns: 1fr; gap: .6rem; }
+  .hookwall__item:nth-child(2), .hookwall__item:nth-child(3), .hookwall__item:nth-child(4) { margin-left: 0; }
+  .home__head { align-items: flex-start; flex-wrap: wrap; }
+  .home__seeall { order: 3; }
+  .home__pingcard { flex-direction: column; align-items: flex-start; }
+  .home__pingcard .home__btn { width: 100%; }
   .stage.is-3d .stage__hud { bottom: 7.4rem; }
   .hud__bar { width: min(calc(100vw - 1.5rem), 34rem); padding: .35rem .35rem .35rem .9rem; }
   .stage.is-3d .stage__title { top: 7.4rem; transform: translateX(-50%); width: 92vw; font-size: 1.75rem; text-align: center; }  .stage.is-3d .stage__foot { grid-template-columns: 1fr; gap: var(--s2); bottom: 4.1rem; }
@@ -627,6 +906,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .stage__ring { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
   .stage__foot { grid-template-columns: 1fr; }
   .stage__links { justify-content: start; }
+  .hud__corner { gap: .4rem; }
   .script__head { display: none; }
   .script__row { grid-template-columns: 1fr; gap: .5rem; }
   .script__row .script__super { order: -1; }
@@ -637,7 +917,6 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .redpen__row { grid-template-columns: 1fr; }
   .redpen__btn { justify-self: start; }
   .card { transform: none; }
-  .chapter__num { font-size: 9rem; }
   .hud__bar .hud__btn { padding: 0 .8rem; }
 }
 
@@ -655,101 +934,6 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
   .card__circle path { stroke-dashoffset: 0; transition: none; }
 }
 
-/* ───────────── type palettes (v8.5) — the bottom-right Aa button + its sheet ─────────────
-   The palette layer only ever writes type tokens: --font-* plus display weight/tracking.
-   Everything here is additive to the tokens above, so a failed font request leaves the
-   site exactly as it was. */
-html[data-pal] .display, html[data-pal] .stage__title, html[data-pal] .prose--em, html[data-pal] .index__title,
-html[data-pal] .card__line, html[data-pal] .brief p, html[data-pal] .edit__after, html[data-pal] .results strong,
-html[data-pal] .phone__hero-text, html[data-pal] .poster__line, html[data-pal] .step__title, html[data-pal] .services__title,
-html[data-pal] .services__arrow, html[data-pal] .manifesto__line em, html[data-pal] .manifesto__line--end,
-html[data-pal] .stamp__center, html[data-pal] .epilogue__mail, html[data-pal] .redpen__after, html[data-pal] .serif-i { font-weight: var(--disp-weight, 400); }
-html[data-pal] .display, html[data-pal] .stage__title, html[data-pal] .epilogue__mail, html[data-pal] .index__title,
-html[data-pal] .step__title, html[data-pal] .services__title, html[data-pal] .card__line, html[data-pal] .poster__line { letter-spacing: var(--disp-ls, -.015em); }
-   /* the italic voice stays Instrument Serif in every palette: it is the one face already inlined,
-      and it has a real italic — no synthesised slants, whatever display face is chosen. */
-html[data-pal] .serif-i, html[data-pal] .display em, html[data-pal] .stage__title em, html[data-pal] .manifesto__line em,
-html[data-pal] .stamp__center, html[data-pal] .index__list a:hover .index__title { font-family: var(--font-ital, var(--font-serif)); font-style: italic; }
-html[data-pal] .mono { letter-spacing: var(--mono-ls, .02em); font-weight: var(--mono-weight, 400); }
-html[data-pal] .index__title { font-family: var(--font-serif); }
-
-/* the corner control, docked with the reading progress so the bottom right stays one cluster */
-.hud__type {
-  bottom: 1.4rem; right: calc(var(--gutter) + .55rem); display: inline-flex; align-items: center; gap: .45rem;
-  height: 2rem; padding: 0 .7rem; border: 1px solid var(--line); border-radius: 999px;
-  background: rgba(var(--bg-rgb, 0,0,0), .55); backdrop-filter: blur(10px);
-  color: var(--muted); transition: color .25s, border-color .25s, background-color .25s;
-}
-.hud__corner { bottom: 1.4rem; right: var(--gutter); left: auto; display: flex; align-items: center; gap: .55rem; }
-.hud__type:hover { color: var(--fg); border-color: var(--fg); }
-.hud__type .mono { font-size: .68rem; letter-spacing: .06em; }
-.hud__type__aa { font-family: var(--font-serif); font-size: 1rem; line-height: 1; letter-spacing: -.02em; }
-.hud__progress { padding: .2rem .1rem; margin: 0; background: none; backdrop-filter: none; }
-
-/* the sheet */
-.typepal {
-  position: fixed; z-index: 880; top: 0; right: 0; bottom: 0; width: min(46rem, 100vw);
-  display: grid; grid-template-rows: auto auto 1fr; gap: 0;
-  background: rgba(var(--bg-rgb, 0,0,0), .92); backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border-left: 1px solid var(--line); color: var(--fg); overscroll-behavior: contain;
-  box-shadow: -30px 0 80px -40px rgba(0,0,0,.9);
-}
-.typepal[hidden] { display: none; }
-html.tp-open { overflow: hidden; }
-.typepal__head { padding: 1.5rem var(--gutter) 1rem; border-bottom: 1px solid var(--line); display: grid; gap: .55rem; }
-.typepal__label { color: var(--muted); }
-.typepal__title { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.06; letter-spacing: -.015em; }
-.typepal__title em { font-style: italic; color: var(--red); }
-.typepal__row { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
-.typepal__hint { color: var(--muted); margin-right: auto; }
-.typepal__x, .typepal__reset, .typepal__chip {
-  font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .05em;
-  border: 1px solid var(--line); border-radius: 999px; padding: .42rem .8rem; cursor: pointer; color: var(--fg);
-  transition: border-color .2s, background-color .2s, color .2s;
-}
-.typepal__x:hover, .typepal__chip:hover, .typepal__reset:hover { border-color: var(--fg); }
-.typepal__chip.is-on, .typepal__x { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.typepal__x:hover { background: var(--red); border-color: var(--red); color: var(--white); }
-.typepal__scroll { overflow: auto; padding: 1.2rem var(--gutter) 3rem; scrollbar-width: thin; }
-.typepal__note { color: var(--muted); padding: .8rem var(--gutter) 1.2rem; border-top: 1px solid var(--line); }
-.typepal[data-palfonts='fallback'] .typepal__note { color: var(--red); }
-.tpg { margin: 0 0 1.8rem; }
-.tpg[hidden] { display: none; }
-.tpg__t { color: var(--red); margin-bottom: .35rem; }
-.tpg__b { color: var(--muted); font-size: .92rem; line-height: 1.45; max-width: 62ch; margin-bottom: .9rem; }
-.tpg__row { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: .6rem; }
-.tp {
-  display: grid; gap: .5rem; justify-items: start; text-align: left; cursor: pointer; min-width: 0;
-  padding: .85rem .9rem 1rem; border: 1px solid var(--line); border-radius: 4px;
-  background: rgba(var(--fg-rgb), .03); color: var(--fg);
-  transition: border-color .2s, background-color .2s, transform .2s var(--ease-out);
-}
-.tp:hover { border-color: rgba(var(--fg-rgb), .4); background: rgba(var(--fg-rgb), .06); }
-.tp.is-on { border-color: var(--red); background: rgba(var(--fg-rgb), .05); box-shadow: inset 0 0 0 1px var(--red); }
-.tp:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
-.tp__top { width: 100%; display: flex; justify-content: space-between; gap: .6rem; align-items: baseline; color: var(--muted); }
-.tp__fam { text-align: right; opacity: .7; }
-.tp__disp { font-family: var(--font-serif); font-weight: 400; font-size: 1.5rem; line-height: 1.02; letter-spacing: -.02em; }
-.tp__body { font-family: var(--font-sans); font-size: .86rem; line-height: 1.4; color: var(--muted); }
-.tp__body em { font-family: var(--font-serif); font-style: italic; color: var(--fg); }
-.tp__mono { font-family: var(--font-mono); font-size: .58rem; text-transform: uppercase; letter-spacing: .06em; color: var(--red); }
-.tp__note { font-size: .78rem; line-height: 1.35; color: var(--muted); opacity: .85; }
-@media (prefers-reduced-motion: no-preference) { .typepal { animation: tp-in .4s var(--ease-out); } }
-@keyframes tp-in { from { opacity: 0; transform: translateX(1.2rem); } }
-@media (max-width: 900px) {
-  .typepal { width: 100vw; top: auto; height: min(84svh, 46rem); border-left: 0; border-top: 1px solid var(--line); }
-  .typepal__head { padding: 1.1rem var(--gutter) .8rem; }
-  .tpg__row { grid-template-columns: 1fr; }
-  .tp { padding: .8rem .85rem .9rem; }
-  html.tp-open body { padding-bottom: 0; }
-}
-@media (max-width: 600px) {
-  .hud__type { bottom: 1.35rem; right: var(--gutter); }
-  .hud__type .hud__type__lbl { display: none; }
-  .hud__type { padding: 0 .6rem; }
-  .hud__corner { gap: .4rem; }
-}
 </style>
 </head>
 <body>
@@ -776,49 +960,26 @@ html.tp-open { overflow: hidden; }
   <p class="hud__chapter mono" aria-live="polite"><span data-chapter-label>Prologue</span></p>
   <div class="hud__corner">
     <p class="hud__progress mono"><span data-progress-num>00</span><span class="hud__pct">%</span><span class="hud__read"> read</span></p>
-    <button class="hud__type mono" type="button" data-type-toggle aria-controls="typepal" aria-expanded="false" aria-label="Type palettes" title="Type palettes — click to open the list">
-      <span class="hud__type__aa" aria-hidden="true">Aa</span><span class="hud__type__lbl" data-pal-label>Instrument</span>
-    </button>
   </div>
 </header>
 
-<!-- ───────────────────────── TYPE PALETTES — 40 pairings, click to apply ───────────────────────── -->
-<div class="typepal" id="typepal" data-typepal role="dialog" aria-label="Type palettes" hidden>
-  <div class="typepal__head">
-    <p class="typepal__label mono">Type palettes · 40 settings, from the typography that keeps winning on Awwwards</p>
-    <h2 class="typepal__title">Pick the voice. <em>The page re-types instantly.</em></h2>
-    <div class="typepal__row">
-      <span class="typepal__hint mono">Every card is live · click to apply · Esc closes · kept on this device</span>
-      <button class="typepal__reset" type="button" data-type-reset>Reset</button>
-      <button class="typepal__x" type="button" data-type-close>Close</button>
-    </div>
-    <div class="typepal__row">
-      <button class="typepal__chip is-on" type="button" data-type-filter="all">All 40</button>
-      <button class="typepal__chip" type="button" data-type-filter="editorial">Editorial</button>
-      <button class="typepal__chip" type="button" data-type-filter="grotesk">Grotesk</button>
-      <button class="typepal__chip" type="button" data-type-filter="display">Display</button>
-      <button class="typepal__chip" type="button" data-type-filter="mono">Mono</button>
-      <button class="typepal__chip" type="button" data-type-filter="humanist">Humanist</button>
-      <button class="typepal__chip" type="button" data-type-filter="luxury">Luxury</button>
-    </div>
-  </div>
-  <div class="typepal__scroll" data-type-grid></div>
-  <p class="typepal__note mono">Specimens load from Google Fonts when this panel opens — nothing else on the site ever does. Blocked or offline, the cards fall back to the same category of system face.</p>
-</div>
 <!-- ───────────────────────── INDEX OVERLAY ───────────────────────── -->
 <div class="index" id="index" data-index aria-hidden="true">
   <div class="index__inner">
     <p class="mono index__label">Index — one orbit, eight chapters, one red pen</p>
     <ol class="index__list">
-      <li><a href="#orbit" data-index-link><span class="mono">00</span><span class="index__title">The orbit</span><span class="mono index__meta">34 pieces of work · scatter / grid / orbit</span></a></li>
+      <li><a href="#orbit" data-index-link><span class="mono">00</span><span class="index__title">The orbit</span><span class="mono index__meta">32 pieces of work · scatter / grid / orbit</span></a></li>
+      <li><a href="#work" data-index-link><span class="mono">0a</span><span class="index__title">Selected work</span><span class="mono index__meta">Six briefs · one click</span></a></li>
+      <li><a href="#notes" data-index-link><span class="mono">0b</span><span class="index__title">Notes — the hook lab</span><span class="mono index__meta">Four lines that open reels</span></a></li>
       <li><a href="#ch1" data-index-link><span class="mono">01</span><span class="index__title">The brief before the brief</span><span class="mono index__meta">About</span></a></li>
       <li><a href="#ch2" data-index-link><span class="mono">02</span><span class="index__title">ICC Champions Trophy</span><span class="mono index__meta">All on the Line · 2025</span></a></li>
       <li><a href="#ch3" data-index-link><span class="mono">03</span><span class="index__title">Surf Excel</span><span class="mono index__meta">Cleanliness Paglus · 2025</span></a></li>
       <li><a href="#ch4" data-index-link><span class="mono">04</span><span class="index__title">GoBoult</span><span class="mono index__meta">Lesssgooo · 2025</span></a></li>
       <li><a href="#ch5" data-index-link><span class="mono">05</span><span class="index__title">DHL × Mumbai Indians</span><span class="mono index__meta">Clio case film · IPL 2025</span></a></li>
-      <li><a href="#ch6" data-index-link><span class="mono">06</span><span class="index__title">The hook lab</span><span class="mono index__meta">Creator scripts · 3–5×</span></a></li>
-      <li><a href="#ch7" data-index-link><span class="mono">07</span><span class="index__title">The rest of the desk</span><span class="mono index__meta">Bajaj · web · email</span></a></li>
-      <li><a href="#ch8" data-index-link><span class="mono">08</span><span class="index__title">How I work</span><span class="mono index__meta">Method &amp; proof</span></a></li>
+      <li><a href="#ch6" data-index-link><span class="mono">06</span><span class="index__title">ICC Women’s World Cup</span><span class="mono index__meta">#WillToWin · 10 scripts</span></a></li>
+      <li><a href="#ch7" data-index-link><span class="mono">07</span><span class="index__title">The hook lab</span><span class="mono index__meta">Creator scripts · 3–5×</span></a></li>
+      <li><a href="#ch8" data-index-link><span class="mono">08</span><span class="index__title">The rest of the desk</span><span class="mono index__meta">Bajaj · web · email</span></a></li>
+      <li><a href="#ch9" data-index-link><span class="mono">09</span><span class="index__title">How I work</span><span class="mono index__meta">Method &amp; proof</span></a></li>
       <li><a href="#epilogue" data-index-link><span class="mono">∞</span><span class="index__title">Epilogue</span><span class="mono index__meta">Say hello</span></a></li>
     </ol>
     <p class="mono index__foot">abhi.insider@gmail.com · Mumbai, IN · <span data-clock>--:--</span> IST</p>
@@ -828,49 +989,47 @@ html.tp-open { overflow: hidden; }
 <main data-main>
 
 <!-- ───────────────────────── 00 · THE ORBIT — the whole desk, turning ─────────────────────────
-     Andrianjaka Tony's card system (recent.design/i/75uqgzu) as the opening screen: every slide, static, script and
-     film on two counter-turning rings; Scatter / Grid are the other two arrangements. motion.js §8 adds .is-3d;
-     without it (no JS, GSAP blocked, reduced motion) this is a captioned grid under the headline. -->
+     Every slide, static, script and film on two counter-turning rings; Scatter / Grid are the other
+     two arrangements. motion.js adds .is-3d; without it (no JS, reduced motion) this is a captioned
+     grid under the headline. -->
 <section class="stage" id="orbit" data-stage data-theme="ink" data-chapter="00 · The orbit" aria-label="Selected work — every slide, static, script and film, in orbit">
   <h1 class="stage__title" data-stage-title>The audience wrote the brief. <em>I write the line.</em></h1>
   <div class="stage__space" data-stage-space>
     <div class="stage__ring" data-ring="in">
-      <figure class="stage__card" data-stage-card data-card-id="surf-24-paglus" data-k="Surf Excel × Zoo Media · Social pitch, slide 24 of 74 · 2025" data-href="#ch3"><img src="assets/work/plates/surf-24-paglus.webp" alt="Pitch slide: We are Cleanliness Paglus. We love things clean. We find it therapeutic to clean, not just clothes but everything in the house." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“We are Cleanliness Paglus.” — the identity, in full</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-28-stain-story" data-k="Surf Excel × Zoo Media · Social pitch, slide 28 of 74 · 2025" data-href="#ch3"><img src="assets/work/plates/surf-28-stain-story.webp" alt="Pitch slide: Every Stain Tells a Story — a carousel of three stains, each captioned “Every stain tells a story.”" width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Every stain tells a story.” — the comments write the story</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-38-horoscopes" data-k="Surf Excel × Zoo Media · Social pitch, slide 38 of 74 · 2025" data-href="#ch3"><img src="assets/work/plates/surf-38-horoscopes.webp" alt="Pitch slide: Stain Horoscopes carousel — Taurus, curry stains; Aries, paint stains; Gemini, mud stains." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Stain Horoscopes — “Taurus: curry stains.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-39-stain-bios" data-k="Surf Excel × Zoo Media · Social pitch, slide 39 of 74 · 2025" data-href="#ch3"><img src="assets/work/plates/surf-39-stain-bios.webp" alt="Pitch slide: If Stains Had Instagram Bios — carousel static of stain profiles." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">If Stains Had Instagram Bios</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-40-this-or-that" data-k="Surf Excel × Zoo Media · Social pitch, slide 40 of 74 · 2025" data-href="#ch3"><img src="assets/work/plates/surf-40-this-or-that.webp" alt="Pitch slide: This or That — Instagram Stories poll: air dry or machine dry, folding clothes neatly or shoving in the closet." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">This or That — a Stories poll</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="surf-65-bingo" data-k="Surf Excel × Zoo Media · Social pitch, slide 65 of 74 · 2025" data-href="#ch3"><img src="assets/work/plates/surf-65-bingo.webp" alt="Pitch slide: Laundry Break Bingo — what did you tick off during your Surf Excel Matic laundry break?" width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Laundry Break Bingo — Surf Excel Matic</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-25-mouth" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 25 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-25-mouth.webp" alt="Pitch slide: a close-up of a mouth with LESSSGOOO on the teeth, the GoBoult logo below." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Lesssgooo!!” — the word, before the logo</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-08-name-hides" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 8 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-08-name-hides.webp" alt="Pitch slide: What the Name Hides — GO equals speed, momentum, action; Boult equals energy, boldness, power." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">What the name hides — GO + Boult</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-27-posters" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 27 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-27-posters.webp" alt="Pitch slide: two key visuals — Lesssgooo Viral with a cat in headphones, Lesssgooo Crazy with a hand holding a speaker." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lesssgooo Viral · Lesssgooo Crazy — key visuals</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-30-billboard-viral" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 30 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-30-billboard-viral.webp" alt="Pitch slide: the Lesssgooo Viral key visual on a billboard above a Mumbai street." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Out of home, Mumbai</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-45-roar-thump" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 45 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-45-roar-thump.webp" alt="Pitch slide: two product posts — Lesssgooo Roaaaarrrr with a gaming headset, Lesssgooo Thump with earbuds." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Product posts — Roaaaarrrr · Thump</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-54-team-belly" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 54 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-54-team-belly.webp" alt="Pitch slide: a contextual billboard reading Team Conrad, Team Jeremiah, Team Belly with a tick, next to a smartwatch." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contextual billboards — “Team Belly ✓”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-55-sirf-fein" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 55 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-55-sirf-fein.webp" alt="Pitch slide: a billboard reading Sirf Fein sunne ke liye 15,000 ki ticket leli, with gold earbuds." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Sirf Fein sunne ke liye 15,000 ki ticket leli.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="boult-56-eras-tour" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 56 of 61 · 2025" data-href="#ch4"><img src="assets/work/plates/boult-56-eras-tour.webp" alt="Pitch slide: a night billboard reading Aa maru Eras Tour che, with mint earbuds." width="1120" height="630" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Aa maru Eras Tour che.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-24-paglus" data-k="Surf Excel × Zoo Media · Social pitch, slide 24 of 74 · 2025" data-href="pieces/surf-24-paglus.html"><img src="assets/work/plates/surf-24-paglus.webp" alt="Pitch slide: We are Cleanliness Paglus. We love things clean. We find it therapeutic to clean, not just clothes but everything in the house." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“We are Cleanliness Paglus.” — the identity, in full</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-28-stain-story" data-k="Surf Excel × Zoo Media · Social pitch, slide 28 of 74 · 2025" data-href="pieces/surf-28-stain-story.html"><img src="assets/work/plates/surf-28-stain-story.webp" alt="Pitch slide: Every Stain Tells a Story — a carousel of three stains, each captioned “Every stain tells a story.”" width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Every stain tells a story.” — the comments write the story</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-38-horoscopes" data-k="Surf Excel × Zoo Media · Social pitch, slide 38 of 74 · 2025" data-href="pieces/surf-38-horoscopes.html"><img src="assets/work/plates/surf-38-horoscopes.webp" alt="Pitch slide: Stain Horoscopes carousel — Taurus, curry stains; Aries, paint stains; Gemini, mud stains." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Stain Horoscopes — “Taurus: curry stains.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-39-stain-bios" data-k="Surf Excel × Zoo Media · Social pitch, slide 39 of 74 · 2025" data-href="pieces/surf-39-stain-bios.html"><img src="assets/work/plates/surf-39-stain-bios.webp" alt="Pitch slide: If Stains Had Instagram Bios — carousel static of stain profiles." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">If Stains Had Instagram Bios</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-40-this-or-that" data-k="Surf Excel × Zoo Media · Social pitch, slide 40 of 74 · 2025" data-href="pieces/surf-40-this-or-that.html"><img src="assets/work/plates/surf-40-this-or-that.webp" alt="Pitch slide: This or That — Instagram Stories poll: air dry or machine dry, folding clothes neatly or shoving in the closet." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">This or That — a Stories poll</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="surf-65-bingo" data-k="Surf Excel × Zoo Media · Social pitch, slide 65 of 74 · 2025" data-href="pieces/surf-65-bingo.html"><img src="assets/work/plates/surf-65-bingo.webp" alt="Pitch slide: Laundry Break Bingo — what did you tick off during your Surf Excel Matic laundry break?" width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Laundry Break Bingo — Surf Excel Matic</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-25-mouth" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 25 of 61 · 2025" data-href="pieces/boult-25-mouth.html"><img src="assets/work/plates/boult-25-mouth.webp" alt="Pitch slide: a close-up of a mouth with LESSSGOOO on the teeth, the GoBoult logo below." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Lesssgooo!!” — the word, before the logo</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-08-name-hides" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 8 of 61 · 2025" data-href="pieces/boult-08-name-hides.html"><img src="assets/work/plates/boult-08-name-hides.webp" alt="Pitch slide: What the Name Hides — GO equals speed, momentum, action; Boult equals energy, boldness, power." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">What the name hides — GO + Boult</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-27-posters" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 27 of 61 · 2025" data-href="pieces/boult-27-posters.html"><img src="assets/work/plates/boult-27-posters.webp" alt="Pitch slide: two key visuals — Lesssgooo Viral with a cat in headphones, Lesssgooo Crazy with a hand holding a speaker." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lesssgooo Viral · Lesssgooo Crazy — key visuals</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-30-billboard-viral" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 30 of 61 · 2025" data-href="pieces/boult-30-billboard-viral.html"><img src="assets/work/plates/boult-30-billboard-viral.webp" alt="Pitch slide: the Lesssgooo Viral key visual on a billboard above a Mumbai street." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Out of home, Mumbai</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-45-roar-thump" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 45 of 61 · 2025" data-href="pieces/boult-45-roar-thump.html"><img src="assets/work/plates/boult-45-roar-thump.webp" alt="Pitch slide: two product posts — Lesssgooo Roaaaarrrr with a gaming headset, Lesssgooo Thump with earbuds." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Product posts — Roaaaarrrr · Thump</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-54-team-belly" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 54 of 61 · 2025" data-href="pieces/boult-54-team-belly.html"><img src="assets/work/plates/boult-54-team-belly.webp" alt="Pitch slide: a contextual billboard reading Team Conrad, Team Jeremiah, Team Belly with a tick, next to a smartwatch." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contextual billboards — “Team Belly ✓”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-55-sirf-fein" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 55 of 61 · 2025" data-href="pieces/boult-55-sirf-fein.html"><img src="assets/work/plates/boult-55-sirf-fein.webp" alt="Pitch slide: a billboard reading Sirf Fein sunne ke liye 15,000 ki ticket leli, with gold earbuds." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Sirf Fein sunne ke liye 15,000 ki ticket leli.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="boult-56-eras-tour" data-k="GoBoult × Zoo Media · Rebrand pitch, slide 56 of 61 · 2025" data-href="pieces/boult-56-eras-tour.html"><img src="assets/work/plates/boult-56-eras-tour.webp" alt="Pitch slide: a night billboard reading Aa maru Eras Tour che, with mint earbuds." width="630" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Aa maru Eras Tour che.”</figcaption></figure>
     </div>
     <div class="stage__ring" data-ring="out">
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-lohri" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="#ch7"><img src="assets/work/bajaj-lohri.jpg" alt="Bajaj Electricals Lohri post: a bonfire in a courtyard" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lohri — “As the fire glows brighter, warmth finds its way home.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="derek-01" data-k="Creator scripts · Real estate · 15 reels · 2025" data-href="#ch6"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: Day 1 – 15 reel scripts for a real-estate creator; B-roll video, viral audio link, filming notes in red, text on screen, editor notes in green." width="761" height="1075" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Real estate, p.1 — B‑roll, viral audio, one number</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-sankranti" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="#ch7"><img src="assets/work/bajaj-sankranti.jpg" alt="Bajaj Electricals Makar Sankranti post: a child flying a kite from a pile of til laddoos beside a mixer grinder" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-auto-shut-off" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-auto-shut-off.webp" width="432" height="768" aria-label="Bajaj Auto Shut Off water heater film"><source src="assets/work/films/bajaj-auto-shut-off.mp4" type="video/mp4"></video><figcaption class="mono">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-summer" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-summer.jpg" alt="Bajaj Majesty RX10 room heater post: a man sunbathing indoors while it snows outside" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Majesty RX10 — “It’s always summer with Bajaj.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="vanilla-noir" data-k="Vanilla Noir · Spec sales page + teardown · 2025" data-href="#side"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours" width="899" height="518" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-kettle" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-kettle.jpg" alt="Bajaj KTP electric kettle post: a chef reaching past a kettle for a pizza" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">KTP kettle — “Indulgence that never gets in your way.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="harshit-01" data-k="Creator scripts · Fitness · storytelling · 2025" data-href="#ch6"><img src="assets/work/plates/harshit-01.webp" alt="Script document, page 1: fitness storytelling script beginning “This is a 2.5 kg dumbbell”, with camera directions highlighted." width="761" height="1075" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“This is a 2.5 kg dumbbell.” — the fitness script</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-gracio" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-gracio.jpg" alt="Bajaj Gracio water heater post: a cutaway showing the anti-corrosion magnesium anode" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Gracio — “Corrosion doesn’t stand a chance.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-new-year" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-new-year.webp" width="432" height="768" aria-label="Bajaj New Year film"><source src="assets/work/films/bajaj-new-year.mp4" type="video/mp4"></video><figcaption class="mono">New Year — “When lights guide your way, every glow becomes a brighter step.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-contempo" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="#ch7"><img src="assets/work/bajaj-contempo.jpg" alt="Bajaj Contempo water heater post: two children playing in a bathtub under a protective dome" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contempo — “Joy in every splash, safety in every moment.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="nyc-01" data-k="Not Your College · Website copy, v1 · 2026" data-href="#side"><img src="assets/work/plates/nyc-01.webp" alt="Not Your College website, hero: Build the skills, projects, and proof you need — before graduation." width="1120" height="792" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Build the skills, projects, and proof you need — before graduation.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-1" data-k="Bajaj Electricals × Zoo Media · Wrapped series 1/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-1.jpg" alt="Bajaj Wrapped 2025 post: Your Spotify Wrapped is incomplete" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-2" data-k="Bajaj Electricals × Zoo Media · Wrapped series 2/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “912 minutes singing in the shower.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="jobcoach-01" data-k="Creator scripts · Careers · talking‑head · 2025" data-href="#ch6"><img src="assets/work/plates/jobcoach-01.webp" alt="Script document, page 1: talking-head script about the interview question 90% of people answer wrong, with three reframes in red." width="760" height="1074" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The interview question 90% of people answer wrong.” — three reframes</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-3" data-k="Bajaj Electricals × Zoo Media · Wrapped series 3/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-3.jpg" alt="Bajaj Wrapped 2025 post: 643 minutes to look fresh, with a Splendora iron" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “643 minutes to look fresh.”</figcaption></figure>
-      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-home-stories" data-k="Bajaj Electricals × Zoo Media · Year‑end film · 2025" data-href="#ch7"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-home-stories.webp" width="432" height="768" aria-label="Bajaj A Home Full of Stories film"><source src="assets/work/films/bajaj-home-stories.mp4" type="video/mp4"></video><figcaption class="mono">Year‑end — “What makes your home a home? … A home full of stories.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-4" data-k="Bajaj Electricals × Zoo Media · Wrapped series 4/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-4.jpg" alt="Bajaj Wrapped 2025 post: 1526 minutes of mastering the art of cooking" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="luna-01" data-k="Luna by Khush · Founder‑led brand story email · 2025" data-href="#side"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, with the founder at her stall." width="760" height="950" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Ignited by a glow from within.”</figcaption></figure>
-      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-5" data-k="Bajaj Electricals × Zoo Media · Wrapped series 5/5 · 2025" data-href="#ch7"><img src="assets/work/bajaj-wrapped-5.jpg" alt="Bajaj Wrapped 2025 post: Your top products in 2025 — Pentacle Digi water heater, Splendora iron, ICX 190 FS induction" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your top products in 2025.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-lohri" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="pieces/bajaj-lohri.html"><img src="assets/work/bajaj-lohri.jpg" alt="Bajaj Electricals Lohri post: a bonfire in a courtyard" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Lohri — “As the fire glows brighter, warmth finds its way home.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="derek-01" data-k="Creator scripts · Real estate · 15 reels · 2025" data-href="pieces/derek-01.html"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: Day 1 – 15 reel scripts for a real-estate creator; B-roll video, viral audio link, filming notes in red, text on screen, editor notes in green." width="1075" height="761" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Real estate, p.1 — B‑roll, viral audio, one number</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-sankranti" data-k="Bajaj Electricals × Zoo Media · Festive static · 2025" data-href="pieces/bajaj-sankranti.html"><img src="assets/work/bajaj-sankranti.jpg" alt="Bajaj Electricals Makar Sankranti post: a child flying a kite from a pile of til laddoos beside a mixer grinder" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-auto-shut-off" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="pieces/bajaj-auto-shut-off.html"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-auto-shut-off.webp" width="432" height="768" aria-label="Bajaj Auto Shut Off water heater film"><source src="assets/work/films/bajaj-auto-shut-off.mp4" type="video/mp4"></video><figcaption class="mono">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-summer" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="pieces/bajaj-summer.html"><img src="assets/work/bajaj-summer.jpg" alt="Bajaj Majesty RX10 room heater post: a man sunbathing indoors while it snows outside" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Majesty RX10 — “It’s always summer with Bajaj.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="vanilla-noir" data-k="Vanilla Noir · Spec sales page + teardown · 2025" data-href="pieces/vanilla-noir.html"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours" width="899" height="518" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="harshit-01" data-k="Creator scripts · Fitness · storytelling · 2025" data-href="pieces/harshit-01.html"><img src="assets/work/plates/harshit-01.webp" alt="Script document, page 1: fitness storytelling script beginning “This is a 2.5 kg dumbbell”, with camera directions highlighted." width="1075" height="761" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“This is a 2.5 kg dumbbell.” — the fitness script</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-gracio" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="pieces/bajaj-gracio.html"><img src="assets/work/bajaj-gracio.jpg" alt="Bajaj Gracio water heater post: a cutaway showing the anti-corrosion magnesium anode" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Gracio — “Corrosion doesn’t stand a chance.”</figcaption></figure>
+      <figure class="stage__card stage__card--film" data-stage-card data-card-id="bajaj-new-year" data-k="Bajaj Electricals × Zoo Media · Film · 2025" data-href="pieces/bajaj-new-year.html"><video muted loop playsinline preload="none" poster="assets/work/films/bajaj-new-year.webp" width="432" height="768" aria-label="Bajaj New Year film"><source src="assets/work/films/bajaj-new-year.mp4" type="video/mp4"></video><figcaption class="mono">New Year — “When lights guide your way, every glow becomes a brighter step.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-contempo" data-k="Bajaj Electricals × Zoo Media · Product post · 2025" data-href="pieces/bajaj-contempo.html"><img src="assets/work/bajaj-contempo.jpg" alt="Bajaj Contempo water heater post: two children playing in a bathtub under a protective dome" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Contempo — “Joy in every splash, safety in every moment.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="nyc-01" data-k="Not Your College · Website copy, v1 · 2026" data-href="pieces/nyc-01.html"><img src="assets/work/plates/nyc-01.webp" alt="Not Your College website, hero: Build the skills, projects, and proof you need — before graduation." width="792" height="1120" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Build the skills, projects, and proof you need — before graduation.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-1" data-k="Bajaj Electricals × Zoo Media · Wrapped series 1/5 · 2025" data-href="pieces/bajaj-wrapped-1.html"><img src="assets/work/bajaj-wrapped-1.jpg" alt="Bajaj Wrapped 2025 post: Your Spotify Wrapped is incomplete" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-2" data-k="Bajaj Electricals × Zoo Media · Wrapped series 2/5 · 2025" data-href="pieces/bajaj-wrapped-2.html"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “912 minutes singing in the shower.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="jobcoach-01" data-k="Creator scripts · Careers · talking‑head · 2025" data-href="pieces/jobcoach-01.html"><img src="assets/work/plates/jobcoach-01.webp" alt="Script document, page 1: talking-head script about the interview question 90% of people answer wrong, with three reframes in red." width="1074" height="760" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“The interview question 90% of people answer wrong.” — three reframes</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-3" data-k="Bajaj Electricals × Zoo Media · Wrapped series 3/5 · 2025" data-href="pieces/bajaj-wrapped-3.html"><img src="assets/work/bajaj-wrapped-3.jpg" alt="Bajaj Wrapped 2025 post: 643 minutes to look fresh, with a Splendora iron" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “643 minutes to look fresh.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-4" data-k="Bajaj Electricals × Zoo Media · Wrapped series 4/5 · 2025" data-href="pieces/bajaj-wrapped-4.html"><img src="assets/work/bajaj-wrapped-4.jpg" alt="Bajaj Wrapped 2025 post: 1526 minutes of mastering the art of cooking" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="luna-01" data-k="Luna by Khush · Founder‑led brand story email · 2025" data-href="pieces/luna-01.html"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, with the founder at her stall." width="950" height="760" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">“Ignited by a glow from within.”</figcaption></figure>
+      <figure class="stage__card" data-stage-card data-card-id="bajaj-wrapped-5" data-k="Bajaj Electricals × Zoo Media · Wrapped series 5/5 · 2025" data-href="pieces/bajaj-wrapped-5.html"><img src="assets/work/bajaj-wrapped-5.jpg" alt="Bajaj Wrapped 2025 post: Your top products in 2025 — Pentacle Digi water heater, Splendora iron, ICX 190 FS induction" width="720" height="900" loading="lazy" decoding="async" draggable="false"><figcaption class="mono">Wrapped 2025 — “Your top products in 2025.”</figcaption></figure>
     </div>
   </div>
   <div class="stage__hud mono">
@@ -881,17 +1040,211 @@ html.tp-open { overflow: hidden; }
     </div>
   </div>
   <div class="stage__foot mono">
-    <p class="stage__role">Copywriter &amp; creative strategist<br>Mumbai · available for briefs</p>
-    <p class="stage__line" data-stage-line aria-live="polite"><span class="stage__k" data-stage-k>34 pieces of work, 2025–26</span><span class="stage__q serif-i" data-stage-q></span><a class="stage__more" data-stage-more href="#ch1" hidden>Read the chapter ↓</a></p>
+    <p class="stage__role"><span class="serif-i">Copywriter &amp; creative strategist</span><br><span>Mumbai · available for briefs</span></p>
+    <p class="stage__line" data-stage-line aria-live="polite"><span class="stage__k" data-stage-k>32 pieces of work, 2025–26</span><span class="stage__q serif-i" data-stage-q></span><a class="stage__more" data-stage-more href="#ch1" hidden>Read the piece →</a></p>
     <p class="stage__links"><a href="mailto:abhi.insider@gmail.com" data-cursor="write">Email</a><a href="tel:+919930915975" data-cursor="call">Call</a><a href="#ch1">About</a></p>
   </div>
 </section>
 
+<!-- ───────────────────────── HOME — the Suite workspace: sidebar · hero · card grids ───────────────────────── -->
+<section class="home" id="home" data-theme="ink" data-chapter="Home" aria-label="The desk — every line shipped, in one place">
+  <div class="home__shell">
+
+    <aside class="home__side" aria-label="Site map">
+      <div class="home__profile" data-reveal>
+        <span class="home__avatar" aria-hidden="true">AK</span>
+        <span class="home__who"><strong>Abhijeet Kanase</strong><small>Copywriter · Mumbai</small></span>
+      </div>
+      <button class="home__search" type="button" data-index-toggle aria-controls="index" data-cursor="open">
+        <svg class="home__searchicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Search the index</span>
+        <span class="home__kbd mono">⌘K</span>
+      </button>
+      <nav class="home__nav" aria-label="Sections">
+        <p class="home__group mono">Main</p>
+        <a class="home__link" href="#orbit" data-home-link><span class="mono home__num">00</span>The orbit</a>
+        <a class="home__link" href="#work" data-home-link><span class="mono home__num">0a</span>Selected work</a>
+        <a class="home__link" href="#notes" data-home-link><span class="mono home__num">0b</span>Notes</a>
+        <a class="home__link" href="#side"><span class="mono home__num">✳</span>Side quests</a>
+        <p class="home__group mono">Chapters</p>
+        <a class="home__link" href="#ch1" data-home-link><span class="mono home__num">01</span>The brief</a>
+        <a class="home__link" href="#ch2" data-home-link><span class="mono home__num">02</span>ICC CT</a>
+        <a class="home__link" href="#ch3" data-home-link><span class="mono home__num">03</span>Surf Excel</a>
+        <a class="home__link" href="#ch4" data-home-link><span class="mono home__num">04</span>GoBoult</a>
+        <a class="home__link" href="#ch5" data-home-link><span class="mono home__num">05</span>DHL × MI</a>
+        <a class="home__link" href="#ch6" data-home-link><span class="mono home__num">06</span>ICC WWC</a>
+        <a class="home__link" href="#ch7" data-home-link><span class="mono home__num">07</span>Hook lab</a>
+        <a class="home__link" href="#ch8" data-home-link><span class="mono home__num">08</span>The desk</a>
+        <a class="home__link" href="#ch9" data-home-link><span class="mono home__num">09</span>How I work</a>
+        <p class="home__group mono">Connect</p>
+        <a class="home__link" href="#ping" data-home-link><span class="mono home__num">∞</span>Stay updated</a>
+        <a class="home__link" href="#epilogue" data-home-link><span class="mono home__num">∞</span>Say hello</a>
+      </nav>
+    </aside>
+
+    <div class="home__main">
+      <div class="home__hero" data-reveal>
+        <p class="home__herohead mono"><span class="home__dot"></span>the desk<span class="home__herosep">/</span>abhijeet kanase<span class="home__herosep">/</span>mumbai · <span data-clock>--:--</span> ist</p>
+        <div class="home__herobody">
+          <div class="home__herotext">
+            <h2 class="home__title">Every line I’ve shipped, <em>in one place.</em></h2>
+            <p class="home__sub">Thirty-two pieces of work, nine chapters and one red pen — campaigns, films, scripts, web and email, from the big briefs to the side quests.</p>
+          </div>
+          <div class="home__actions">
+            <a class="home__btn" href="#epilogue">Say hello</a>
+            <a class="home__btn home__btn--ghost" href="#work">See the work <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="clientline" aria-hidden="true">
+        <div class="clientline__track">
+          <span class="mono">bajaj electricals<i>·</i>surf excel<i>·</i>boult audio<i>·</i>zoo media<i>·</i>wwc<i>·</i>kokoonlabs<i>·</i>luna by khush<i>·</i>vanilla noir<i>·</i></span><span class="mono">bajaj electricals<i>·</i>surf excel<i>·</i>boult audio<i>·</i>zoo media<i>·</i>wwc<i>·</i>kokoonlabs<i>·</i>luna by khush<i>·</i>vanilla noir<i>·</i></span>
+        </div>
+      </div>
+
+      <section class="home__block" id="work" data-theme="ink" data-chapter="0a · Selected work" aria-label="Selected work — six briefs">
+        <div class="home__head" data-depth>
+          <div>
+            <p class="kicker mono" data-reveal>0a <span class="kicker__sep">/</span> Selected work</p>
+            <h2 class="display home__display" data-split>Six briefs. <em>One click each.</em></h2>
+          </div>
+          <a class="home__seeall mono" href="#orbit" data-reveal>See all — 32 in the orbit</a>
+        </div>
+                <ol class="worklist">
+          <li data-reveal>
+            <a class="worklist__row" href="#ch3" data-cursor="open" aria-label="Surf Excel">
+              <span class="mono worklist__num">01</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Surf Excel — “We are Cleanliness Paglus.”</span>
+                <span class="worklist__desc">Nobody wants to be sold detergent while they’re scrolling.</span>
+                <span class="mono worklist__meta">Surf Excel · social identity · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="assets/work/plates/surf-24-paglus.webp" alt="Surf Excel pitch slide: We are Cleanliness Paglus." width="630" height="1120" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.05s">
+            <a class="worklist__row" href="#ch4" data-cursor="open" aria-label="GoBoult">
+              <span class="mono worklist__num">02</span>
+              <span class="worklist__body">
+                <span class="worklist__title">GoBoult — “Lesssgooo!!”</span>
+                <span class="worklist__desc">People bought Boult. They never believed in it.</span>
+                <span class="mono worklist__meta">Boult · rebrand pitch · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="assets/work/plates/boult-25-mouth.webp" alt="GoBoult pitch slide: LESSSGOOO written on a mouth, the logo below." width="630" height="1120" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.10s">
+            <a class="worklist__row" href="#ch8" data-cursor="open" aria-label="Bajaj">
+              <span class="mono worklist__num">03</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Bajaj Electricals — “Your Wrapped 2025 is incomplete.”</span>
+                <span class="worklist__desc">912 minutes singing in the shower. Yes, we counted.</span>
+                <span class="mono worklist__meta">Bajaj · always-on + films · 2025–26</span>
+              </span>
+              <span class="worklist__still"><img src="assets/work/bajaj-wrapped-2.jpg" alt="Bajaj Wrapped 2025 post: 912 minutes singing in the shower." width="720" height="900" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.15s">
+            <a class="worklist__row" href="#ch7" data-cursor="open" aria-label="Hooks">
+              <span class="mono worklist__num">04</span>
+              <span class="worklist__body">
+                <span class="worklist__title">The hook lab — 15 reels, four creators.</span>
+                <span class="worklist__desc">The first line isn’t the intro. It’s the whole reel.</span>
+                <span class="mono worklist__meta">Reels · scripts · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="assets/work/plates/derek-01.webp" alt="Script document, page 1: 15 reel scripts for a real-estate creator." width="1075" height="761" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.20s">
+            <a class="worklist__row" href="#side" data-cursor="open" aria-label="Noir">
+              <span class="mono worklist__num">05</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Vanilla Noir — “The Forbidden Orchid Elixir.”</span>
+                <span class="worklist__desc">A spec sales page — plus the ten-page teardown of why it works.</span>
+                <span class="mono worklist__meta">Spec · web + teardown · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="assets/work/vanilla-noir.jpg" alt="Vanilla Noir sales page: The Forbidden Orchid Elixir." width="899" height="518" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal style="--d:0.25s">
+            <a class="worklist__row" href="#side" data-cursor="open" aria-label="Luna">
+              <span class="mono worklist__num">06</span>
+              <span class="worklist__body">
+                <span class="worklist__title">Luna by Khush — “Ignited by a glow from within.”</span>
+                <span class="worklist__desc">“The lotus roots itself in the mud. It grows in the dark.”</span>
+                <span class="mono worklist__meta">Founder email · 2025</span>
+              </span>
+              <span class="worklist__still"><img src="assets/work/plates/luna-01.webp" alt="Luna by Khush founder email: Ignited by a glow from within, the founder at her stall." width="950" height="760" loading="lazy" decoding="async" draggable="false"></span>
+              <span class="worklist__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ol>
+      </section>
+
+      <section class="home__block" id="notes" data-theme="ink" data-chapter="0b · Notes" aria-label="Notes from the hook lab — four lines that open reels">
+        <div class="home__head" data-depth>
+          <div>
+            <p class="kicker mono" data-reveal>0b <span class="kicker__sep">/</span> Notes</p>
+            <h2 class="display home__display" data-split>The lines that <em>stop the scroll.</em></h2>
+          </div>
+          <a class="home__seeall mono" href="#ch7" data-reveal>See all — chapter 07</a>
+        </div>
+                <ol class="hookwall">
+          <li class="hookwall__item" data-reveal>
+            <span class="hookwall__tag mono">
+              Hook · real estate
+              <span class="hookwall__foot">0–3 s · the fear, then the fix</span>
+            </span>
+            <p class="hookwall__line">“Do not give your house to <em>your kids.</em>”</p>
+          </li>
+          <li class="hookwall__item" data-reveal style="--d:0.08s">
+            <span class="hookwall__tag mono">
+              Hook · careers
+              <span class="hookwall__foot">one question · three reframes</span>
+            </span>
+            <p class="hookwall__line">“The interview question 90% of people know — and <em>always</em> answer wrong.”</p>
+          </li>
+          <li class="hookwall__item" data-reveal style="--d:0.16s">
+            <span class="hookwall__tag mono">
+              Hook · personal finance
+              <span class="hookwall__foot">the number, before the advice</span>
+            </span>
+            <p class="hookwall__line">“Is <em>₹1 lakh</em> enough for an emergency fund?”</p>
+          </li>
+          <li class="hookwall__item" data-reveal style="--d:0.24s">
+            <span class="hookwall__tag mono">
+              Hook · fitness
+              <span class="hookwall__foot">the mistake, admitted first</span>
+            </span>
+            <p class="hookwall__line">“This is a 2.5 kg dumbbell. Here’s what <em>everyone</em>, including me, was doing wrong.”</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="home__block home__ping" id="ping" data-theme="ink" data-chapter="Stay updated" aria-label="Stay updated — get a note when new work ships">
+        <div class="home__pingcard" data-reveal>
+          <div class="home__pingtext">
+            <p class="kicker mono">Stay updated</p>
+            <p class="home__pingline">When work leaves the desk, <em>you get the note first.</em></p>
+            <p class="home__pingsub">No machine behind it — a campaign, a film, a teardown. One short note, and that’s the whole list.</p>
+          </div>
+          <a class="home__btn" href="mailto:abhi.insider@gmail.com?subject=Keep%20me%20posted" data-cursor="write">Keep me posted <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
 <!-- ───────────────────────── CHAPTER 01 · ABOUT ───────────────────────── -->
-<section class="chapter about" id="ch1" data-theme="paper" data-chapter="01 · The brief before the brief">
-  <span class="chapter__num serif-i" aria-hidden="true">01</span>
+<section class="chapter about" id="ch1" data-theme="ink" data-chapter="01 · The brief before the brief">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 01 <span class="kicker__sep">/</span> The brief before the brief</p>
+    <p class="kicker mono" data-reveal>01 <span class="kicker__sep">/</span> The brief before the brief</p>
     <h2 class="display" data-split>Hi. I’m Abhijeet. Before I write a word, <em>I read a few thousand.</em></h2>
   </div>
   <div class="about__grid">
@@ -924,9 +1277,8 @@ html.tp-open { overflow: hidden; }
 
 <!-- ───────────────────────── CHAPTER 02 · ICC ───────────────────────── -->
 <section class="chapter case" id="ch2" data-theme="ink" data-chapter="02 · ICC Champions Trophy 2025">
-  <span class="chapter__num serif-i" aria-hidden="true">02</span>
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 02 <span class="kicker__sep">/</span> ICC Men’s Champions Trophy 2025 · Zoo Media · Campaign</p>
+    <p class="kicker mono" data-reveal>02 <span class="kicker__sep">/</span> ICC Champions Trophy · 2025</p>
     <h2 class="display" data-split>The format was dying. <em>So we put everything on the line.</em></h2>
   </div>
   <div class="case__grid">
@@ -965,10 +1317,9 @@ html.tp-open { overflow: hidden; }
 </section>
 
 <!-- ───────────────────────── CHAPTER 03 · SURF EXCEL ───────────────────────── -->
-<section class="chapter case" id="ch3" data-theme="sand" data-chapter="03 · Surf Excel">
-  <span class="chapter__num serif-i" aria-hidden="true">03</span>
+<section class="chapter case" id="ch3" data-theme="ink" data-chapter="03 · Surf Excel">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 03 <span class="kicker__sep">/</span> Surf Excel × Zoo Media · Social strategy pitch · 2025</p>
+    <p class="kicker mono" data-reveal>03 <span class="kicker__sep">/</span> Surf Excel · 2025</p>
     <h2 class="display" data-split>Nobody wants to be sold detergent <em>while they’re scrolling.</em></h2>
   </div>
   <div class="case__grid">
@@ -1001,15 +1352,61 @@ html.tp-open { overflow: hidden; }
         <figcaption class="mono">The identity slide, redrawn as a poster. Move your cursor — it leans.</figcaption>
       </figure>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="surf-24-paglus">Six pages from the pitch are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch3:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“We are Cleanliness Paglus.” — the identity, in full</p>
+            <a class="mono caselog__more" href="pieces/surf-24-paglus.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Every stain tells a story.” — the comments write the story</p>
+            <a class="mono caselog__more" href="pieces/surf-28-stain-story.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Stain Horoscopes — “Taurus: curry stains.”</p>
+            <a class="mono caselog__more" href="pieces/surf-38-horoscopes.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">If Stains Had Instagram Bios</p>
+            <a class="mono caselog__more" href="pieces/surf-39-stain-bios.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">This or That — a Stories poll</p>
+            <a class="mono caselog__more" href="pieces/surf-40-this-or-that.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Laundry Break Bingo — Surf Excel Matic</p>
+            <a class="mono caselog__more" href="pieces/surf-65-bingo.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch3:end -->
     </div>
   </div>
 </section>
 
 <!-- ───────────────────────── CHAPTER 04 · GOBOULT ───────────────────────── -->
-<section class="chapter case" id="ch4" data-theme="graphite" data-chapter="04 · GoBoult">
-  <span class="chapter__num serif-i" aria-hidden="true">04</span>
+<section class="chapter case" id="ch4" data-theme="ink" data-chapter="04 · GoBoult">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 04 <span class="kicker__sep">/</span> GoBoult × Zoo Media · Rebrand pitch · September 2025</p>
+    <p class="kicker mono" data-reveal>04 <span class="kicker__sep">/</span> GoBoult · September 2025</p>
     <h2 class="display" data-split>People bought Boult. <em>They never believed in it.</em></h2>
   </div>
   <div class="case__grid">
@@ -1047,15 +1444,75 @@ html.tp-open { overflow: hidden; }
         <li><span class="mono">Film 3 · The Artist</span><p>A doodle on a café tissue, posted nervously. Late nights, collabs, and finally a wall the size of a city block.</p></li>
       </ul>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="boult-25-mouth">Eight pages from the pitch are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch4:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Lesssgooo!!” — the word, before the logo</p>
+            <a class="mono caselog__more" href="pieces/boult-25-mouth.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">What the name hides — GO + Boult</p>
+            <a class="mono caselog__more" href="pieces/boult-08-name-hides.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Lesssgooo Viral · Lesssgooo Crazy — key visuals</p>
+            <a class="mono caselog__more" href="pieces/boult-27-posters.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Out of home, Mumbai</p>
+            <a class="mono caselog__more" href="pieces/boult-30-billboard-viral.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Product posts — Roaaaarrrr · Thump</p>
+            <a class="mono caselog__more" href="pieces/boult-45-roar-thump.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Contextual billboards — “Team Belly ✓”</p>
+            <a class="mono caselog__more" href="pieces/boult-54-team-belly.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Sirf Fein sunne ke liye 15,000 ki ticket leli.”</p>
+            <a class="mono caselog__more" href="pieces/boult-55-sirf-fein.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Aa maru Eras Tour che.”</p>
+            <a class="mono caselog__more" href="pieces/boult-56-eras-tour.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch4:end -->
     </div>
   </div>
 </section>
 
 <!-- ───────────────────────── CHAPTER 05 · DHL ───────────────────────── -->
-<section class="chapter case" id="ch5" data-theme="paper" data-chapter="05 · DHL × Mumbai Indians">
-  <span class="chapter__num serif-i" aria-hidden="true">05</span>
+<section class="chapter case" id="ch5" data-theme="ink" data-chapter="05 · DHL × Mumbai Indians">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · IPL 2025 · Case film for the Clio Awards</p>
+    <p class="kicker mono" data-reveal>05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · 2025</p>
     <h2 class="display" data-split>While other brands shouted, <em>DHL had a conversation.</em></h2>
   </div>
   <div class="case__grid">
@@ -1095,11 +1552,43 @@ html.tp-open { overflow: hidden; }
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 06 · THE HOOK LAB ───────────────────────── -->
-<section class="chapter case" id="ch6" data-theme="graphite" data-chapter="06 · The hook lab">
-  <span class="chapter__num serif-i" aria-hidden="true">06</span>
+<!-- ───────────────────────── CHAPTER 06 · ICC WOMEN'S WORLD CUP ───────────────────────── -->
+<section class="chapter case" id="ch6" data-theme="ink" data-chapter="06 · ICC Women's World Cup">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 06 <span class="kicker__sep">/</span> Short‑form scripts · six‑ and seven‑figure creators · 2025</p>
+    <p class="kicker mono" data-reveal>06 <span class="kicker__sep">/</span> ICC Women’s World Cup · 2025</p>
+    <h2 class="display" data-split>Ten players, one tournament — <em>and ten different scripts.</em></h2>
+  </div>
+  <div class="case__grid">
+    <aside class="case__meta" data-reveal>
+      <dl class="meta">
+        <div><dt>Client</dt><dd>ICC — Women’s World Cup 2025 · Zoo Media, Mumbai</dd></div>
+        <div><dt>Role</dt><dd>Copywriter — player story scripts</dd></div>
+        <div><dt>Deliverables</dt><dd>10 personalized player scripts · one per player</dd></div>
+        <div><dt>Hashtag</dt><dd>#WillToWin</dd></div>
+      </dl>
+    </aside>
+    <div class="case__body">
+      <p class="prose" data-reveal>For the ICC Women’s World Cup 2025, each player got a story in her own voice — not ten versions of the same line. Smriti Mandhana and Jemimah Rodrigues, Amelia Kerr and Sophie Ecclestone, Harshita Samavikrama and Fatima Sana: ten scripts, one idea — <span class="mono">#WillToWin</span>.</p>
+      <ul class="players" data-reveal>
+        <li><span class="mono">01</span>Smriti Mandhana</li>
+        <li><span class="mono">02</span>Jemimah Rodrigues</li>
+        <li><span class="mono">03</span>Amelia Kerr</li>
+        <li><span class="mono">04</span>Sophie Ecclestone</li>
+        <li><span class="mono">05</span>Ashleigh Gardner</li>
+        <li><span class="mono">06</span>Harshita Samavikrama</li>
+        <li><span class="mono">07</span>Fatima Sana</li>
+        <li><span class="mono">08</span>Laura Wolvaardt</li>
+        <li><span class="mono">09</span>Sarah Glenn</li>
+        <li><span class="mono">10</span>Nigar Sultana Jyoti</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────── CHAPTER 07 · THE HOOK LAB ───────────────────────── -->
+<section class="chapter case" id="ch7" data-theme="ink" data-chapter="07 · The hook lab">
+  <div class="chapter__head" data-depth>
+    <p class="kicker mono" data-reveal>07 <span class="kicker__sep">/</span> The hook lab · 2025</p>
     <h2 class="display" data-split>The first line isn’t the intro. <em>It’s the whole reel.</em></h2>
   </div>
   <div class="case__grid">
@@ -1151,15 +1640,40 @@ html.tp-open { overflow: hidden; }
         <figcaption class="mono">Five hooks from the folder, each with its own camera direction and editor note.</figcaption>
       </figure>
       <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="derek-01">Three of the scripts, as delivered, are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch7:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Real estate, p.1 — B‑roll, viral audio, one number</p>
+            <a class="mono caselog__more" href="pieces/derek-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“This is a 2.5 kg dumbbell.” — the fitness script</p>
+            <a class="mono caselog__more" href="pieces/harshit-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“The interview question 90% of people answer wrong.” — three reframes</p>
+            <a class="mono caselog__more" href="pieces/jobcoach-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch7:end -->
     </div>
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 07 · THE REST OF THE DESK ───────────────────────── -->
-<section class="chapter case desk" id="ch7" data-theme="sand" data-chapter="07 · The rest of the desk">
-  <span class="chapter__num serif-i" aria-hidden="true">07</span>
+<!-- ───────────────────────── CHAPTER 08 · THE REST OF THE DESK ───────────────────────── -->
+<section class="chapter case desk" id="ch8" data-theme="ink" data-chapter="08 · Bajaj Electricals">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 07 <span class="kicker__sep">/</span> Bajaj Electricals · Always‑on social · 2025 — and the side quests</p>
+    <p class="kicker mono" data-reveal>08 <span class="kicker__sep">/</span> Bajaj Electricals · 2025–26</p>
     <h2 class="display" data-split>912 minutes singing in the shower. <em>Yes, we counted.</em></h2>
   </div>
   <div class="case__grid">
@@ -1172,7 +1686,97 @@ html.tp-open { overflow: hidden; }
       </dl>
     </aside>
     <div class="case__body">
-      <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="bajaj-wrapped-2">Eleven statics and three films are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <p class="prose" data-reveal>Bajaj’s feed has no off-season — festive statics, product posts, a five-part Wrapped series and three films, all in the same kitchen-table voice.</p>
+      <p class="mono orbit-link" data-reveal><a href="#orbit" data-orbit-open="bajaj-wrapped-2">Ten statics and two films are in the orbit <span aria-hidden="true">↑</span></a></p>
+      <!-- caselog:ch8:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">The work, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Lohri — “As the fire glows brighter, warmth finds its way home.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-lohri.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Makar Sankranti — “From sweet beginnings to soaring celebrations.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-sankranti.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Auto Shut Off — “Everything needs a reminder. Except the Pentacle Digi.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-auto-shut-off.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Majesty RX10 — “It’s always summer with Bajaj.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-summer.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Gracio — “Corrosion doesn’t stand a chance.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-gracio.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">New Year — “When lights guide your way, every glow becomes a brighter step.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-new-year.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Contempo — “Joy in every splash, safety in every moment.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-contempo.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “Your Spotify Wrapped is incomplete.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-1.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “912 minutes singing in the shower.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-2.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “643 minutes to look fresh.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-3.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “1526 minutes of mastering the art of cooking.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-4.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">Wrapped 2025 — “Your top products in 2025.”</p>
+            <a class="mono caselog__more" href="pieces/bajaj-wrapped-5.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:ch8:end -->
       <div class="side" id="side">
         <p class="kicker mono" data-reveal>Side quests <span class="kicker__sep">/</span> long‑form, web &amp; email</p>
         <ul class="side__list">
@@ -1191,23 +1795,73 @@ html.tp-open { overflow: hidden; }
             <p class="side__title">“The Lotus roots itself in the mud. It grows in the dark… you are that flower breaking the surface.”</p>
             <p class="mono side__tag">Luna by Khush · founder email · 2025 · <a href="#orbit" data-orbit-open="luna-01">in the orbit ↑</a></p>
           </li>
+          <li class="side__item" data-reveal style="--d:.3s">
+            <p class="side__big">KokoonLabs<span class="dot">.</span></p>
+            <p class="side__title">Website copy — version three.</p>
+            <p class="mono side__tag">Web · v3 · 2026</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.4s">
+            <p class="side__big">LumiCell<span class="dot">.</span></p>
+            <p class="side__title">The Renewal Serum — product page copy.</p>
+            <p class="mono side__tag">Product page · 2025</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.5s">
+            <p class="side__big serif-i">The win-back<span class="dot">.</span></p>
+            <p class="side__title">A re-engagement sequence for a beauty brand.</p>
+            <p class="mono side__tag">Email · beauty · 2026</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.6s">
+            <p class="side__big serif-i">Is your gym diet holding you back?</p>
+            <p class="side__title">A creator email that opens on the question, not the product.</p>
+            <p class="mono side__tag">Email · fitness · 2025</p>
+          </li>
+          <li class="side__item" data-reveal style="--d:.7s">
+            <p class="side__big serif-i">Join India’s no. 1 coding community<span class="dot">.</span></p>
+            <p class="side__title">The membership pitch — written to sound like the people in it.</p>
+            <p class="mono side__tag">Email · creators · 2025</p>
+          </li>
         </ul>
       </div>
+      <!-- caselog:side:begin (generated - src/data/pieces.json , tools/gen_log.py) -->
+      <ol class="caselog" data-reveal>
+        <li class="caselog__head" aria-hidden="true"><span class="mono">Side quests, logged</span></li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“The Forbidden Orchid Elixir That Evolves on Your Skin for 72 Hours”</p>
+            <a class="mono caselog__more" href="pieces/vanilla-noir.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2026</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Build the skills, projects, and proof you need — before graduation.”</p>
+            <a class="mono caselog__more" href="pieces/nyc-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+        <li>
+          <span class="mono caselog__year">2025</span>
+          <div class="caselog__body">
+            <p class="caselog__what">“Ignited by a glow from within.”</p>
+            <a class="mono caselog__more" href="pieces/luna-01.html">the piece &rarr;</a>
+          </div>
+        </li>
+      </ol>
+      <!-- caselog:side:end -->
     </div>
   </div>
 </section>
 
-<!-- ───────────────────────── CHAPTER 08 · HOW I WORK ───────────────────────── -->
-<section class="chapter process" id="ch8" data-theme="paper" data-chapter="08 · How I work">
-  <span class="chapter__num serif-i" aria-hidden="true">08</span>
+<!-- ───────────────────────── CHAPTER 09 · HOW I WORK ───────────────────────── -->
+<section class="chapter process" id="ch9" data-theme="ink" data-chapter="09 · How I work">
   <div class="chapter__head" data-depth>
-    <p class="kicker mono" data-reveal>Chapter 08 <span class="kicker__sep">/</span> How I work</p>
+    <p class="kicker mono" data-reveal>09 <span class="kicker__sep">/</span> How I work</p>
     <h2 class="display" data-split>The method is research. <em>The output is a line.</em></h2>
   </div>
   <ol class="steps">
     <li class="step" data-reveal><span class="step__num serif-i">01</span><h3 class="step__title">Mine the comments</h3><p class="step__body">Reddit threads, one‑star reviews, YouTube replies. The audience has already written the objections and the desires.</p></li>
     <li class="step" data-reveal style="--d:.08s"><span class="step__num serif-i">02</span><h3 class="step__title">Study the winners</h3><p class="step__body">50+ Cannes and Clio winners, reverse‑engineered. Which structures survive a change of medium?</p></li>
-    <li class="step" data-reveal style="--d:.16s"><span class="step__num serif-i">03</span><h3 class="step__title">Write a hundred</h3><p class="step__body">100–200 concepts per brief, from a research system built on Claude and Lovable. The client sees three.</p></li>
+    <li class="step" data-reveal style="--d:.16s"><span class="step__num serif-i">03</span><h3 class="step__title">Write a hundred</h3><p class="step__body">100–200 concepts per brief. The client sees three.</p></li>
     <li class="step" data-reveal style="--d:.24s"><span class="step__num serif-i">04</span><h3 class="step__title">Write for the ear and the thumb</h3><p class="step__body">A line that can’t survive being said aloud, or scrolled past, isn’t finished.</p></li>
   </ol>
 
@@ -1238,6 +1892,8 @@ html.tp-open { overflow: hidden; }
     </svg>
   </div>
 </section>
+
+
 
 </main>
 
@@ -1274,10 +1930,11 @@ html.tp-open { overflow: hidden; }
       </div>
       <div>
         <p class="mono">Set in Instrument Serif &amp; Sans</p>
+        <p class="mono">Stack — Docs · Grammarly · Figma · Notion · Loom</p>
         <p class="mono">Agency work shown with Zoo Media, 2024–26</p>
       </div>
       <div>
-        <p class="mono">© 2026 Abhijeet Kanase</p>
+        <p class="mono">© 2026 Abhijeet Kanase · updated october 2026</p>
         <p class="mono epilogue__disclaimer">Campaign figures as reported by clients &amp; the ICC</p>
       </div>
     </div>
@@ -1372,6 +2029,9 @@ html.tp-open { overflow: hidden; }
   /* document offsets are measured once per layout change, never per frame → the loop performs no layout reads */
   const docTop = (el) => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
   const themed = $$('[data-theme][data-chapter]').map((el) => ({ el, top: 0, bottom: 0 }));
+  const homeLinks = $$('[data-home-link]').map((a) => ({ a, id: a.getAttribute('href') }));
+  let homeActive = '';
+  const homeSetActive = (id) => { if (id === homeActive) return; homeActive = id; homeLinks.forEach((l) => l.a.classList.toggle('is-active', l.id === '#' + id)); };
   const nums = $$('.chapter__num').map((el) => ({ el, top: 0, h: 0, last: NaN }));
   const depths = $$('[data-depth]').map((el) => ({ el, top: 0, h: 0, last: NaN, extra: '' }));   // data-depth may carry a resting transform (the index card's tilt) — read in measure()
   const mainEl = $('[data-main]');
@@ -1424,8 +2084,8 @@ html.tp-open { overflow: hidden; }
     const mid = y + vh * 0.5;
     let active = null;
     for (const s of themed) if (s.top <= mid && s.bottom > mid) active = s.el;
-    if (active) { setTheme(active.dataset.theme); setChapter(active.dataset.chapter); }
-    else if (mainEl && mainBottom <= mid) { setTheme('ink'); setChapter('Epilogue'); }
+    if (active) { setTheme(active.dataset.theme); setChapter(active.dataset.chapter); homeSetActive(active.id || ''); }
+    else if (mainEl && mainBottom <= mid) { setTheme('ink'); setChapter('Epilogue'); homeSetActive('epilogue'); }
     if (swapping && performance.now() - swapAt > 1200) { swapping = false; chapterLabel.textContent = currentChapter; hudChapter.classList.remove('is-swapping'); }   // label hidden (no transition ran) → settle it
     // big chapter numerals drift slower than the page (ambient layer)
     if (reduce) return;
@@ -1615,7 +2275,7 @@ html.tp-open { overflow: hidden; }
   }
 
   /* ───────────── index overlay ───────────── */
-  const index = $('[data-index]'), indexBtn = $('[data-index-toggle]'), indexLabel = $('[data-index-label]');
+  const index = $('[data-index]'), indexBtns = $$('[data-index-toggle]'), indexLabel = $('[data-index-label]');
   $$('.index__list li').forEach((li, i) => li.style.setProperty('--i', i));
   let indexOpen = false;
   function toggleIndex(force) {
@@ -1623,20 +2283,21 @@ html.tp-open { overflow: hidden; }
     index.classList.toggle('is-open', indexOpen);
     index.setAttribute('aria-hidden', String(!indexOpen));
     html.classList.toggle('index-open', indexOpen);
-    indexBtn.setAttribute('aria-expanded', String(indexOpen));
+    indexBtns.forEach((b) => b.setAttribute('aria-expanded', String(indexOpen)));
     indexLabel.textContent = indexOpen ? 'Close' : 'Index';
     html.style.overflow = indexOpen ? 'hidden' : '';
     if (indexOpen && reduce) $('[data-index-link]')?.focus({ preventScroll: true });
   }
-  if (index && indexBtn) {
-    indexBtn.addEventListener('click', () => toggleIndex());
+  if (index && indexBtns.length) {
+    indexBtns.forEach((b) => b.addEventListener('click', () => toggleIndex()));
     index.addEventListener('transitionend', (e) => { if (e.target === index && e.propertyName === 'transform' && indexOpen) $('[data-index-link]')?.focus({ preventScroll: true }); });   // focus once the panel has arrived
     $$('[data-index-link]').forEach((a) => a.addEventListener('click', () => toggleIndex(false)));
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && indexOpen) { toggleIndex(false); indexBtn.focus(); } });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && indexOpen) { toggleIndex(false); indexBtns[0].focus(); } });
+    addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); toggleIndex(); } });   // ⌘K — the sidebar's search chip keeps its promise
   }
 
   /* ───────────── in-page links: native smooth scroll (never hijacked) ───────────── */
-  $$('[data-index-link], .hud__name, .hud__btn--solid, .services__list a, .stage__links a[href^="#"], [data-stage-more], .orbit-link a:not([data-orbit-open])').forEach((a) => {
+  $$('[data-index-link], [data-home-link], .hud__name, .hud__btn--solid, .services__list a, .stage__links a[href^="#"], [data-stage-more], .orbit-link a:not([data-orbit-open])').forEach((a) => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
       if (!id || !id.startsWith('#')) return;
@@ -1738,8 +2399,7 @@ html.tp-open { overflow: hidden; }
 <script>
 /* ─────────────────────────────────────────────────────────────
    ABHIJEET KANASE — THE SCENE (v7)
-   One continuous 3D environment for every piece of work, modelled on
-   Andrianjaka Tony's "Portfolio Homepage Layout" (recent.design/i/75uqgzu):
+   One continuous 3D environment for every piece of work, three arrangements:
 
      ORBIT   a flat ring turning in the screen plane (two counter-turning rings here)
      SCATTER the same cards on a turning helix drum — a true 3D carousel:
@@ -1819,7 +2479,7 @@ html.tp-open { overflow: hidden; }
   const captions = cards.map((c) => ($('figcaption', c) || {}).textContent || '');
   const kinds = cards.map((c) => c.dataset.k || '');
   const hrefs = cards.map((c) => c.dataset.href || '#ch1');
-  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: '34 pieces of work, 2025–26' };
+  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: lineK ? lineK.textContent.trim() : '32 pieces of work, 2025–26' };   // the count lives in the markup, once
   const order = cards.map((_, i) => (i * 7) % n);                       // stable pseudo-random stagger order
 
   /* ── sceneState — the single source of truth ── */
@@ -1849,8 +2509,11 @@ html.tp-open { overflow: hidden; }
        caption band), so the top band is just breathing room and the bottom band is measured from the
        mode row down. In the stacked (≤600px) layout the headline sits above the rings and reserves its own height. */
     const band = stacked ? 118 : 108;                                                          // the caption band, as before
-    const hudTop = hud ? hud.getBoundingClientRect().top - stage.getBoundingClientRect().top : H - band;
-    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : 20;
+    const rectTop = stage.getBoundingClientRect().top;
+    const hudTop = hud ? hud.getBoundingClientRect().top - rectTop : H - band;
+    const bar = $('.hud__bar');                                                                 // the fixed glass nav pill: the ring's top pass must clear it, not duck under it
+    const barBottom = bar ? bar.getBoundingClientRect().bottom - rectTop : 0;
+    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : Math.max(20, barBottom + 14);
     const below = Math.max(band, H - hudTop + 12);                                             // everything the mode row + foot occupy
     CY = above + (H - above - below) / 2;                                 // the scene's centre, in stage px
     roomTop = above - CY; roomBottom = H - below - CY;                    // the room, relative to that centre
@@ -1870,7 +2533,7 @@ html.tp-open { overflow: hidden; }
     if (!r.width || !r.height) return;
     const half = Math.hypot(r.width, r.height) / 2;                        // the farthest glyph from the centre, at scale 1
     const hole = ring.inner - 8;                                           // ring.inner already keeps 6 px from the innermost card edge
-    const fit = clamp(hole / half, 0.55, 1);
+    const fit = clamp(hole / half, 0.42, 1);                       // short 16:9 windows: the headline shrinks to clear the hole instead of over the cards
     if (fit < 0.995) stage.style.setProperty('--title-fit', fit.toFixed(3));
   }
   const sumW = (idx) => idx.reduce((a, i) => a + cw[i], 0);
@@ -1896,7 +2559,7 @@ html.tp-open { overflow: hidden; }
     // 9:16 film take the same room). v8.3: the spacing PACKS ITSELF (see drumPack) — as close as this card set
     // allows on this screen, on both axes, with no two lit cards ever touching, and it re-solves for any new set of work.
     const room = roomBottom - roomTop, midY = (roomTop + roomBottom) / 2;
-    const perTurn = mobile ? 5 : 6.5;                                                 // cards per turn: a fractional count keeps successive turns from lining up in columns
+    const perTurn = 5;                                                          // cards per turn (laptop + phone): 5 packs the lit arc ~35 % narrower than 6.5 — the spacing solver (drumPack) proves no two lit cards touch at any angle; the per-card jy/jr jitter keeps successive turns from lining up in columns
     const aRef = cards.map((_, i) => cw[i] * ch[i]).sort((a, b) => a - b)[n >> 1];    // the reference area: the median card (a 4:5 static)
     const kFront = P / (P - (1 - 0.2) * W * 0.44);                                   // phone: how much the perspective magnifies the front card (its z = (1 − zoff)·R)
     const s = mobile ? 1.15 / kFront : clamp(room / 1080 * 1.25, 0.6, 0.85);         // common size, from the room height: the front card ≈ 40 % of the room tall, like the reference; the phone keeps its approved front-card size now that depth is real
@@ -1928,7 +2591,7 @@ html.tp-open { overflow: hidden; }
      at rest and never intersects under the lean — unless the one behind is a half-lit shoulder card (< .75) tucked
      behind an opaque one (real depth order, so it is simply occluded, like a stack of prints); two shoulder cards
      (< .7) and the dark far side are free. ~30–50 ms, once per resize (nothing runs in the frame loop). */
-  const DRUM_GAP = 12, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first
+  const DRUM_GAP = 4, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first · 4 px rest clearance: the v8.3 default of 12 read as "spread out" on laptops — the pack is 15–25 % tighter
   const boxes = [];                                                                    // scratch: projected boxes of the lit cards at one phase
   function drumPack(apply, room) {
     const RxMin = W * 0.14, RxMax = Math.min(W * 0.36, room * 0.9);
@@ -2083,7 +2746,7 @@ html.tp-open { overflow: hidden; }
     if (more) { more.hidden = !href; if (href) more.setAttribute('href', href); }
     document.dispatchEvent(new Event('cursor:refresh'));
   };
-  const titleWanted = () => (S.mode === 'orbit' && S.focused < 0 ? 1 : 0);   // the headline lives in the still centre of the rings only
+  const titleWanted = () => ((stacked || S.mode === 'orbit') && S.focused < 0 ? 1 : 0);   // in the hole of the rings only — on phones it sits above them, so it stays up
 
   /* ── mode changes: the same cards travel to the next arrangement ── */
   let lead = -1;
@@ -2308,16 +2971,20 @@ html.tp-open { overflow: hidden; }
     S.layoutProgress = progress;
   }
 
-  /* ── the idle tour: orbit → scatter → grid → orbit once, only while nobody is looking closely ── */
-  const TOUR = ['scatter', 'grid', 'orbit']; let tourI = 0;
+  /* ── the standing opening: orbit → grid → scatter → orbit, on the loop —
+     10 s in orbit, 5 s in grid, 5 s in scatter. The site always opens on orbit (laptop and
+     phone alike). It pauses while nobody is looking closely (hover, drag, focus, hidden tab,
+     scrolled away, mid-fling) and any direct interaction still switches it off, as before. ── */
+  const TOUR = ['grid', 'scatter', 'orbit']; let tourI = 0;
+  const TOUR_DWELL = [10, 5, 5];                                              // seconds in the mode the tour is sitting in: orbit, grid, scatter
   function tourStep(dt) {
     if (!tour) return;
     if (S.hold || S.hovered >= 0 || S.focused >= 0 || S.dragging || document.hidden || S.scrollProgress > 0.25 || Math.abs(S.scrollVelocity) > 80) { S.idle = 0; return; }
     S.idle += dt;
-    if (S.idle < (tourI === 0 ? 12 : 6)) return;
+    if (S.idle < TOUR_DWELL[tourI]) return;
     S.idle = 0;
     setMode(TOUR[tourI]);
-    if (++tourI >= TOUR.length) tour = false;
+    tourI = (tourI + 1) % TOUR.length;                                        // loops: orbit → grid → scatter → orbit …
   }
 
   /* ── visibility: the stage in view → active (films resume), out of view → idle ── */
@@ -2389,8 +3056,8 @@ html.tp-open { overflow: hidden; }
    page opens, then it moves only when the pointer or a finger moves, and the dye
    dissipates back to plain black in ~3 s.
 
-   Adapted from Pavel Dobryakov's WebGL-Fluid-Simulation (MIT, 2017) — the same
-   solver helloshivam.com runs — rewritten for this page:
+   Adapted from Pavel Dobryakov's WebGL-Fluid-Simulation (MIT, 2017) and
+   rewritten for this page:
      · transparent over the black (the dye is added; the black remains the
        fallback for no-JS, reduced motion, missing WebGL, context loss)
      · pointer events on window, the canvas never intercepts a click or a drag
@@ -2425,12 +3092,12 @@ html.tp-open { overflow: hidden; }
 
   const C = Object.assign({
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,
-    DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 0.8, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,
-    SPLAT_RADIUS: 0.25, SPLAT_FORCE: 3000,
-    BRIGHTNESS: 0.12, COLOR_UPDATE_SPEED: 10,                     // hue cycles 10×/s; .15 is the reference's neon, .12 keeps the type first
+    DENSITY_DISSIPATION: 2.5, VELOCITY_DISSIPATION: 1.4, PRESSURE: 0.8, PRESSURE_ITERATIONS: 20, CURL: 0,   // 1.4: the jet dies sooner, so the flow stays near the cursor
+    SPLAT_RADIUS: 0.12, SPLAT_FORCE: 1800,   // smaller radius: the flow keeps its shape but stays close to the pointer (was 0.25 / 3000)
+    BRIGHTNESS: 0.05, COLOR_UPDATE_SPEED: 10,                     // one grey tone, a whisper under the type (was 0.12 → 0.08, full spectrum)
     SHADING: true,
-    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.65, BLOOM_THRESHOLD: 0.6, BLOOM_SOFT_KNEE: 0.7,
-    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 1.0,
+    BLOOM: true, BLOOM_ITERATIONS: 8, BLOOM_RESOLUTION: 256, BLOOM_INTENSITY: 0.2, BLOOM_THRESHOLD: 0.25, BLOOM_SOFT_KNEE: 0.7,   // only the opening burst reaches the glow, softly
+    SUNRAYS: true, SUNRAYS_RESOLUTION: 196, SUNRAYS_WEIGHT: 0.4,
     IMMEDIATE: true, SLEEP_AFTER: 4, MAX_DPR: 1, GUARD: true,        // MAX_DPR 1: the dye is a 512 px texture — extra display pixels add cost, not detail
   }, window.AK_FLUID_CONFIG || {});
 
@@ -2661,11 +3328,7 @@ html.tp-open { overflow: hidden; }
   /* ───────────── pointers: window-level, passive — the canvas is never in the hit-test ───────────── */
   const pointers = new Map();
   let splatStack = [], colorTimer = 0, lastInput = -1e9, awake = false;
-  const HSVtoRGB = (h, s, v) => {
-    const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
-    switch (i % 6) { case 0: return [v, t, p]; case 1: return [q, v, p]; case 2: return [p, v, t]; case 3: return [p, q, v]; case 4: return [t, p, v]; default: return [v, p, q]; }
-  };
-  const generateColor = () => HSVtoRGB(Math.random(), 1, 1).map((c) => c * C.BRIGHTNESS);
+  const generateColor = () => { const g = C.BRIGHTNESS; return [g, g, g]; };   // monochrome: one tone, no hue roll (the old neon rainbow)
   const aspect = () => canvas.width / canvas.height;
   const correctDeltaX = (d) => (aspect() < 1 ? d * aspect() : d);
   const correctDeltaY = (d) => (aspect() > 1 ? d / aspect() : d);
@@ -2707,7 +3370,7 @@ html.tp-open { overflow: hidden; }
   }
   function multipleSplats(amount) {
     for (let i = 0; i < amount; i++) {
-      const c = generateColor().map((v) => v * 5);                // the opening burst: brighter than a trail, gone in ~3 s (the reference uses 10× — too much under the orbit)
+      const c = generateColor().map((v) => v * 5.5);             // the opening burst: brighter than a trail, gone in ~3 s — 5.5 × 0.05 = 0.275, just over the bloom threshold
       splat(Math.random(), Math.random(), 1000 * (Math.random() - 0.5), 1000 * (Math.random() - 0.5), c);
     }
   }
@@ -2898,111 +3561,6 @@ html.tp-open { overflow: hidden; }
   } catch (err) { if (window.console) console.warn('fluid off:', err && err.message); }   // never the page's problem: the gradient is always there
 })();
 
-</script>
-<script>
-/* ─────────────────────────────────────────────────────────────
-   TYPE PALETTES (v8.5) — 40 pairings, picked from the typography
-   that keeps winning on Awwwards. Nothing loads until the panel is opened; the
-   site default (Instrument Serif / Sans, inlined) is free and works offline.
-   A palette is just CSS custom properties, so it can only ever touch type — the
-   layout, the copy and the orbit are untouched. Choices persist in localStorage.
-   ───────────────────────────────────────────────────────────── */
-(() => {
-  'use strict';
-  const D = {"palettes":[{"id":"instrument","name":"Instrument · site default","mood":"editorial","d":"Instrument Serif","dw":400,"b":"Instrument Sans","m":"JetBrains Mono","ls":"-.015em","mls":".02em","note":"What the site ships today. Fonts are inlined, so this pairing costs nothing and works offline.","url":"https://fonts.googleapis.com/css2?family=Instrument%2BSerif:wght@400;400&family=Instrument%2BSans:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Instrument Serif','Iowan Old Style',serif","bS":"'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"fraunces","name":"Fraunces Editorial","mood":"editorial","d":"Fraunces","dw":600,"b":"Inter","m":"IBM Plex Mono","ls":"-.022em","mls":".03em","note":"The variable-serif move behind most recent typography honours — wonky at display size, demure at text.","url":"https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Inter:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Fraunces','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"newsreader","name":"Newsreader Press","mood":"editorial","d":"Newsreader","dw":500,"b":"Archivo","m":"JetBrains Mono","ls":"-.02em","mls":".025em","note":"Newspaper-front-page serif over a workhorse grotesk. Reads like an opinion column, not a template.","url":"https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500&family=Archivo:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Newsreader','Iowan Old Style','Times New Roman',serif","bS":"'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"playfair","name":"Playfair Contrast","mood":"editorial","d":"Playfair Display","dw":700,"b":"Libre Franklin","m":"Space Mono","ls":"-.018em","mls":".03em","note":"The highest-contrast pairing on Awwwards portfolios: thin hairlines, fat stems, one loud italic.","url":"https://fonts.googleapis.com/css2?family=Playfair%2BDisplay&family=Libre%2BFranklin:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Playfair Display','Iowan Old Style','Times New Roman',serif","bS":"'Libre Franklin',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"cormorant","name":"Cormorant Gallery","mood":"editorial","d":"Cormorant Garamond","dw":600,"b":"Manrope","m":"IBM Plex Mono","ls":"-.008em","mls":".04em","note":"Museum-catalogue serif. Needs the air — set the headlines large or not at all.","url":"https://fonts.googleapis.com/css2?family=Cormorant%2BGaramond:wght@400;600&family=Manrope:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Cormorant Garamond','Iowan Old Style','Times New Roman',serif","bS":"'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"garamond","name":"Garamond Long Read","mood":"editorial","d":"EB Garamond","dw":500,"b":"Work Sans","m":"Inconsolata","ls":"-.01em","mls":".02em","note":"Book-typography serif for a page whose real product is sentences.","url":"https://fonts.googleapis.com/css2?family=EB%2BGaramond:wght@400;500&family=Work%2BSans:wght@400;600&family=Inconsolata:wght@400;700&display=swap","dS":"'EB Garamond','Iowan Old Style','Times New Roman',serif","bS":"'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Inconsolata',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"spectral","name":"Spectral Quiet","mood":"editorial","d":"Spectral","dw":500,"b":"Karla","m":"DM Mono","ls":"-.012em","mls":".025em","note":"Low-contrast screen serif; the loudest thing left on the page is still the red pen.","url":"https://fonts.googleapis.com/css2?family=Spectral:wght@400;500&family=Karla:wght@400;600&family=DM%2BMono:wght@400;700&display=swap","dS":"'Spectral','Iowan Old Style','Times New Roman',serif","bS":"'Karla',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'DM Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"prata","name":"Prata Poster","mood":"editorial","d":"Prata","dw":400,"b":"Montserrat","m":"Space Mono","ls":"0em","mls":".04em","note":"Single-weight Didone-flavoured serif — one weight, so hierarchy comes from size alone.","url":"https://fonts.googleapis.com/css2?family=Prata&family=Montserrat:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Prata','Iowan Old Style','Times New Roman',serif","bS":"'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"marcellus","name":"Marcellus Classical","mood":"editorial","d":"Marcellus","dw":400,"b":"Outfit","m":"JetBrains Mono","ls":".01em","mls":".02em","note":"Roman-caps serif for a headline that wants to sound like an institution.","url":"https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Marcellus','Iowan Old Style','Times New Roman',serif","bS":"'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"spacegrotesk","name":"Space Grotesk Tech","mood":"grotesk","d":"Space Grotesk","dw":700,"b":"Inter","m":"Space Mono","ls":"-.03em","mls":".03em","note":"The default of a thousand shortlisted studios: monospaced DNA in the letterforms, zero decoration.","url":"https://fonts.googleapis.com/css2?family=Space%2BGrotesk:wght@400;700&family=Inter:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Space Grotesk','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"syne","name":"Syne Extended","mood":"grotesk","d":"Syne","dw":700,"b":"DM Sans","m":"Space Mono","ls":"-.035em","mls":".04em","note":"Extended, slightly rude display grotesk — the Awwwards-circuit flex of 2022 onwards.","url":"https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM%2BSans:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Syne','Iowan Old Style','Times New Roman',serif","bS":"'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"sora","name":"Sora Statement","mood":"grotesk","d":"Sora","dw":700,"b":"DM Sans","m":"IBM Plex Mono","ls":"-.028em","mls":".03em","note":"Geometric and heavy: reads like a brand, not a résumé.","url":"https://fonts.googleapis.com/css2?family=Sora:wght@400;700&family=DM%2BSans:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Sora','Iowan Old Style','Times New Roman',serif","bS":"'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"unbounded","name":"Unbounded Wide","mood":"grotesk","d":"Unbounded","dw":700,"b":"Manrope","m":"Space Mono","ls":"-.015em","mls":".05em","note":"Wide-set display caps for a page that should feel like an album cover.","url":"https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Manrope:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Unbounded','Iowan Old Style','Times New Roman',serif","bS":"'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"jakarta","name":"Jakarta Solo","mood":"grotesk","d":"Plus Jakarta Sans","dw":700,"b":"Plus Jakarta Sans","m":"JetBrains Mono","ls":"-.025em","mls":".03em","note":"One family, three weights — the low-risk way to build hierarchy that Vercel/Linear portfolios use.","url":"https://fonts.googleapis.com/css2?family=Plus%2BJakarta%2BSans:wght@400;700&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Plus Jakarta Sans','Iowan Old Style','Times New Roman',serif","bS":"'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"onest","name":"Onest Neutral","mood":"grotesk","d":"Onest","dw":600,"b":"Onest","m":"IBM Plex Mono","ls":"-.02em","mls":".025em","note":"The quiet neo-grotesque. Nearly invisible, which is the point when the work is loud.","url":"https://fonts.googleapis.com/css2?family=Onest:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Onest','Iowan Old Style','Times New Roman',serif","bS":"'Onest',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"geist","name":"Geist System","mood":"grotesk","d":"Geist","dw":700,"b":"Geist","m":"Geist Mono","ls":"-.03em","mls":".02em","note":"Vercel's own system, now on Google Fonts: the most 'product designer' setting available.","url":"https://fonts.googleapis.com/css2?family=Geist:wght@400;700&family=Geist%2BMono:wght@400;700&display=swap","dS":"'Geist','Iowan Old Style','Times New Roman',serif","bS":"'Geist',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"hanken","name":"Hanken Grotesk","mood":"grotesk","d":"Hanken Grotesk","dw":700,"b":"Hanken Grotesk","m":"Azeret Mono","ls":"-.022em","mls":".02em","note":"Swiss-ish and warm at small sizes — good if the metadata rows matter as much as the headlines.","url":"https://fonts.googleapis.com/css2?family=Hanken%2BGrotesk:wght@400;700&family=Azeret%2BMono:wght@400;700&display=swap","dS":"'Hanken Grotesk','Iowan Old Style','Times New Roman',serif","bS":"'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Azeret Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"figtree","name":"Figtree Clean","mood":"grotesk","d":"Figtree","dw":700,"b":"Figtree","m":"JetBrains Mono","ls":"-.02em","mls":".025em","note":"Rounded terminals, SaaS-default politeness. Reads friendly without going toy.","url":"https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Figtree','Iowan Old Style','Times New Roman',serif","bS":"'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"epilogue","name":"Epilogue Edge","mood":"grotesk","d":"Epilogue","dw":700,"b":"Inter","m":"Space Mono","ls":"-.03em","mls":".03em","note":"Slightly flattened counters — the grotesk that looks like it was art-directed, not picked.","url":"https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700&family=Inter:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Epilogue','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"archivoblack","name":"Archivo Poster","mood":"display","d":"Archivo Black","dw":400,"b":"Work Sans","m":"IBM Plex Mono","ls":"-.025em","mls":".03em","note":"Dense single-weight caps: the closest free thing to a screenprint.","url":"https://fonts.googleapis.com/css2?family=Archivo%2BBlack&family=Work%2BSans:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Archivo Black','Iowan Old Style','Times New Roman',serif","bS":"'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"anton","name":"Anton Tabloid","mood":"display","d":"Anton","dw":400,"b":"Barlow","m":"Space Mono","ls":"-.01em","mls":".04em","note":"Condensed newsprint shout. Takes no prisoners, needs no copy.","url":"https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Anton','Iowan Old Style','Times New Roman',serif","bS":"'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"bebas","name":"Bebas Cinema","mood":"display","d":"Bebas Neue","dw":400,"b":"Lato","m":"JetBrains Mono","ls":".005em","mls":".03em","note":"Poster condensed — the Awwwards launch-page trick for a headline that must survive a thumbnail.","url":"https://fonts.googleapis.com/css2?family=Bebas%2BNeue&family=Lato:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Bebas Neue','Iowan Old Style','Times New Roman',serif","bS":"'Lato',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"ultra","name":"Ultra Slab","mood":"display","d":"Ultra","dw":400,"b":"Lora","m":"Space Mono","ls":"0em","mls":".04em","note":"Fat slab display over a book serif — 1970s billboard energy.","url":"https://fonts.googleapis.com/css2?family=Ultra&family=Lora:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Ultra','Iowan Old Style','Times New Roman',serif","bS":"'Lora',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"yeseva","name":"Yeseva Theatrical","mood":"display","d":"Yeseva One","dw":400,"b":"Montserrat","m":"DM Mono","ls":".005em","mls":".035em","note":"High-contrast display with ball terminals; reads as a film-title card.","url":"https://fonts.googleapis.com/css2?family=Yeseva%2BOne&family=Montserrat:wght@400;600&family=DM%2BMono:wght@400;700&display=swap","dS":"'Yeseva One','Iowan Old Style','Times New Roman',serif","bS":"'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'DM Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"michroma","name":"Michroma Machine","mood":"display","d":"Michroma","dw":400,"b":"Manrope","m":"Space Mono","ls":".02em","mls":".04em","note":"Very wide, very few letters per line. Use for two-word headlines only.","url":"https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Michroma','Iowan Old Style','Times New Roman',serif","bS":"'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"syncopate","name":"Syncopate Spaced","mood":"display","d":"Syncopate","dw":700,"b":"Jost","m":"Space Mono","ls":".06em","mls":".05em","note":"Extended caps with room to breathe — the fashion-tech setting.","url":"https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jost:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Syncopate','Iowan Old Style','Times New Roman',serif","bS":"'Jost',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"spartan","name":"Spartan Geometric","mood":"display","d":"League Spartan","dw":400,"b":"Inter","m":"Space Mono","ls":"-.02em","mls":".03em","note":"Bauhaus-flavoured geometric, single weight, brutal at size.","url":"https://fonts.googleapis.com/css2?family=League%2BSpartan&family=Inter:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'League Spartan','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"jetbrains","name":"JetBrains Everywhere","mood":"mono","d":"JetBrains Mono","dw":700,"b":"IBM Plex Sans","m":"JetBrains Mono","ls":"-.02em","mls":".02em","note":"Code-face headlines: reads like a terminal that got a design budget.","url":"https://fonts.googleapis.com/css2?family=JetBrains%2BMono:wght@400;700&family=IBM%2BPlex%2BSans:wght@400;600&display=swap","dS":"'JetBrains Mono','Iowan Old Style','Times New Roman',serif","bS":"'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"azeret","name":"Azeret Typewriter","mood":"mono","d":"Azeret Mono","dw":700,"b":"Space Grotesk","m":"Azeret Mono","ls":"-.015em","mls":".02em","note":"Fixed-pitch display for a copywriter who wants the page to feel like a script draft.","url":"https://fonts.googleapis.com/css2?family=Azeret%2BMono:wght@400;700&family=Space%2BGrotesk:wght@400;600&display=swap","dS":"'Azeret Mono','Iowan Old Style','Times New Roman',serif","bS":"'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Azeret Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"spacemono","name":"Space Mono Terminal","mood":"mono","d":"Space Mono","dw":700,"b":"Archivo","m":"Space Mono","ls":"-.01em","mls":".03em","note":"The original design-community typewriter — quirky legibility, huge character.","url":"https://fonts.googleapis.com/css2?family=Space%2BMono:wght@400;700&family=Archivo:wght@400;600&display=swap","dS":"'Space Mono','Iowan Old Style','Times New Roman',serif","bS":"'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"fragment","name":"Fragment Grid","mood":"mono","d":"Fragment Mono","dw":700,"b":"Public Sans","m":"Fragment Mono","ls":"0em","mls":".02em","note":"Narrow mono, tight grid. Good when the metadata strip is the design.","url":"https://fonts.googleapis.com/css2?family=Fragment%2BMono:wght@400;700&family=Public%2BSans:wght@400;600&display=swap","dS":"'Fragment Mono','Iowan Old Style','Times New Roman',serif","bS":"'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Fragment Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"tektur","name":"Tektur Sci-fi","mood":"mono","d":"Tektur","dw":700,"b":"Rajdhani","m":"Share Tech Mono","ls":"-.01em","mls":".04em","note":"Squared corners and cut terminals — the Awwwards 3D-reel setting.","url":"https://fonts.googleapis.com/css2?family=Tektur:wght@400;700&family=Rajdhani:wght@400;600&family=Share%2BTech%2BMono:wght@400;700&display=swap","dS":"'Tektur','Iowan Old Style','Times New Roman',serif","bS":"'Rajdhani',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Share Tech Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"oxanium","name":"Oxanium Console","mood":"mono","d":"Oxanium","dw":700,"b":"Rajdhani","m":"JetBrains Mono","ls":"-.015em","mls":".03em","note":"Angular and fast; best with the red pen doing all the colour work.","url":"https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Rajdhani:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Oxanium','Iowan Old Style','Times New Roman',serif","bS":"'Rajdhani',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"lora","name":"Lora Warmth","mood":"humanist","d":"Lora","dw":600,"b":"Mulish","m":"Inconsolata","ls":"-.012em","mls":".02em","note":"Humanist serif with brush-ish curves; the friendly end of the editorial range.","url":"https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Mulish:wght@400;600&family=Inconsolata:wght@400;700&display=swap","dS":"'Lora','Iowan Old Style','Times New Roman',serif","bS":"'Mulish',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Inconsolata',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"sourceserif","name":"Source Document","mood":"humanist","d":"Source Serif 4","dw":600,"b":"Source Sans 3","m":"IBM Plex Mono","ls":"-.012em","mls":".02em","note":"Adobe's text family: the most readable small-size setting on this list.","url":"https://fonts.googleapis.com/css2?family=Source%2BSerif%2B4:wght@400;600&family=Source%2BSans%2B3:wght@400;600&family=IBM%2BPlex%2BMono:wght@400;700&display=swap","dS":"'Source Serif 4','Iowan Old Style','Times New Roman',serif","bS":"'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"bitter","name":"Bitter Report","mood":"humanist","d":"Bitter","dw":700,"b":"Open Sans","m":"Roboto Mono","ls":"-.015em","mls":".02em","note":"Slab-ish serif built for screens — long-form without the costume drama.","url":"https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&family=Open%2BSans:wght@400;600&family=Roboto%2BMono:wght@400;700&display=swap","dS":"'Bitter','Iowan Old Style','Times New Roman',serif","bS":"'Open Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Roboto Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"zilla","name":"Zilla Journal","mood":"humanist","d":"Zilla Slab","dw":600,"b":"Inter","m":"JetBrains Mono","ls":"-.01em","mls":".025em","note":"Mozilla's slab: a printed-report feel that stays legible at 16px.","url":"https://fonts.googleapis.com/css2?family=Zilla%2BSlab:wght@400;600&family=Inter:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Zilla Slab','Iowan Old Style','Times New Roman',serif","bS":"'Inter',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"bodoni","name":"Bodoni Vogue","mood":"luxury","d":"Bodoni Moda","dw":600,"b":"Jost","m":"JetBrains Mono","ls":"-.01em","mls":".05em","note":"The fashion-magazine contrast: hairlines against geometric sans.","url":"https://fonts.googleapis.com/css2?family=Bodoni%2BModa&family=Jost:wght@400;600&family=JetBrains%2BMono:wght@400;700&display=swap","dS":"'Bodoni Moda','Iowan Old Style','Times New Roman',serif","bS":"'Jost',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace","s":1},{"id":"dmserif","name":"DM Serif Trio","mood":"luxury","d":"DM Serif Display","dw":400,"b":"DM Sans","m":"DM Mono","ls":"-.012em","mls":".03em","note":"One designer's three-part system — guaranteed to cohere because it is one voice.","url":"https://fonts.googleapis.com/css2?family=DM%2BSerif%2BDisplay&family=DM%2BSans:wght@400;600&family=DM%2BMono:wght@400;700&display=swap","dS":"'DM Serif Display','Iowan Old Style','Times New Roman',serif","bS":"'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'DM Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0},{"id":"italiana","name":"Italiana Cinema","mood":"luxury","d":"Italiana","dw":400,"b":"Montserrat","m":"Space Mono","ls":".02em","mls":".05em","note":"Tall, thin, single weight: title-card elegance for a page about film work.","url":"https://fonts.googleapis.com/css2?family=Italiana&family=Montserrat:wght@400;600&family=Space%2BMono:wght@400;700&display=swap","dS":"'Italiana','Iowan Old Style','Times New Roman',serif","bS":"'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif","mS":"'Space Mono',ui-monospace,'SF Mono',Menlo,monospace","s":0}],"moods":[{"id":"editorial","letter":"A","title":"Editorial serif × grotesk","blurb":"The Awwwards typography-honour standard: a display serif for the line, a neutral grotesk for the reading."},{"id":"grotesk","letter":"B","title":"Modern grotesk, one voice","blurb":"Single-voice sans systems — the developer-award and SaaS look. Hierarchy comes from weight, not from a second typeface."},{"id":"display","letter":"C","title":"Display statement","blurb":"Poster faces. One loud voice, everything else stays quiet — for a page whose product is a line of copy."},{"id":"mono","letter":"D","title":"Mono-led / technical","blurb":"Fixed-pitch headlines. Reads like a script draft or a terminal, which suits a writer who shows the work."},{"id":"humanist","letter":"E","title":"Warm humanist","blurb":"Book-and-report settings. Choses readability over the look of a design award."},{"id":"luxury","letter":"F","title":"High-contrast luxury","blurb":"Fashion and title-card contrast — hairline serifs for a page about Clio case films and perfume copy."}]};
-  const html = document.documentElement, $ = (s, r) => (r || document).querySelector(s);
-  const store = 'ak-type-palette';
-  const link = document.createElement('style'); link.id = 'ak-palette-vars'; document.head.appendChild(link);
-  const loaded = new Set(); let panelFonts = false;
-
-  const byId = (id) => D.palettes.filter((p) => p.id === id)[0] || D.palettes[0];
-  function cssFor(p) {
-    if (p.id === 'instrument') return '';                       /* the inlined default — no override needed */
-    return ':root{--font-serif:' + p.dS + ';--font-sans:' + p.bS + ';--font-mono:' + p.mS +
-      ';--font-ital:\'Instrument Serif\',\'Iowan Old Style\',Georgia,serif;--disp-weight:' + p.dw +
-      ';--disp-ls:' + p.ls + ';--mono-ls:' + p.mls + ';--mono-weight:' + (p.s ? 500 : 400) + ';}';
-  }
-  function fonts(p) {
-    if (p.id === 'instrument' || loaded.has(p.id)) return;
-    loaded.add(p.id);
-    const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = p.url;
-    l.onerror = () => { loaded.delete(p.id); html.dataset.palFonts = 'fallback'; };
-    document.head.appendChild(l);
-  }
-  function apply(id, save) {
-    const p = byId(id);
-    link.textContent = cssFor(p);
-    html.dataset.pal = p.id;
-    fonts(p);
-    const lbl = $('[data-pal-label]'); if (lbl) lbl.textContent = p.name.split(' · ')[0];
-    document.querySelectorAll('[data-pal-pick]').forEach((b) => {
-      const on = b.dataset.palPick === p.id; b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.classList.toggle('is-on', on);
-    });
-    if (save !== false) { try { localStorage.setItem(store, p.id); } catch (e) {} }
-  }
-  /* build the panel body once */
-  const grid = $('[data-type-grid]');
-  if (grid && !grid.childElementCount) {
-    D.moods.forEach((g) => {
-      const wrap = document.createElement('section'); wrap.className = 'tpg'; wrap.dataset.mood = g.id;
-      wrap.innerHTML = '<h3 class="tpg__t mono">' + g.letter + ' · ' + g.title + '</h3>' +
-        '<p class="tpg__b">' + g.blurb + '</p>';
-      const row = document.createElement('div'); row.className = 'tpg__row';
-      D.palettes.filter((p) => p.mood === g.id).forEach((p) => row.appendChild(card(p)));
-      wrap.appendChild(row); grid.appendChild(wrap);
-    });
-  }
-  function card(p) {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'tp'; b.dataset.palPick = p.id; b.setAttribute('aria-pressed', 'false');
-    b.style.setProperty('--font-serif', p.dS); b.style.setProperty('--font-sans', p.bS); b.style.setProperty('--font-mono', p.mS);
-    b.innerHTML = '<span class="tp__top mono"><span>' + p.name + '</span><span class="tp__fam">' +
-      [p.d, p.b, p.m].filter((v, i, a) => a.indexOf(v) === i).join(' · ') + '</span></span>' +
-      '<span class="tp__disp">All on the Line.</span>' +
-      '<span class="tp__body">The audience wrote the brief. <em>I write the line.</em></span>' +
-      '<span class="tp__mono">Surf Excel × Zoo Media · slide 24 / 74 · 2025</span>' +
-      '<span class="tp__note">' + p.note + '</span>';
-    b.addEventListener('click', () => apply(p.id));
-    return b;
-  }
-  const allchip = $('[data-type-filter="all"]'); if (allchip) allchip.textContent = 'All ' + D.palettes.length;
-  /* filter chips */
-  document.querySelectorAll('[data-type-filter]').forEach((chip) => chip.addEventListener('click', () => {
-    const m = chip.dataset.typeFilter;
-    document.querySelectorAll('[data-type-filter]').forEach((c) => c.classList.toggle('is-on', c === chip));
-    document.querySelectorAll('.tpg').forEach((s) => { s.hidden = !(m === 'all' || s.dataset.mood === m); });
-  }));
-
-  const open = (on) => {
-    const pal = $('[data-typepal]'), btn = $('[data-type-toggle]');
-    if (!pal) return;
-    pal.hidden = !on; html.classList.toggle('tp-open', on);
-    if (btn) { btn.setAttribute('aria-expanded', on ? 'true' : 'false'); btn.classList.toggle('is-on', on); }
-    if (on && !panelFonts) {                                    /* one request for every specimen */
-      panelFonts = true;
-      const urls = D.palettes.map((p) => p.url).filter((u) => u.indexOf('Instrument') < 0);
-      urls.forEach((u, i) => {                                   /* chunked: a bad family can only sink its own link */
-        const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = u;
-        l.onerror = () => { html.dataset.palFonts = 'fallback'; };
-        document.head.appendChild(l);
-        if (i === 0 && document.fonts) document.fonts.ready.then(() => { html.dataset.palFonts = html.dataset.palFonts || 'live'; });
-      });
-    }
-    if (on) { const c = $('.tp.is-on') || $('.tp'); if (c) c.focus({ preventScroll: true }); }
-    else if (btn) btn.focus({ preventScroll: true });
-  };
-
-  const tog = $('[data-type-toggle]');
-  if (tog) tog.addEventListener('click', () => open($('[data-typepal]').hidden));
-  document.querySelectorAll('[data-type-close]').forEach((b) => b.addEventListener('click', () => open(false)));
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && html.classList.contains('tp-open')) open(false); });
-  const scrim = $('[data-type-scrim]'); if (scrim) scrim.addEventListener('click', () => open(false));
-  const reset = $('[data-type-reset]');
-  if (reset) reset.addEventListener('click', () => { link.textContent = ''; apply('instrument'); });
-
-  let saved = null; try { saved = localStorage.getItem(store); } catch (e) {}
-  apply(saved && byId(saved).id === saved ? saved : 'instrument', false);
-})();
 </script>
 </body>
 </html>

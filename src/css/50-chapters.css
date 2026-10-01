@@ -1,5 +1,5 @@
 /* ───────────── about ───────────── */
-.about__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--group) var(--col); align-items: start; }
+.about__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
 .about__side { display: grid; gap: var(--group); }
 
 /* tilt artifacts */
@@ -24,11 +24,25 @@
 .is-in .card__circle path, .no-js .card__circle path { stroke-dashoffset: 0; }
 .card__foot { color: var(--red); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
 
-/* ───────────── case chapters ───────────── */
-.case__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: var(--group) var(--col); align-items: start; }
-.case__meta { position: sticky; top: calc(var(--hud-h) + var(--s4)); padding-top: var(--s1); }
+/* ───────────── case chapters — single-column editorial ─────────────
+   One centred column per chapter: kicker, headline, a compact meta line, then the body.
+   The side rail and the ghost numerals are gone; the meta dl collapses to one wrapped line. */
+.case__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--group); align-items: start; }
+.case__meta { position: static; }
 .case__grid + .case__grid { margin-top: var(--section); }
 .case__body { display: grid; gap: var(--group); }
+
+/* the meta dl as one compact line: "CLIENT — value · ROLE — value · …" (works for the about chapter too) */
+.case__meta .meta, .about__side .meta { display: flex; flex-wrap: wrap; gap: .55rem 2.5rem; }
+.case__meta .meta div, .about__side .meta div { display: flex; gap: .6rem; border-top: 0; padding-top: 0; }
+.case__meta .meta dt, .about__side .meta dt { min-width: auto; }
+.case__meta .meta dd, .about__side .meta dd { padding-right: 0; }
+
+/* the WWC roster — ten players, numbered */
+.players { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 48rem; }
+.players li { display: flex; align-items: baseline; gap: 1.1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); font-family: var(--font-serif); font-size: clamp(1.25rem, 1.7vw, 1.55rem); line-height: 1.15; }
+.players .mono { color: var(--muted); min-width: 2ch; flex: none; }
+@media (max-width: 640px) { .players { grid-template-columns: 1fr; } }
 
 .brief { display: grid; gap: var(--s2); }
 .brief p { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.8vw, 2.7rem); line-height: 1.12; letter-spacing: -.01em; max-width: 24ch; }
@@ -89,7 +103,7 @@
 /* poster */
 .artifact--poster { max-width: 24rem; min-width: 0; }   /* a grid item's min-width:auto would let the 3:4 poster's content height widen the column (overflow at 320 px) */
 .poster {
-  aspect-ratio: 3 / 4; background: var(--paper); color: var(--ink);
+  aspect-ratio: 3 / 4; background: var(--surface); color: var(--ink);   /* one paper stock, page-wide: the same cream as the notecard */
   padding: 1.4rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
   box-shadow: 0 30px 60px -28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
 }
@@ -172,5 +186,25 @@
 /* phone (hook lab) */
 .phone__hero-text--sm { font-size: 1.22rem; line-height: 1.12; }
 
-/* ───────────── the desk: gallery + side quests ───────────── */
+/* ───────────── the desk: side quests ───────────── */
 .desk__intro { max-width: 62ch; margin-bottom: var(--group); }
+.side { display: grid; gap: var(--s5); }
+.side__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; }
+.side__item { display: grid; gap: .45rem; padding: var(--s4) 0; border-top: 1px solid var(--line); align-content: start; }
+.side__big { font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 1.8rem); line-height: 1.12; letter-spacing: -.01em; }
+.side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
+.side__tag { color: var(--muted); }
+
+/* ── caselog — the dated work ledger, generated from src/data/pieces.json by tools/gen_log.py ── */
+.caselog { list-style: none; margin: var(--group) 0 0; padding: 0; border-top: 1px solid var(--line); }
+.caselog__head { border-bottom: 1px solid var(--line); padding-bottom: .7rem; margin: 0; }
+.caselog__head .mono { font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.caselog > li:not(.caselog__head) { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1.2rem; padding: 1.05rem 0; border-bottom: 1px solid var(--line); }
+.caselog__year { font-size: .78rem; letter-spacing: .05em; color: var(--muted); padding-top: .4rem; }
+.caselog__what { font-family: var(--font-serif); font-weight: 400; font-size: 1.3rem; line-height: 1.35; margin: 0 0 .45rem; }
+.caselog__more { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); text-decoration: none; }
+.caselog__more:hover { color: var(--red); }
+@media (max-width: 640px) {
+  .caselog > li:not(.caselog__head) { grid-template-columns: 1fr; gap: .25rem; }
+  .caselog__year { padding-top: 0; }
+}
