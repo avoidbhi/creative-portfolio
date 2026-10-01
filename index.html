@@ -51,6 +51,7 @@
 
   --gutter: clamp(1.25rem, 4vw, 4.5rem);
   --max: 1480px;
+  --page: 76rem;   /* ONE content column: home, every chapter, the epilogue — same edges, same hairlines */
   --hud-h: 4.5rem;
 
 }
@@ -177,7 +178,7 @@ main { position: relative; z-index: 2; background: transparent; color: var(--fg)
 
 /* the boundary is a hairline, not a void: 11rem/10rem of padding stacked on a 5.5rem head
    margin and up to 7rem of trailing block margin meant ~400px of nothing between chapters */
-.chapter { position: relative; overflow: visible clip; padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: min(var(--max), 68rem); margin-inline: auto; }   /* single-column editorial width: the chapters read as essays, not spreads */
+.chapter { position: relative; overflow: visible clip; padding: var(--section) var(--gutter) var(--group); border-top: 1px solid var(--line); max-width: min(var(--max), var(--page)); margin-inline: auto; }   /* the page's one column (var(--page)); the prose measure — 58ch — keeps the essay width */
 .chapter__head { position: relative; display: grid; gap: var(--s3); margin-bottom: var(--group); }
 [data-depth] { will-change: transform, opacity; transform-origin: 50% 100%; }          /* scroll-derived arrival (translate/scale/opacity), one writer: the page loop */
 .js [data-depth] { opacity: 0; }                                                       /* until the loop's first write (never under reduced motion / reveal-all) */
@@ -457,7 +458,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 
 .home { padding: clamp(3rem, 6vh, 4.5rem) var(--gutter) clamp(4rem, 8vh, 6rem); }
 .home__shell {
-  max-width: min(var(--max), 76rem); margin-inline: auto;
+  max-width: min(var(--max), var(--page)); margin-inline: auto;
   display: grid; grid-template-columns: 248px minmax(0, 1fr);
   gap: clamp(1.5rem, 3vw, 3rem); align-items: start;
 }
@@ -571,11 +572,12 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .home__block { scroll-margin-top: calc(var(--hud-h) + 1rem); }
 .home__head {
   position: relative; display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 1rem 2rem; margin-bottom: var(--s5);
+  gap: 1rem 2rem; margin-bottom: var(--group);
 }
 .home__head > div { min-width: 0; }
-.home__head .kicker { margin-bottom: .9rem; }
-.home__display { max-width: 12ch; font-size: clamp(2.3rem, 4.6vw, 4.2rem); }
+.home__head .kicker { margin-bottom: var(--s3); }
+/* the section heads are the same display scale as the chapters — one type system, page-wide */
+.home__display { max-width: 12ch; }
 .home__seeall {
   color: var(--muted); text-decoration: none; white-space: nowrap; padding-bottom: .45rem;
   border-bottom: 1px solid transparent; transition: color .25s, border-color .25s;
@@ -653,8 +655,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .hookwall__item:nth-child(3) { margin-left: clamp(0rem, 12vw, 9rem); }
 .hookwall__item:nth-child(4) { margin-left: clamp(0rem, 4vw, 2.5rem); }
 
-/* stay updated — one wide card */
-.home__ping { margin-top: calc(var(--group) * .4); }
+/* stay updated — one wide card (the grid gap keeps the rhythm uniform) */
 .home__pingcard {
   display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
   background: rgba(var(--fg-rgb), .035); border: 1px solid var(--line); border-radius: 1.2rem;
@@ -765,7 +766,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue {
   position: relative; min-height: 100svh; background: transparent; color: var(--paper); display: grid; align-items: end;
 }
-.epilogue__inner { width: 100%; min-height: 100svh; max-width: var(--max); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group); border-top: 1px solid var(--line);
+.epilogue__inner { width: 100%; min-height: 100svh; max-width: min(var(--max), var(--page)); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group); border-top: 1px solid var(--line);
   display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; gap: var(--flow) var(--col); align-content: start;
 }
 .epilogue__inner > .kicker { grid-column: 1 / -1; }
@@ -773,7 +774,8 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue__mail { grid-column: 1; grid-row: 3; align-self: start; }
 .redpen { grid-column: 2; grid-row: 2 / 4; align-self: end; }
 .epilogue__meta { grid-column: 1 / -1; }
-.epilogue__title { max-width: 16ch; font-size: clamp(2.3rem, 5.4vw, 5.6rem); }
+/* the closer wears the page's display scale, like every other head */
+.epilogue__title { max-width: 16ch; }
 .epilogue__mail {
   justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 6.4vw, 6.4rem); line-height: 1; letter-spacing: -.02em;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% .06em; background-position: 0 92%;
@@ -1216,7 +1218,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 01 · ABOUT ───────────────────────── -->
-<section class="chapter about" id="ch1" data-theme="paper" data-chapter="01 · The brief before the brief">
+<section class="chapter about" id="ch1" data-theme="ink" data-chapter="01 · The brief before the brief">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 01 <span class="kicker__sep">/</span> The brief before the brief</p>
     <h2 class="display" data-split>Hi. I’m Abhijeet. Before I write a word, <em>I read a few thousand.</em></h2>
@@ -1291,7 +1293,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 03 · SURF EXCEL ───────────────────────── -->
-<section class="chapter case" id="ch3" data-theme="sand" data-chapter="03 · Surf Excel">
+<section class="chapter case" id="ch3" data-theme="ink" data-chapter="03 · Surf Excel">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 03 <span class="kicker__sep">/</span> Surf Excel × Zoo Media · Social strategy pitch · 2025</p>
     <h2 class="display" data-split>Nobody wants to be sold detergent <em>while they’re scrolling.</em></h2>
@@ -1331,7 +1333,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 04 · GOBOULT ───────────────────────── -->
-<section class="chapter case" id="ch4" data-theme="graphite" data-chapter="04 · GoBoult">
+<section class="chapter case" id="ch4" data-theme="ink" data-chapter="04 · GoBoult">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 04 <span class="kicker__sep">/</span> GoBoult × Zoo Media · Rebrand pitch · September 2025</p>
     <h2 class="display" data-split>People bought Boult. <em>They never believed in it.</em></h2>
@@ -1376,7 +1378,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 05 · DHL ───────────────────────── -->
-<section class="chapter case" id="ch5" data-theme="paper" data-chapter="05 · DHL × Mumbai Indians">
+<section class="chapter case" id="ch5" data-theme="ink" data-chapter="05 · DHL × Mumbai Indians">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 05 <span class="kicker__sep">/</span> DHL × Mumbai Indians · IPL 2025 · Case film for the Clio Awards</p>
     <h2 class="display" data-split>While other brands shouted, <em>DHL had a conversation.</em></h2>
@@ -1452,7 +1454,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 07 · THE HOOK LAB ───────────────────────── -->
-<section class="chapter case" id="ch7" data-theme="graphite" data-chapter="07 · The hook lab">
+<section class="chapter case" id="ch7" data-theme="ink" data-chapter="07 · The hook lab">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 07 <span class="kicker__sep">/</span> Short‑form scripts · six‑ and seven‑figure creators · 2025</p>
     <h2 class="display" data-split>The first line isn’t the intro. <em>It’s the whole reel.</em></h2>
@@ -1511,7 +1513,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 08 · THE REST OF THE DESK ───────────────────────── -->
-<section class="chapter case desk" id="ch8" data-theme="sand" data-chapter="08 · The rest of the desk">
+<section class="chapter case desk" id="ch8" data-theme="ink" data-chapter="08 · The rest of the desk">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 08 <span class="kicker__sep">/</span> Bajaj Electricals · Always‑on social · 2025–26 — and the side quests</p>
     <h2 class="display" data-split>912 minutes singing in the shower. <em>Yes, we counted.</em></h2>
@@ -1578,7 +1580,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 </section>
 
 <!-- ───────────────────────── CHAPTER 09 · HOW I WORK ───────────────────────── -->
-<section class="chapter process" id="ch9" data-theme="paper" data-chapter="09 · How I work">
+<section class="chapter process" id="ch9" data-theme="ink" data-chapter="09 · How I work">
   <div class="chapter__head" data-depth>
     <p class="kicker mono" data-reveal>Chapter 09 <span class="kicker__sep">/</span> How I work</p>
     <h2 class="display" data-split>The method is research. <em>The output is a line.</em></h2>
