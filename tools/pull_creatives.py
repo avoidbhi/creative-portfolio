@@ -120,15 +120,6 @@ FILM_REPLACE = [
     ('1VChA7rnk-YZRpNQsS05e3h0vcMPDxI4-', 'films/bajaj-new-year.mp4'),        # NEW YEAR_2.mp4
 ]
 
-WORD = {20: 'Twenty', 21: 'Twenty-one', 22: 'Twenty-two', 23: 'Twenty-three', 24: 'Twenty-four',
-        25: 'Twenty-five', 26: 'Twenty-six', 27: 'Twenty-seven', 28: 'Twenty-eight',
-        29: 'Twenty-nine', 30: 'Thirty', 31: 'Thirty-one', 32: 'Thirty-two', 33: 'Thirty-three',
-        34: 'Thirty-four', 35: 'Thirty-five', 36: 'Thirty-six', 37: 'Thirty-seven',
-        38: 'Thirty-eight', 39: 'Thirty-nine', 40: 'Forty', 41: 'Forty-one', 42: 'Forty-two',
-        43: 'Forty-three', 44: 'Forty-four', 45: 'Forty-five', 46: 'Forty-six', 47: 'Forty-seven',
-        48: 'Forty-eight', 49: 'Forty-nine', 50: 'Fifty', 51: 'Fifty-one', 52: 'Fifty-two'}
-
-
 def log(kind: str, msg: str) -> None:
     print(f'  [{kind:7s}] {msg}')
 
@@ -332,24 +323,12 @@ def poster_from_video(mp4: str, out: str) -> bool:
         return False
 
 
-# ── orbit card templates (match the existing markup) ─────────────────────────────────────────
-
-def card_static(cid: str, src: str, alt: str, w: int, h: int, dk: str, href: str, cap: str) -> str:
-    return (f'      <figure class="stage__card" data-stage-card data-card-id="{cid}" data-k="{dk}" '
-            f'data-href="{href}"><img src="{src}" alt="{alt}" width="{w}" height="{h}" '
-            f'loading="lazy" decoding="async" draggable="false">'
-            f'<figcaption class="mono">{cap}</figcaption></figure>')
-
-
-def card_film(cid: str, mp4: str, poster: str, dk: str, href: str, cap: str, aria: str) -> str:
-    return (f'      <figure class="stage__card stage__card--film" data-stage-card data-card-id="{cid}" '
-            f'data-k="{dk}" data-href="{href}"><video muted loop playsinline preload="none" '
-            f'poster="{poster}" width="432" height="768" aria-label="{aria}">'
-            f'<source src="{mp4}" type="video/mp4"></video>'
-            f'<figcaption class="mono">{cap}</figcaption></figure>')
-
-
-# ── the plan ─────────────────────────────────────────────────────────────────────────────────
+# ── wiring: src/data/pieces.json → orbit + case logs + piece pages (idempotent) ──
+#
+# pieces.json is the single content config (see tools/gen_orbit.py). Wire updates it with
+# whatever landed on disk, then regenerates the orbit rings + counts (gen_orbit), the chapter
+# case logs (gen_log) and the piece pages (gen_pieces). Hand-kept HTML (the worklist stills)
+# gets its width/height refreshed for every replaced asset, all occurrences.
 
 def plan() -> list[dict]:
     items = []
@@ -364,84 +343,111 @@ def plan() -> list[dict]:
         items.append(dict(kind='doc', did=did, page=page, base=f'plates/{base}',
                           old=f'assets/work/plates/{base}.webp', new=f'assets/work/plates/{base}.webp'))
     for did, base, cap in LUNA_CREATIVES:
-        items.append(dict(kind='luna', did=did, base=base, cap=cap, new=f'assets/work/{base}.webp'))
-    items.append(dict(kind='safe', did=SAFE_TOUCH[0], base=SAFE_TOUCH[1], new=f'assets/work/{SAFE_TOUCH[1]}.webp'))
+        items.append(dict(kind='luna', did=did, base=base, cap=cap,
+                          old=f'assets/work/{base}.webp', new=f'assets/work/{base}.webp'))
+    items.append(dict(kind='safe', did=SAFE_TOUCH[0], base=SAFE_TOUCH[1],
+                      old=f'assets/work/{SAFE_TOUCH[1]}.webp', new=f'assets/work/{SAFE_TOUCH[1]}.webp'))
     items.append(dict(kind='nye-film', did=NYE_FILM[0], new='assets/work/films/bajaj-nye.mp4'))
     for did, rel in FILM_REPLACE:
         items.append(dict(kind='film-replace', did=did, new=f'assets/work/{rel}'))
     return items
 
 
-# ── wiring into src/index.html (idempotent) ──────────────────────────────────────────────────
+def _first_out_index(pieces: list) -> int:
+    for i, p in enumerate(pieces):
+        if p['ring'] == 'out':
+            return i
+    return len(pieces)
+
 
 def wire(done: dict, skipped: list) -> None:
+    import json
+    pieces_path = os.path.join(ROOT, 'src', 'data', 'pieces.json')
+    with open(pieces_path, encoding='utf8') as f:
+        pieces = json.load(f)['pieces']
+    ids = {p['id'] for p in pieces}
     s = open(SRC_HTML, encoding='utf8').read()
     original = s
-    items = plan()
+    replaced = added = 0
 
-    # 1 · replaces: same path (plates — bytes upgrade in place) or old → new path (jpg → webp),
-    #    then fix the width/height of the first <img> that uses the path (the orbit card)
-    for it in items:
-        if it['kind'] not in ('deck', 'photo', 'doc'):
+    # 1 · replaces (deck plates, 4K photos, pdf docs): src + dimensions in the config
+    for it in plan():
+        if it['kind'] not in ('deck', 'photo', 'doc', 'luna', 'safe'):
             continue
-        key = it['base']
-        if key not in done:
+        if it['base'] not in done:
             continue
-        p, w, h = done[key]
-        rel = os.path.relpath(p, ROOT).replace(os.sep, '/')   # 'assets/work/…' — html uses '../assets/work/…'
+        p, w, h = done[it['base']]
+        rel = os.path.relpath(p, ROOT).replace(os.sep, '/')
+        stem = os.path.splitext(os.path.basename(it['old']))[0]
+        for pc in pieces:
+            if pc['id'] == stem:
+                pc['src'] = rel
+                if pc['kind'] == 'static':
+                    pc['w'], pc['h'] = w, h
+                replaced += 1
+                break
         if it['old'] != it['new'] and it['old'] in s:
             s = s.replace(it['old'], rel)
-        esc = re.escape(rel)
-        pat_w = re.compile(r'(<img[^>]*src="(?:\.\./)?' + esc + r'"[^>]*?)width="\d+"', re.S)
-        pat_h = re.compile(r'(<img[^>]*src="(?:\.\./)?' + esc + r'"[^>]*?)height="\d+"', re.S)
-        s = pat_w.sub(lambda m: m.group(1) + f'width="{w}"', s, count=1)
-        s = pat_h.sub(lambda m: m.group(1) + f'height="{h}"', s, count=1)
+        for name in (os.path.basename(it['old']), os.path.basename(rel)):
+            pat_w = re.compile(r'(<img[^>]*src="[^"]*' + re.escape(name) + r'[^"]*"[^>]*?)width="\d+"', re.S)
+            pat_h = re.compile(r'(<img[^>]*src="[^"]*' + re.escape(name) + r'[^"]*"[^>]*?)height="\d+"', re.S)
+            s = pat_w.sub(lambda m: m.group(1) + f'width="{w}"', s)
+            s = pat_h.sub(lambda m: m.group(1) + f'height="{h}"', s)
 
-    # 2 · adds: new figures into the outer ring (idempotent by card id)
-    adds: list[str] = []
+    # 2 · adds: new pieces into the config (front of the outer ring, as before)
+    cands = []
     for _did, base, cap in LUNA_CREATIVES:
-        if base in done and f'data-card-id="{base}"' not in s:
+        if base in done:
             p, w, h = done[base]
-            adds.append(card_static(base, '../' + os.path.relpath(p, ROOT).replace(os.sep, '/'), cap,
-                                    w, h, LUNA_K, '#side', cap))
-    if 'plates/kokoon-01' in done and 'data-card-id="kokoon-01"' not in s:
-        p, w, h = done['plates/kokoon-01']
-        adds.append(card_static('kokoon-01', '../' + os.path.relpath(p, ROOT).replace(os.sep, '/'),
-                                'KokoonLabs — the website copy, version three.', w, h,
-                                'KokoonLabs \u00b7 Website copy, v3 \u00b7 2026', '#side',
-                                'KokoonLabs — the website copy, version three.'))
-    if 'plates/lumicell-01' in done and 'data-card-id="lumicell-01"' not in s:
-        p, w, h = done['plates/lumicell-01']
-        adds.append(card_static('lumicell-01', '../' + os.path.relpath(p, ROOT).replace(os.sep, '/'),
-                                'The Renewal Serum — the product page.', w, h,
-                                'LumiCell \u00b7 Product page copy \u00b7 2025', '#side',
-                                'The Renewal Serum — the product page.'))
-    if SAFE_TOUCH[1] in done and f'data-card-id="{SAFE_TOUCH[1]}"' not in s:
+            cands.append(dict(id=base, ring='out', kind='static',
+                              src=os.path.relpath(p, ROOT).replace(os.sep, '/'), w=w, h=h,
+                              k=LUNA_K, href='#side', alt=cap, cap=cap))
+    for key, base, k, href, alt, cap in (
+            ('plates/kokoon-01', 'kokoon-01', 'KokoonLabs \u00b7 Website copy, v3 \u00b7 2026', '#side',
+             'KokoonLabs \u2014 the website copy, version three.', 'KokoonLabs \u2014 the website copy, version three.'),
+            ('plates/lumicell-01', 'lumicell-01', 'LumiCell \u00b7 Product page copy \u00b7 2025', '#side',
+             'The Renewal Serum \u2014 the product page.', 'The Renewal Serum \u2014 the product page.')):
+        if key in done:
+            p, w, h = done[key]
+            cands.append(dict(id=base, ring='out', kind='static',
+                              src=os.path.relpath(p, ROOT).replace(os.sep, '/'), w=w, h=h,
+                              k=k, href=href, alt=alt, cap=cap))
+    if SAFE_TOUCH[1] in done:
         p, w, h = done[SAFE_TOUCH[1]]
-        adds.append(card_static(SAFE_TOUCH[1], '../' + os.path.relpath(p, ROOT).replace(os.sep, '/'),
-                                SAFE_TOUCH[3], w, h, SAFE_TOUCH[2], '#ch8', SAFE_TOUCH[3]))
-    if 'nye' in done and 'data-card-id="bajaj-nye"' not in s:
-        adds.append(card_film('bajaj-nye', '../assets/work/films/bajaj-nye.mp4',
-                              '../' + done['nye'][0].lstrip('./'),
-                              NYE_FILM[2], '#ch8', NYE_FILM[3], 'Bajaj New Year\u2019s Eve film'))
-    if adds:
-        marker = '<div class="stage__ring" data-ring="out">'
-        idx = s.index(marker) + len(marker)
-        s = s[:idx] + '\n' + '\n'.join(adds) + s[idx:]
-        log('wire', f'{len(adds)} new cards → outer ring')
+        cands.append(dict(id=SAFE_TOUCH[1], ring='out', kind='static',
+                          src=os.path.relpath(p, ROOT).replace(os.sep, '/'), w=w, h=h,
+                          k=SAFE_TOUCH[2], href='#ch8', alt=SAFE_TOUCH[3], cap=SAFE_TOUCH[3]))
+    if 'nye' in done:
+        cands.append(dict(id='bajaj-nye', ring='out', kind='film',
+                          src='assets/work/films/bajaj-nye.mp4', poster=done['nye'][0],
+                          k=NYE_FILM[2], href='#ch8', aria='Bajaj New Year\u2019s Eve film', cap=NYE_FILM[3]))
+    at = _first_out_index(pieces)
+    for c in cands:
+        if c['id'] not in ids:
+            pieces.insert(at, c)
+            ids.add(c['id'])
+            added += 1
+            at += 1
 
-    # 3 · counts (from what is actually in the file)
-    total = s.count('data-stage-card')
-    s = re.sub(r'>\d+ pieces of work', f'>{total} pieces of work', s)
-    s = re.sub(r'[A-Za-z]+(?:-[a-z]+)? pieces of work, nine chapters',
-               f'{WORD.get(total, str(total))} pieces of work, nine chapters', s)
-    s = re.sub(r'See all \u2014 \d+ in the orbit', f'See all \u2014 {total} in the orbit', s)
+    if replaced or added or s != original:
+        with open(pieces_path, 'w', encoding='utf8') as f:
+            json.dump({'pieces': pieces}, f, ensure_ascii=False, indent=2)
+            f.write('\n')
 
-    if s != original:
+    # 3 · regenerate: orbit + counts from the config, then logs, then piece pages
+    import gen_log, gen_orbit, gen_pieces
+    s2 = gen_orbit.generate(s, pieces)
+    if s2 != original:
+        open(SRC_HTML, 'w', encoding='utf8').write(s2)
+        log('wire', f'src/index.html rewired ({len(pieces)} cards)')
+    elif s != original:
         open(SRC_HTML, 'w', encoding='utf8').write(s)
-        log('wire', f'src/index.html updated ({total} cards)')
+        log('wire', 'worklist stills refreshed (orbit already matched)')
     else:
         log('wire', 'no changes (already wired)')
+    gen_log.generate()
+    gen_pieces.generate()
+    log('wire', f'config: {replaced} replaced, {added} added, {len(pieces)} pieces total')
 
 
 # ── main ─────────────────────────────────────────────────────────────────────────────────────
@@ -466,7 +472,7 @@ def main() -> None:
                 log('plan', 'NEW film card bajaj-nye (2025)')
             else:
                 log('plan', f"film in place → {it['new']}")
-        log('plan', 'wires: replaces in place, 9 new cards, counts 32 → 41')
+        log('plan', 'wires: src/data/pieces.json → orbit + case logs + piece pages (32 → 41)')
         return
 
     if WIRE_ONLY:

@@ -194,3 +194,17 @@
 .side__big { font-family: var(--font-serif); font-size: clamp(1.45rem, 2vw, 1.8rem); line-height: 1.12; letter-spacing: -.01em; }
 .side__title { color: var(--muted); font-size: .98rem; line-height: 1.45; }
 .side__tag { color: var(--muted); }
+
+/* ── caselog — the dated work ledger, generated from src/data/pieces.json by tools/gen_log.py ── */
+.caselog { list-style: none; margin: var(--group) 0 0; padding: 0; border-top: 1px solid var(--line); }
+.caselog__head { border-bottom: 1px solid var(--line); padding-bottom: .7rem; margin: 0; }
+.caselog__head .mono { font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.caselog > li:not(.caselog__head) { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1.2rem; padding: 1.05rem 0; border-bottom: 1px solid var(--line); }
+.caselog__year { font-size: .78rem; letter-spacing: .05em; color: var(--muted); padding-top: .4rem; }
+.caselog__what { font-family: var(--font-serif); font-weight: 400; font-size: 1.3rem; line-height: 1.35; margin: 0 0 .45rem; }
+.caselog__more { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); text-decoration: none; }
+.caselog__more:hover { color: var(--red); }
+@media (max-width: 640px) {
+  .caselog > li:not(.caselog__head) { grid-template-columns: 1fr; gap: .25rem; }
+  .caselog__year { padding-top: 0; }
+}
