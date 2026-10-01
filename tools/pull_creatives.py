@@ -106,9 +106,9 @@ LUNA_CREATIVES = [  # drive id, target base, caption
     ('1BwcvXDmU0wDp8-wnXSGAv3HPcj-PkNLd', 'luna-water', 'The Smudger, in water.'),
 ]
 SAFE_TOUCH = ('15N83A-RMRx8lrUs4iSvfJ9oo-6QCEnIz', 'bajaj-safe-to-touch',
-              'Bajaj Electricals \u00d7 Zoo Media \u00b7 Product post \u00b7 2026', 'Safe to touch.')
+              'Bajaj Electricals \u00d7 Zoo Media \u00b7 Product post \u00b7 2025', 'Safe to touch.')
 NYE_FILM = ('1aGqLstphS2oD_OTSdowCEhJD8dU4J8G7', 'bajaj-nye',
-            'Bajaj Electricals \u00d7 Zoo Media \u00b7 Film \u00b7 2026', 'New Year\u2019s Eve.')
+            'Bajaj Electricals \u00d7 Zoo Media \u00b7 Film \u00b7 2025', 'New Year\u2019s Eve.')
 NYE_THUMBS = [  # Drive's own video thumbnail (poster fallback when ffmpeg is absent)
     'https://lh3.googleusercontent.com/drive-storage/AJQWtBMXacHH_nf4oD4sgISfVWT2ZV_lGwUsH7gst4R9B_qOyObioHSWkTCwknyoRKqVXDWFjlte64PkInhpw59gkMZLP2ms4eZQQDYLUWw-=s16000',
     'https://lh3.googleusercontent.com/drive-storage/AJQWtBMXacHH_nf4oD4sgISfVWT2ZV_lGwUsH7gst4R9B_qOyObioHSWkTCwknyoRKqVXDWFjlte64PkInhpw59gkMZLP2ms4eZQQDYLUWw-=s190',
@@ -461,9 +461,9 @@ def main() -> None:
             elif it['kind'] == 'luna':
                 log('plan', f'NEW card {it["base"]}')
             elif it['kind'] == 'safe':
-                log('plan', 'NEW card bajaj-safe-to-touch (2026)')
+                log('plan', 'NEW card bajaj-safe-to-touch (2025)')
             elif it['kind'] == 'nye-film':
-                log('plan', 'NEW film card bajaj-nye (2026)')
+                log('plan', 'NEW film card bajaj-nye (2025)')
             else:
                 log('plan', f"film in place → {it['new']}")
         log('plan', 'wires: replaces in place, 9 new cards, counts 32 → 41')
