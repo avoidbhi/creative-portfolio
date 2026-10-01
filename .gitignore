@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 .DS_Store
 image-search/
+tools/.sharp/   # npm cache for the WebP pass in tools/pull_creatives.py
