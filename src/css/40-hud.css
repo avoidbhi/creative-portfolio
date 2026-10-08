@@ -31,6 +31,7 @@
 .hud__chapter { bottom: 1.4rem; left: var(--gutter); color: var(--muted); overflow: hidden; padding: .2rem .5rem; margin-left: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__chapter span { display: inline-block; transition: transform .45s var(--ease-out), opacity .45s; }
 .hud__chapter.is-swapping span { transform: translateY(110%); opacity: 0; transition: transform .25s var(--ease-in), opacity .25s; }
+.hud__corner { bottom: 1.4rem; right: var(--gutter); left: auto; display: flex; align-items: center; gap: .55rem; }
 .hud__progress { bottom: 1.4rem; right: var(--gutter); color: var(--muted); font-variant-numeric: tabular-nums; padding: .2rem .5rem; margin-right: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__pct { margin-left: .05em; }
 html.index-open .hud { color: var(--white); }

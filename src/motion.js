@@ -1,7 +1,6 @@
 /* ─────────────────────────────────────────────────────────────
    ABHIJEET KANASE — THE SCENE (v7)
-   One continuous 3D environment for every piece of work, modelled on
-   Andrianjaka Tony's "Portfolio Homepage Layout" (recent.design/i/75uqgzu):
+   One continuous 3D environment for every piece of work, three arrangements:
 
      ORBIT   a flat ring turning in the screen plane (two counter-turning rings here)
      SCATTER the same cards on a turning helix drum — a true 3D carousel:
@@ -81,7 +80,7 @@
   const captions = cards.map((c) => ($('figcaption', c) || {}).textContent || '');
   const kinds = cards.map((c) => c.dataset.k || '');
   const hrefs = cards.map((c) => c.dataset.href || '#ch1');
-  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: '34 pieces of work, 2025–26' };
+  const KLINE = { scatter: 'Scatter — the desk, turning', grid: 'Grid — the year as one contact sheet', orbit: lineK ? lineK.textContent.trim() : '32 pieces of work, 2025–26' };   // the count lives in the markup, once
   const order = cards.map((_, i) => (i * 7) % n);                       // stable pseudo-random stagger order
 
   /* ── sceneState — the single source of truth ── */
@@ -111,8 +110,11 @@
        caption band), so the top band is just breathing room and the bottom band is measured from the
        mode row down. In the stacked (≤600px) layout the headline sits above the rings and reserves its own height. */
     const band = stacked ? 118 : 108;                                                          // the caption band, as before
-    const hudTop = hud ? hud.getBoundingClientRect().top - stage.getBoundingClientRect().top : H - band;
-    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : 20;
+    const rectTop = stage.getBoundingClientRect().top;
+    const hudTop = hud ? hud.getBoundingClientRect().top - rectTop : H - band;
+    const bar = $('.hud__bar');                                                                 // the fixed glass nav pill: the ring's top pass must clear it, not duck under it
+    const barBottom = bar ? bar.getBoundingClientRect().bottom - rectTop : 0;
+    const above = stacked ? title.offsetTop + title.offsetHeight + 10 : Math.max(20, barBottom + 14);
     const below = Math.max(band, H - hudTop + 12);                                             // everything the mode row + foot occupy
     CY = above + (H - above - below) / 2;                                 // the scene's centre, in stage px
     roomTop = above - CY; roomBottom = H - below - CY;                    // the room, relative to that centre
@@ -132,7 +134,7 @@
     if (!r.width || !r.height) return;
     const half = Math.hypot(r.width, r.height) / 2;                        // the farthest glyph from the centre, at scale 1
     const hole = ring.inner - 8;                                           // ring.inner already keeps 6 px from the innermost card edge
-    const fit = clamp(hole / half, 0.55, 1);
+    const fit = clamp(hole / half, 0.42, 1);                       // short 16:9 windows: the headline shrinks to clear the hole instead of over the cards
     if (fit < 0.995) stage.style.setProperty('--title-fit', fit.toFixed(3));
   }
   const sumW = (idx) => idx.reduce((a, i) => a + cw[i], 0);
@@ -158,7 +160,7 @@
     // 9:16 film take the same room). v8.3: the spacing PACKS ITSELF (see drumPack) — as close as this card set
     // allows on this screen, on both axes, with no two lit cards ever touching, and it re-solves for any new set of work.
     const room = roomBottom - roomTop, midY = (roomTop + roomBottom) / 2;
-    const perTurn = mobile ? 5 : 6.5;                                                 // cards per turn: a fractional count keeps successive turns from lining up in columns
+    const perTurn = 5;                                                          // cards per turn (laptop + phone): 5 packs the lit arc ~35 % narrower than 6.5 — the spacing solver (drumPack) proves no two lit cards touch at any angle; the per-card jy/jr jitter keeps successive turns from lining up in columns
     const aRef = cards.map((_, i) => cw[i] * ch[i]).sort((a, b) => a - b)[n >> 1];    // the reference area: the median card (a 4:5 static)
     const kFront = P / (P - (1 - 0.2) * W * 0.44);                                   // phone: how much the perspective magnifies the front card (its z = (1 − zoff)·R)
     const s = mobile ? 1.15 / kFront : clamp(room / 1080 * 1.25, 0.6, 0.85);         // common size, from the room height: the front card ≈ 40 % of the room tall, like the reference; the phone keeps its approved front-card size now that depth is real
@@ -190,7 +192,7 @@
      at rest and never intersects under the lean — unless the one behind is a half-lit shoulder card (< .75) tucked
      behind an opaque one (real depth order, so it is simply occluded, like a stack of prints); two shoulder cards
      (< .7) and the dark far side are free. ~30–50 ms, once per resize (nothing runs in the frame loop). */
-  const DRUM_GAP = 12, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first
+  const DRUM_GAP = 4, DRUM_LEAN = [[-5, 0], [-8.6, -6], [-8.6, 6], [-1.4, -6], [-1.4, 6]];   // [tilt, pan] in degrees: rest first · 4 px rest clearance: the v8.3 default of 12 read as "spread out" on laptops — the pack is 15–25 % tighter
   const boxes = [];                                                                    // scratch: projected boxes of the lit cards at one phase
   function drumPack(apply, room) {
     const RxMin = W * 0.14, RxMax = Math.min(W * 0.36, room * 0.9);
@@ -345,7 +347,7 @@
     if (more) { more.hidden = !href; if (href) more.setAttribute('href', href); }
     document.dispatchEvent(new Event('cursor:refresh'));
   };
-  const titleWanted = () => (S.mode === 'orbit' && S.focused < 0 ? 1 : 0);   // the headline lives in the still centre of the rings only
+  const titleWanted = () => ((stacked || S.mode === 'orbit') && S.focused < 0 ? 1 : 0);   // in the hole of the rings only — on phones it sits above them, so it stays up
 
   /* ── mode changes: the same cards travel to the next arrangement ── */
   let lead = -1;
@@ -570,16 +572,20 @@
     S.layoutProgress = progress;
   }
 
-  /* ── the idle tour: orbit → scatter → grid → orbit once, only while nobody is looking closely ── */
-  const TOUR = ['scatter', 'grid', 'orbit']; let tourI = 0;
+  /* ── the standing opening: orbit → grid → scatter → orbit, on the loop —
+     10 s in orbit, 5 s in grid, 5 s in scatter. The site always opens on orbit (laptop and
+     phone alike). It pauses while nobody is looking closely (hover, drag, focus, hidden tab,
+     scrolled away, mid-fling) and any direct interaction still switches it off, as before. ── */
+  const TOUR = ['grid', 'scatter', 'orbit']; let tourI = 0;
+  const TOUR_DWELL = [10, 5, 5];                                              // seconds in the mode the tour is sitting in: orbit, grid, scatter
   function tourStep(dt) {
     if (!tour) return;
     if (S.hold || S.hovered >= 0 || S.focused >= 0 || S.dragging || document.hidden || S.scrollProgress > 0.25 || Math.abs(S.scrollVelocity) > 80) { S.idle = 0; return; }
     S.idle += dt;
-    if (S.idle < (tourI === 0 ? 12 : 6)) return;
+    if (S.idle < TOUR_DWELL[tourI]) return;
     S.idle = 0;
     setMode(TOUR[tourI]);
-    if (++tourI >= TOUR.length) tour = false;
+    tourI = (tourI + 1) % TOUR.length;                                        // loops: orbit → grid → scatter → orbit …
   }
 
   /* ── visibility: the stage in view → active (films resume), out of view → idle ── */

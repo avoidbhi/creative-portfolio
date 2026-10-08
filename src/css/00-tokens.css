@@ -41,6 +41,7 @@
 
   --gutter: clamp(1.25rem, 4vw, 4.5rem);
   --max: 1480px;
+  --page: 76rem;   /* ONE content column: home, every chapter, the epilogue — same edges, same hairlines */
   --hud-h: 4.5rem;
 
 }

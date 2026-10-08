@@ -9,7 +9,12 @@
 .epilogue {
   position: relative; min-height: 100svh; background: transparent; color: var(--paper); display: grid; align-items: end;
 }
-.epilogue__inner { width: 100%; min-height: 100svh; max-width: var(--max); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group); border-top: 1px solid var(--line);
+.epilogue__inner::before {   /* the rule runs edge to edge, like every chapter's */
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 100vw; max-width: var(--max);
+  border-top: 1px solid var(--line);
+}
+.epilogue__inner { width: 100%; min-height: 100svh; max-width: min(var(--max), var(--page)); margin-inline: auto; padding: clamp(3rem, 7vh, 4.5rem) var(--gutter) var(--group);
   display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; gap: var(--flow) var(--col); align-content: start;
 }
 .epilogue__inner > .kicker { grid-column: 1 / -1; }
@@ -17,9 +22,10 @@
 .epilogue__mail { grid-column: 1; grid-row: 3; align-self: start; }
 .redpen { grid-column: 2; grid-row: 2 / 4; align-self: end; }
 .epilogue__meta { grid-column: 1 / -1; }
-.epilogue__title { max-width: 16ch; font-size: clamp(2.3rem, 5.4vw, 5.6rem); }
+/* the closer wears the page's display scale, like every other head */
+.epilogue__title { max-width: 16ch; }
 .epilogue__mail {
-  justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 6.4vw, 6.4rem); line-height: 1; letter-spacing: -.02em;
+  justify-self: start; font-family: var(--font-serif); font-size: clamp(2rem, 5.4vw, 5.4rem); line-height: 1; letter-spacing: -.02em;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% .06em; background-position: 0 92%;
   transition: color .3s, background-size .5s var(--ease-out); will-change: transform; display: inline-block;
 }
