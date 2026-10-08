@@ -41,6 +41,82 @@ read it first. Where this prompt and the code disagree, the code wins; report th
 - `tools/pull_creatives.py` — Drive→4K→webp pipeline; all Drive IDs live here.
 - `assets/` — artwork (2560 px webp q80), films, fonts.
 
+### 1.1 · External references (the pages the build uses)
+
+**Ground truth (check against these, not memory)**
+
+- Live site (the current deployed build — side-by-side parity reference):
+  https://creative-portfolio-two-omega.vercel.app
+- This repo: https://github.com/avoidbhi/creative-portfolio
+
+**Stack**
+
+- Astro — https://docs.astro.build/en/
+  - Islands architecture (the two heavy islands: `<Orbit />`, `<Fluid />`):
+    https://docs.astro.build/en/concepts/islands/
+  - Content collections (loaders + Zod schemas for pieces/chapters):
+    https://docs.astro.build/en/guides/content-collections/
+  - File-based routing + `getStaticPaths()` (the 41 piece pages):
+    https://docs.astro.build/en/guides/routing/
+  - MDX (the piece/chapter bodies + the `Line`/`Items`/`Note` component vocabulary):
+    https://docs.astro.build/en/guides/mdx/
+  - Deploying a static Astro site to Vercel (no adapter needed for static output):
+    https://docs.astro.build/en/guides/deploy/vercel/
+  - `@astrojs/vercel` adapter — **only** if a Vercel service (image optimization,
+    analytics) is actually used:
+    https://docs.astro.build/en/guides/integrations-guide/vercel/
+- Zod (frontmatter validation, so "edit one file" is enforced by the build):
+  https://zod.dev/
+- Vercel — Astro guide: https://vercel.com/docs/astro · project configuration
+  (headers / cache rules for fonts + webp): https://vercel.com/docs/project-configuration
+  · preview deployments per PR:
+  https://vercel.com/docs/concepts/deployments/preview-deployments
+- GitHub Actions (wire `npm run check` as a pre-push gate):
+  https://docs.github.com/en/actions
+- Lighthouse (acceptance: Performance ≥ 90):
+  https://developer.chrome.com/docs/lighthouse/overview/
+
+**Motion system — the Web APIs the engine is built on (MDN is the behavior spec;
+the repo code is the executable spec — if the two disagree, the code wins)**
+
+- `requestAnimationFrame` (the one clock):
+  https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
+- `IntersectionObserver` (chapter `active`, reveal-once, tour pause):
+  https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
+- `ResizeObserver` (solve on resize):
+  https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
+- Pointer Events (hold / drag / capture / click-suppression vocabulary):
+  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
+- `prefers-reduced-motion` (the designed degrade):
+  https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+- Canvas 2D (constellation / ink-rewind mutations):
+  https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
+- Web Audio API (the opt-in sound mutation only):
+  https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
+- WebGL fluid — the reference implementation this repo's `src/fluid.js` descends
+  from (stable fluids: semi-Lagrangian advection, Jacobi pressure iteration):
+  https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+
+**Assets & type**
+
+- WebP (the artwork format, ≤ 2560 px q80):
+  https://developers.google.com/speed/webp
+- `sharp` (only if the Drive pipeline moves from Python/PIL to Node):
+  https://sharp.pixelplumbing.com
+- Fonts — self-host woff2, no CDN:
+  Instrument Serif https://fonts.google.com/specimen/Instrument+Serif ·
+  Instrument Sans https://fonts.google.com/specimen/Instrument+Sans ·
+  JetBrains Mono https://fonts.google.com/specimen/JetBrains+Mono ·
+  npm packages (easiest self-hosting): https://fontsource.org/fonts/instrument-serif ,
+  https://fontsource.org/fonts/instrument-sans ,
+  https://fontsource.org/fonts/jetbrains-mono
+
+**Rule:** these are the only external runtime dependencies: nothing. No GSAP, no
+Three.js, no animation libraries, no font CDNs — everything in §4 is raw Web APIs.
+If the sandbox network blocks a page, treat the repo's own code
+(`src/motion.js`, `src/main.js`, `src/fluid.js`) as the authoritative spec and
+record the gap in `REBUILD-NOTES.md`.
+
 ## 2 · What the site is (structure & content spec)
 
 **Opening:** full-viewport dark stage. A ring of work-cards orbits slowly; auto-tour: opens on
