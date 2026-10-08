@@ -1,53 +1,60 @@
 # REBUILD PROMPT — Abhijeet Kanase creative-portfolio
-### v2 · self-contained, with the full motion spec and the mutation catalog
+### v3 · fully self-contained — this prompt + the content pack is the whole world
 
-You are rebuilding the creative-portfolio site for Abhijeet Kanase (copywriter & creative
-strategist, Mumbai) from scratch, **in this same repo**, replacing the current hand-rolled
-single-file build with a content-first static architecture. The existing repo is your **spec
-and your content source of truth** — extract its design, copy, behavior and motion 1:1, then
-rebuild. Do not invent content, dates, process or copy. Where the existing site has a string,
-port it verbatim (including U+2011 non-breaking hyphens and exact punctuation).
-
-The current constant-level reference for everything below is `docs/motion-engineering.md` —
-read it first. Where this prompt and the code disagree, the code wins; report the discrepancy.
+You are building the creative-portfolio site for Abhijeet Kanase (copywriter & creative
+strategist, Mumbai) from scratch, as a content-first static site. You will be given exactly
+two things: **this prompt** and a **content pack** (see §1). That is the whole world — there
+is no other codebase to read and no prior build to inherit. Do not invent content, dates,
+process or copy: every line of copy and every number that belongs to the site lives in the
+pack, and every behavior that belongs to the site lives in this prompt. If something is
+missing or ambiguous, record it in `REBUILD-NOTES.md` and ask — never guess.
 
 ---
 
 ## 0 · Ground rules
 
-1. The site's product is the person. Voice, positioning and every line of copy come from the
-   existing repo.
+1. The site's product is the person. Voice, positioning and every line of copy come from
+   the content pack — never from your imagination.
 2. Keep it simple. One column. No admin, no login, no framework features you can't defend in
    one sentence.
 3. Deploy to Vercel from `main` via PR.
 4. A content edit means editing **one content file** — never HTML surgery, never regex patching.
 5. Every derived string (counts, orbit membership, chapter work-logs, worklist rows) is
    computed at build time from the content collection — never hand-written in two places.
-6. **Motion is a deliverable, not a decoration.** The system in §4 is binding: port the
-   *behavior* exactly (the feel is approved), the code shape may change with the stack.
+6. **Motion is a deliverable, not a decoration.** The system in §4 is binding: implement it
+   exactly (the feel is approved), the code shape may change with the stack.
 7. Preserve all design/motion decisions in §4 and §9. They are client-approved, not suggestions.
 
-## 1 · Where the truth is (read these first)
+## 1 · What you're given
 
-- `docs/motion-engineering.md` — the constant-level spec of the motion system (all numbers).
-- `src/index.html` — full markup spec: every section, chapter, kicker, worklist row, HUD string.
-- `src/css/*.css` — the design system. Start with `00-tokens.css`.
-- `src/motion.js` — the orbit engine. Port it, don't rewrite it.
-- `src/main.js` — the single loop, HUD, reveals, depth, cursor.
-- `src/fluid.js` — the WebGL cursor fluid, with its current config.
-- `src/pieces/*.html` — 41 fragments: the full real copy of every piece. This is the content.
-- `src/data/pieces.json` — current orbit config (ids, rings, k-strings, captions, assets).
-- `index.dev.html` — the readable inlined build; a single-file reference of the shipped site.
-- `tools/pull_creatives.py` — Drive→4K→webp pipeline; all Drive IDs live here.
-- `assets/` — artwork (2560 px webp q80), films, fonts.
+**This prompt.** The complete design, motion and architecture spec, self-contained:
+§3 design system · §4 how everything moves (the binding motion spec, every constant) ·
+§5 the mutation catalog (you pick three) · §6 architecture · §7 acceptance · §8 execution
+order · §9 do-not-touch.
 
-### 1.1 · External references (the pages the build uses)
+**The content pack** (provided alongside this prompt). Verify it on arrival — if anything is
+missing, stop and ask:
+- `content/pieces/` — 41 files, one per piece. Frontmatter: `id, ring (in|out), kind
+  (static|film), src, poster?, w, h, client, scope, year, chapter (ch1–ch9|side), alt, cap,
+  aria?`. Body: the piece's **full real copy** — this is the content; the most important part
+  of the pack.
+- `content/chapters/` — 9 chapters + epilogue. Frontmatter: `no, title, year, pieces:`
+  (the ids of that chapter's pieces, for the work-log; empty = no log). Body: the chapter's
+  prose, results and "could have said → said" decision entries — verbatim.
+- `assets/` — the artwork (webp ≤ 2560 px q80) referenced by the pieces' `src`, the films
+  with posters, and the woff2 fonts (Instrument Serif, Instrument Sans, JetBrains Mono).
+- `site.json` — name, role, email, city, tagline, tour config, stage/fluid tuning.
 
-**Ground truth (check against these, not memory)**
+**Optional, only if reachable:** the live production site
+https://creative-portfolio-two-omega.vercel.app — a side-by-side visual sanity check
+(copy, layout, feel). It is a reference, not a source: this prompt + the pack are the source
+of truth; if they disagree, follow this prompt and flag the difference.
 
-- Live site (the current deployed build — side-by-side parity reference):
-  https://creative-portfolio-two-omega.vercel.app
-- This repo: https://github.com/avoidbhi/creative-portfolio
+### 1.1 · External references (only if you have web access)
+
+If you don't, ignore this section — §4 is the complete motion spec, the pack is the complete
+content spec, and no outside knowledge is required to build the site. If you do, these are
+the authoritative pages:
 
 **Stack**
 
@@ -76,8 +83,7 @@ read it first. Where this prompt and the code disagree, the code wins; report th
 - Lighthouse (acceptance: Performance ≥ 90):
   https://developer.chrome.com/docs/lighthouse/overview/
 
-**Motion system — the Web APIs the engine is built on (MDN is the behavior spec;
-the repo code is the executable spec — if the two disagree, the code wins)**
+**Motion system — the Web APIs the engine is built on (consult as the behavior spec)**
 
 - `requestAnimationFrame` (the one clock):
   https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
@@ -93,29 +99,25 @@ the repo code is the executable spec — if the two disagree, the code wins)**
   https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
 - Web Audio API (the opt-in sound mutation only):
   https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
-- WebGL fluid — the reference implementation this repo's `src/fluid.js` descends
-  from (stable fluids: semi-Lagrangian advection, Jacobi pressure iteration):
+- WebGL fluid — a public reference implementation of the stable-fluids algorithm
+  (for understanding; §4.12 above is the complete spec):
   https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
 
 **Assets & type**
 
 - WebP (the artwork format, ≤ 2560 px q80):
   https://developers.google.com/speed/webp
-- `sharp` (only if the Drive pipeline moves from Python/PIL to Node):
+- `sharp` (if the asset-intake script in §6 is wanted in Node):
   https://sharp.pixelplumbing.com
-- Fonts — self-host woff2, no CDN:
+- Fonts (already in the pack — self-hosted woff2, no CDN):
   Instrument Serif https://fonts.google.com/specimen/Instrument+Serif ·
   Instrument Sans https://fonts.google.com/specimen/Instrument+Sans ·
-  JetBrains Mono https://fonts.google.com/specimen/JetBrains+Mono ·
-  npm packages (easiest self-hosting): https://fontsource.org/fonts/instrument-serif ,
-  https://fontsource.org/fonts/instrument-sans ,
-  https://fontsource.org/fonts/jetbrains-mono
+  JetBrains Mono https://fonts.google.com/specimen/JetBrains+Mono
 
-**Rule:** these are the only external runtime dependencies: nothing. No GSAP, no
+**Rule:** the site's external runtime dependencies, in total: nothing. No GSAP, no
 Three.js, no animation libraries, no font CDNs — everything in §4 is raw Web APIs.
-If the sandbox network blocks a page, treat the repo's own code
-(`src/motion.js`, `src/main.js`, `src/fluid.js`) as the authoritative spec and
-record the gap in `REBUILD-NOTES.md`.
+If web access is partial and a page is blocked, build from this prompt (§4 is complete)
+and record the gap in `REBUILD-NOTES.md`.
 
 ## 2 · What the site is (structure & content spec)
 
@@ -142,7 +144,7 @@ per piece of that chapter). Chapters with zero pieces carry no log. No fabricati
 **Piece pages:** one per piece (41). Kicker, serif title (the piece's line from its caption),
 plate or film, the **full real copy**, then links: back to orbit, down to chapter, email.
 
-## 3 · Design system — binding, port the values exactly
+## 3 · Design system — binding, implement the values exactly
 
 - Palette: `--ink #000000` (only background) · `--graphite #0B0B0D` · `--paper #F6F6F4`
   (text) · `--red #FF3B30` (the red pen — the only accent) · `#FFF` where a surface needs one.
@@ -154,13 +156,13 @@ plate or film, the **full real copy**, then links: back to orbit, down to chapte
 - Kicker grammar `NN / name · year`. Easings: `--ease-out cubic-bezier(.16,1,.3,1)`,
   `--ease-inout cubic-bezier(.7,0,.2,1)`, `--ease-in cubic-bezier(.6,0,.9,.4)`.
 
-## 4 · The motion system — how everything moves (binding behavior spec)
+## 4 · The motion system — how everything moves (binding spec, every constant)
 
-Port this system as the stage's client island. The **DOM contract is part of the spec**: the
+Build this system as the stage's client island. The **DOM contract is part of the spec**: the
 engine reads `[data-stage]`, `[data-stage-space]`, `[data-stage-card]` (with `data-ring`,
 `data-card-id`, `data-k`, `data-href`), the mode buttons `[data-stage-mode]`, the caption line
 `[data-stage-k/q]`, the "read" link `[data-stage-more]`, the title `.stage__title`, the HUD
-`.stage__hud`. Keep those names and the engine ports almost unmodified.
+`.stage__hud`. Use these names everywhere — in the HTML, the engine and the tests.
 
 ### 4.1 The seven laws (never break any of these)
 
@@ -313,7 +315,7 @@ gaussian dye splat (radius `SPLAT_RADIUS/100`, aspect-corrected) in the pointer'
 the dye (that is the flow); dye dissipates in ~3 s, velocity dies fast so the flow stays
 compact. Post: soft bloom (threshold 0.25, intensity 0.2) + sunrays (0.4); overall brightness
 0.05 — a whisper under the type. The opening burst is the same dye at 5.5× once, on load —
-the only moment the page glows for itself. Current approved config (the compact wisp):
+the only moment the page glows for itself. Approved config (the compact wisp):
 `SPLAT_RADIUS 0.07 · SPLAT_FORCE 1200 · VELOCITY_DISSIPATION 1.8 · DENSITY_DISSIPATION 2.5 ·
 SIM 128 / DYE 512 · MAX_DPR 1 · SLEEP_AFTER 4 s`. All in one config object
 (`window.AK_FLUID_CONFIG` may override). Runs only while the pointer has recently moved;
@@ -412,30 +414,27 @@ the QA checklist in §7.
 
 ## 6 · Architecture (the "better way")
 
-**Astro, static output, Vercel adapter.** A content site with two heavy interactive islands:
-Astro ships zero JS by default, gives real routes for 41 piece pages, and content collections
+**Astro, static output, Vercel.** A content site with two heavy interactive islands: Astro
+ships zero JS by default, gives real routes for the 41 piece pages, and content collections
 with Zod schemas make the "edit one file" rule enforced by the build.
 
-- `content/pieces/*.mdx` — one per piece (41). Frontmatter: `id, ring (in|out), kind
-  (static|film), src, poster?, w, h, client, scope, year, chapter (ch1–ch9|side), alt, cap,
-  aria?`. Body: full copy as MDX with a small component vocabulary (`Line` big serif line,
-  `Items` hook lists, `Note` mono meta, blockquotes).
-- `content/chapters/*.mdx` — one per chapter (9 + epilogue): `no, title, year, pieces:`
-  (explicit piece ids for the work-log; empty = no log).
-- `src/data/site.json` — name, role, email, city, tagline, tour config, **and the stage/fluid
-  config objects (rates, dwells, gaps, amplitudes, the three mutation flags)** — all tuning
-  is data, overridable at runtime as today.
+- `content/pieces/*.mdx` — one per piece (41) — from the pack, frontmatter unchanged; the
+  body rendered through a small component vocabulary (`Line` big serif line, `Items` hook
+  lists, `Note` mono meta, blockquotes).
+- `content/chapters/*.mdx` — one per chapter (9 + epilogue) — from the pack.
+- `src/data/site.json` — from the pack: name, role, email, city, tagline, tour config,
+  **and the stage/fluid config objects (rates, dwells, gaps, amplitudes, the three mutation
+  flags)** — all tuning is data, overridable at runtime.
 - Routes: `/` (stage + chapters) and `/pieces/[id]` (`getStaticPaths` from the collection).
-- Islands: `<Orbit />` (the ported engine — cards rendered server-side from the collection,
-  DOM contract per §4), `<Fluid />` (the ported sim behind the stage canvas), plus small
-  vanilla modules (cursor, reveals, progress). Nothing else is client JS.
-- **Delete, deliberately:** the 4.7 MB standalone data-URI build (Vercel serves assets with
-  immutable cache headers), marker-comment injection, count-regex patching, the custom Python
-  preview server (`npm run dev` is the preview).
-- **Keep:** `tools/pull_creatives.py` (Drive → 4K → 2560 px webp q80), repointed so its wire
-  step writes into the content world: update piece frontmatter (`src, w, h`) for replaces,
-  create `content/pieces/<id>.mdx` for adds, then `npm run build`. Idempotent, `--dry-run`,
-  `--wire-only`.
+- Islands: `<Orbit />` (the engine — cards rendered server-side from the collection, DOM
+  contract per §4), `<Fluid />` (the sim behind the stage canvas), plus small vanilla
+  modules (cursor, reveals, progress). Nothing else is client JS.
+- **Do not build:** a monolithic data-URI single-file build, regex patching of generated
+  HTML, or a custom preview server — `npm run dev` is the preview.
+- **Asset intake (when new work arrives):** a small idempotent script that takes new artwork
+  and either updates a piece's frontmatter (`src, w, h`) or creates a new
+  `content/pieces/<id>.mdx`, then `npm run build`. Contract: idempotent, `--dry-run`, writes
+  only content files, nothing else.
 - Scripts: `npm run dev` · `npm run build` · `npm run check` (= schema validation +
   counts-consistency + dead-link scan + "every piece has a page, asset, year, caption" +
   two consecutive builds byte-identical).
@@ -443,21 +442,23 @@ with Zod schemas make the "edit one file" rule enforced by the build.
 ## 7 · Acceptance criteria
 
 1. `npm run build` idempotent (byte-identical twice); `npm run check` passes, wired pre-push.
-2. All 41 pieces: correct ring/year/caption in the orbit; `/pieces/<id>` with full real copy
-   and asset; linked from orbit card and chapter work-log.
+2. All 41 pieces: correct ring/year/caption in the orbit; `/pieces/<id>` with the full real
+   copy verbatim from the pack and its asset; linked from orbit card and chapter work-log.
 3. Counts in exactly one computed place; every visible count matches.
-4. Verbatim copy parity with `index.dev.html` for all chapters, HUD, worklist, epilogue
-   (diff the text, not the markup).
-5. **Motion parity:** the 12-shot checklist — 390 / 768 / 1440 px × {orbit, scatter, grid,
-   focused card} — visually indistinguishable from the current build (the mutations you
-   enabled are the only allowed deltas, and each is documented). The QA handle drives
-   `setMode/open/close` programmatically; assert: no opacity > 1, no writes while the stage
-   is off-screen, the drum's wrap teleport never visible (jumps only at opacity < 0.05),
-   the tour pauses and dies exactly as in §4.9, reduced-motion kills the scene and reveals
-   everything.
+4. **Verbatim copy parity with the content pack:** every orbit caption, chapter line, HUD
+   string, worklist row and epilogue word comes from the pack (diff the text, not the
+   markup).
+5. **Motion-spec parity:** the 12-shot checklist — 390 / 768 / 1440 px × {orbit, scatter,
+   grid, focused card} — matches §4 exactly (the mutations you enabled are the only allowed
+   deltas, and each is documented); if the live site is reachable, it is
+   side-by-side-indistinguishable from there. The QA handle drives `setMode/open/close`
+   programmatically; assert: no opacity > 1, no writes while the stage is off-screen, the
+   drum's wrap teleport never visible (jumps only at opacity < 0.05), the tour pauses and
+   dies exactly as in §4.9, reduced-motion kills the scene and reveals everything.
 6. Orbit: three modes, tour 10/5/5, drag + keyboard + touch, card → piece page; media lazy
    with width/height (zero CLS); orbit is the opening on phones too.
-7. Fluid matches the approved compact config; reduced motion disables it and the tour.
+7. Fluid matches the approved compact config in §4.12; reduced motion disables it and the
+   tour.
 8. Lighthouse on `/` and a piece page: Performance ≥ 90; only the two fonts render-block;
    images ≤ 2560 px webp.
 9. One-file content edit: change a caption → build → orbit card, work-log, piece page and
@@ -467,21 +468,23 @@ with Zod schemas make the "edit one file" rule enforced by the build.
 
 ## 8 · Execution order (do not skip)
 
-1. **Inventory:** read §1 files + `docs/motion-engineering.md` completely; write
-   `REBUILD-NOTES.md` (untracked) listing every section, string, token, behavior and motion
-   constant you found — your parity checklist.
-2. Scaffold Astro + tokens/base CSS (port token values verbatim) + layout + fonts.
-3. Content collections + Zod schemas; migrate all 41 pieces and 9 chapters (copy verbatim).
-4. **The stage island:** port the scene engine (DOM contract per §4) + the full pattern set
-   (orbit/drum/grid/front, journeys, mass, camera, tour, pointer vocabulary, boot, destroy,
-   QA handle) + the fluid island. Verify motion parity on the 12-shot checklist *before*
-   building the rest of the page.
+1. **Inventory:** read this prompt in full; verify the content pack against the §1 checklist
+   (41/41 pieces, 9 + 1 chapters, assets, fonts, site.json); write `REBUILD-NOTES.md`
+   (untracked) listing every copy string, token and motion constant you will use — your
+   parity checklist. Anything missing or contradictory: **ask before proceeding.**
+2. Scaffold Astro + tokens/base CSS (implement §3 values verbatim) + layout + fonts.
+3. Content collections + Zod schemas; move the pack's pieces and chapters into the
+   collections (copy verbatim).
+4. **The stage island:** implement the scene engine from §4 (DOM contract per §4.2) + the
+   full pattern set (orbit/drum/grid/front, journeys, mass, camera, tour, pointer
+   vocabulary, boot, destroy, QA handle) + the fluid island. Verify motion-spec parity on
+   the 12-shot checklist *before* building the rest of the page.
 5. Components: HUD, Chapter/CaseChapter, red-pen `Edit`, Caselog, Worklist, PiecePage,
    reveals/depth/tilt/cursor/progress modules.
 6. **Pick and implement your three mutations** (§5), each flagged and documented.
-7. Repoint `pull_creatives.py`; write `npm run check`.
-8. Vercel config; open a PR; run §7 end-to-end; side-by-side against the current
-   `index.dev.html`; fix every unexplained difference.
+7. Asset-intake script; write `npm run check`.
+8. Vercel config; open the PR; run §7 end-to-end; if the live site is reachable,
+   side-by-side against it; fix every unexplained difference.
 
 ## 9 · Do not touch (client-approved)
 
@@ -492,7 +495,7 @@ correction) · the "research first. Then the sentence." voice · no invented dat
 (Bajaj 2025, KokoonLabs 2026, LumiCell 2025, NYC 2026, Luna 2025) · deploy via PR ·
 README clean · the fluid's approved compact config.
 
-*The system's single sentence — the rebuild must keep it true: the same forty-one objects,
+*The system's single sentence — the build must keep it true: the same forty-one objects,
 always; the only thing that changes is the law that places them, and every law hands every
 object back to the next law without dropping it. A mutation is allowed to be a new law. It
 must never be a second system.*
