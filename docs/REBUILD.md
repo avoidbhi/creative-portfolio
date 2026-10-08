@@ -23,7 +23,7 @@ read it first. Where this prompt and the code disagree, the code wins; report th
 4. A content edit means editing **one content file** — never HTML surgery, never regex patching.
 5. Every derived string (counts, orbit membership, chapter work-logs, worklist rows) is
    computed at build time from the content collection — never hand-written in two places.
-6. **Motion is a deliverable, not a decoration.** The system in §5 is binding: port the
+6. **Motion is a deliverable, not a decoration.** The system in §4 is binding: port the
    *behavior* exactly (the feel is approved), the code shape may change with the stack.
 7. Preserve all design/motion decisions in §4 and §9. They are client-approved, not suggestions.
 
