@@ -1,6 +1,6 @@
 /* ─────────────────────────────────────────────────────────────
    ABHIJEET KANASE — copywriter & creative strategist, Mumbai
-   Design system: two typefaces, one coral pen, four paper stocks.
+   Design system: two typefaces, one red pen, four paper stocks.
    Motion: enter = ease-out, exit = ease-in, nothing high-frequency animates.
    ───────────────────────────────────────────────────────────── */
 
@@ -11,16 +11,16 @@
 
 :root {
   /* palette — named, deliberate, small */
-  --ink: #0A0F1C;        /* deep navy — the only surface on the page */
-  --graphite: #0F1524;   /* a slightly lifted navy — fills, placeholders */
-  --paper: #F2EFE6;      /* ivory — warm against the cool navy (was clean near-white) */
-  --pen: #FF6B4A;        /* the coral pen — the single accent, holds against navy */
+  --ink: #000000;        /* pure black — the only surface on the page */
+  --graphite: #0B0B0D;   /* a slightly lifted black — fills, placeholders */
+  --paper: #F6F6F4;      /* clean near-white — reads clean on pure black (was warm cream) */
+  --red: #FF3B30;        /* the red pen — brighter so it holds against pure black */
   --white: #FFFFFF;
 
   /* THE background — plain black, painted once on a fixed layer (.bg) so every screen is
      lit the same way. No gradient (it banded), no grain overlay. The fluid sim still paints
      over it, cursor-only, and sleeps when the pointer is clear. */
-  --bg-gradient: #0A0F1C;   /* plain navy — no gradient, no bloom, no banding */
+  --bg-gradient: #000000;   /* plain black — no gradient, no bloom, no banding */
 
   --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
   --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -47,5 +47,5 @@
 }
 
 /* one surface, one set of tokens — data-theme on the chapters now only labels them */
-html, html[data-theme] { --bg: var(--ink); --bg-rgb: 10,15,28; --fg: var(--paper); --fg-rgb: 242,239,230; --muted: rgba(242,239,230,.72); --line: rgba(242,239,230,.2); --surface: #F7F4EA; }
+html, html[data-theme] { --bg: var(--ink); --bg-rgb: 0,0,0; --fg: var(--paper); --fg-rgb: 246,246,244; --muted: rgba(246,246,244,.72); --line: rgba(246,246,244,.2); --surface: #FFFDF8; }
 

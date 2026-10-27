@@ -1,7 +1,7 @@
 /* ───────────── HUD ───────────── */
 .progress {
   position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 860;
-  background: var(--pen); transform: scaleX(var(--p, 0)); transform-origin: left; pointer-events: none;
+  background: var(--red); transform: scaleX(var(--p, 0)); transform-origin: left; pointer-events: none;
 }
 .hud { position: fixed; inset: 0; z-index: 850; pointer-events: none; color: var(--fg); }
 .hud > * { pointer-events: auto; position: absolute; z-index: 1; }
@@ -27,7 +27,7 @@
 }
 .hud__bar .hud__btn:hover { background: rgba(var(--fg-rgb), .1); border-color: transparent; }
 .hud__bar .hud__btn--solid { background: var(--fg); color: var(--bg); }
-.hud__bar .hud__btn--solid:hover { background: var(--pen); color: var(--white); }
+.hud__bar .hud__btn--solid:hover { background: var(--red); color: var(--white); }
 .hud__chapter { bottom: 1.4rem; left: var(--gutter); color: var(--muted); overflow: hidden; padding: .2rem .5rem; margin-left: -.5rem; border-radius: 4px; backdrop-filter: blur(10px); background: rgba(var(--bg-rgb, 0,0,0), .5); }
 .hud__chapter span { display: inline-block; transition: transform .45s var(--ease-out), opacity .45s; }
 .hud__chapter.is-swapping span { transform: translateY(110%); opacity: 0; transition: transform .25s var(--ease-in), opacity .25s; }
@@ -38,13 +38,13 @@ html.index-open .hud { color: var(--white); }
 html.index-open .hud .mono { color: rgba(255,255,255,.7); }
 html.index-open .hud__bar { background: rgba(0,0,0,.32); border-color: rgba(255,255,255,.3); }
 html.index-open .hud__bar .hud__btn { border-color: transparent; }
-html.index-open .hud__btn--solid { background: var(--white); color: var(--pen); border-color: var(--white); }
-html.index-open .hud .hud__btn--solid .mono { color: var(--pen); }
+html.index-open .hud__btn--solid { background: var(--white); color: var(--red); border-color: var(--white); }
+html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 
 /* ───────────── index overlay ───────────── */
 .index {
   position: fixed; inset: 0; z-index: 800;
-  background: var(--pen); color: var(--white);
+  background: var(--red); color: var(--white);
   transform: translateY(-100%); visibility: hidden;
   transition: transform .9s var(--ease-inout), visibility 0s linear .9s;
   overflow-y: auto;

@@ -24,7 +24,7 @@
 .home__profile { display: flex; gap: .75rem; align-items: center; padding: .25rem 0; }
 .home__avatar {
   width: 2.6rem; height: 2.6rem; border-radius: .8rem; flex: none;
-  background: var(--pen); color: var(--ink);
+  background: var(--red); color: var(--ink);
   display: grid; place-items: center;
   font-family: var(--font-serif); font-style: italic; font-size: 1.05rem;
   box-shadow: 0 6px 20px -6px rgba(255, 59, 48, .55);
@@ -53,7 +53,7 @@
 }
 .home__link:hover { background: rgba(var(--fg-rgb), .06); color: var(--fg); }
 .home__link.is-active { background: rgba(var(--fg-rgb), .07); color: var(--fg); font-weight: 600; }
-.home__link.is-active .home__num { color: var(--pen); opacity: 1; }
+.home__link.is-active .home__num { color: var(--red); opacity: 1; }
 .home__num { width: 1.7rem; font-size: .62rem; opacity: .5; flex: none; }
 
 /* ── main column ── */
@@ -69,7 +69,7 @@
 /* the desk line — mono metadata, live IST clock */
 .home__herohead { display: flex; align-items: center; gap: .9rem; margin: 0 0 var(--group); font-size: .64rem; letter-spacing: .18em; color: var(--muted); }
 .home__herosep { opacity: .4; }
-.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--pen); animation: pulse 2.4s infinite; }
+.home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .home__herobody {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
@@ -82,12 +82,12 @@
   font-size: clamp(2.6rem, 6.2vw, 6.6rem); line-height: .98; letter-spacing: -.02em;
   text-wrap: balance;
 }
-.home__title em { font-style: italic; color: var(--pen); }
+.home__title em { font-style: italic; color: var(--red); }
 .home__sub { color: var(--muted); font-size: 1.02rem; line-height: 1.55; max-width: 52ch; }
 .home__actions { display: flex; flex-direction: column; align-items: stretch; gap: .6rem; }
 .home__btn {
   display: inline-grid; place-items: center; height: 2.8rem; padding: 0 1.5rem; white-space: nowrap;
-  border-radius: 999px; background: var(--pen); color: var(--white); text-decoration: none;
+  border-radius: 999px; background: var(--red); color: var(--white); text-decoration: none;
   font: 600 .92rem/1 var(--font-sans);
   transition: transform .2s var(--ease-out), background-color .25s, color .25s, border-color .25s;
 }
@@ -130,7 +130,7 @@
   color: var(--muted); text-decoration: none; white-space: nowrap; padding-bottom: .45rem;
   border-bottom: 1px solid transparent; transition: color .25s, border-color .25s;
 }
-.home__seeall:hover { color: var(--pen); border-color: var(--pen); }
+.home__seeall:hover { color: var(--red); border-color: var(--red); }
 
 /* selected work — a numbered editorial index; the copy is the cover */
 .worklist { list-style: none; margin: 0; padding: 0; }
@@ -168,10 +168,10 @@
 }
 .worklist__arrow { font-size: 1.05rem; color: var(--muted); transition: transform .4s var(--ease-out), color .3s; }
 .worklist__row:hover { background: rgba(var(--fg-rgb), .035); }
-.worklist__row:hover .worklist__num { color: var(--pen); }
+.worklist__row:hover .worklist__num { color: var(--red); }
 .worklist__row:hover .worklist__title { transform: translateX(.35em); }
 .worklist__row:hover .worklist__still img { transform: scale(1.07); filter: saturate(1) brightness(1); }
-.worklist__row:hover .worklist__arrow { transform: translateX(.35em); color: var(--pen); }
+.worklist__row:hover .worklist__arrow { transform: translateX(.35em); color: var(--red); }
 
 /* notes — the hook wall: the lines themselves, big as they need to be, staggered */
 .hookwall { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.7rem; }
@@ -197,7 +197,7 @@
   max-width: 26ch;
   transition: transform .5s var(--ease-out);
 }
-.hookwall__line em { font-style: italic; color: var(--pen); }
+.hookwall__line em { font-style: italic; color: var(--red); }
 .hookwall__item:hover .hookwall__line { transform: translateX(.4em); }
 .hookwall__item:nth-child(2) { margin-left: clamp(0rem, 6vw, 4.5rem); }
 .hookwall__item:nth-child(3) { margin-left: clamp(0rem, 12vw, 9rem); }
@@ -211,5 +211,5 @@
 }
 .home__pingtext { max-width: 56ch; display: grid; gap: .8rem; }
 .home__pingline { font-family: var(--font-serif); font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.15; letter-spacing: -.01em; }
-.home__pingline em { font-style: italic; color: var(--pen); }
+.home__pingline em { font-style: italic; color: var(--red); }
 .home__pingsub { color: var(--muted); font-size: .98rem; line-height: 1.55; }
