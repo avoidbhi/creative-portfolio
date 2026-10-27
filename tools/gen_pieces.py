@@ -42,7 +42,7 @@ PIECE_CSS = """
   .piece__copy p:last-child{margin-bottom:0}
   .piece__copy h3{font-family:var(--font-serif);font-weight:500;font-size:1.6rem;letter-spacing:-.01em;margin:2.6rem 0 .9rem}
   .piece__copy .line{font-family:var(--font-serif);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.015em;margin:0 0 1.5rem}
-  .piece__copy blockquote{margin:1.5rem 0;padding-left:1.15rem;border-left:2px solid var(--red);font-family:var(--font-serif);font-size:1.28rem;line-height:1.45}
+  .piece__copy blockquote{margin:1.5rem 0;padding-left:1.15rem;border-left:2px solid var(--pen);font-family:var(--font-serif);font-size:1.28rem;line-height:1.45}
   .piece__copy .items{list-style:none;margin:1.5rem 0 0;padding:0}
   .piece__copy .items li{display:grid;grid-template-columns:minmax(9rem,15rem) 1fr;gap:.15rem 1.4rem;padding:.95rem 0;border-bottom:1px solid var(--line)}
   .piece__copy .items li:first-child{border-top:1px solid var(--line)}
@@ -50,7 +50,7 @@ PIECE_CSS = """
   .piece__copy .note,.piece__copy .mono-note{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   .piece__foot{margin-top:4.5rem;padding-top:1.4rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.8rem;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}
   .piece__foot a{color:var(--fg);text-decoration:none}
-  .piece__foot a:hover{color:var(--red)}
+  .piece__foot a:hover{color:var(--pen)}
   @media (max-width:600px){.piece__copy .items li{grid-template-columns:1fr}}
 """
 

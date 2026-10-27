@@ -11,7 +11,7 @@
   text-wrap: balance;
   max-width: 14ch;
 }
-.display em { font-style: italic; color: var(--red); }
+.display em { font-style: italic; color: var(--pen); }
 
 .kicker { color: var(--muted); display: flex; gap: .6em; align-items: center; }
 .kicker__sep { opacity: .5; }
@@ -25,11 +25,11 @@
 }
 .prose + .prose { margin-top: 1em; }
 .prose--em { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.2vw, 2.3rem); line-height: 1.2; }
-.prose--em em { color: var(--red); }
+.prose--em em { color: var(--pen); }
 
-.note { color: var(--red); text-transform: none; letter-spacing: 0; }
+.note { color: var(--pen); text-transform: none; letter-spacing: 0; }
 
-.dot { color: var(--red); }
+.dot { color: var(--pen); }
 
 /* strike-through drawn with the red pen — animatable, multi-line safe */
 .strike {

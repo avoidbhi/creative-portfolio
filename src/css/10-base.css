@@ -38,13 +38,13 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; }
 p, h1, h2, h3, dl, dd, figure, blockquote, ol, ul { margin: 0; }
 ol, ul { padding: 0; list-style: none; }
-::selection { background: var(--red); color: var(--white); }
+::selection { background: var(--pen); color: var(--white); }
 
-:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; border-radius: 2px; }
+:focus-visible { outline: 2px solid var(--pen); outline-offset: 4px; border-radius: 2px; }
 
 .skip {
   position: fixed; top: .75rem; left: .75rem; z-index: 2000;
-  padding: .6rem 1rem; background: var(--red); color: var(--white);
+  padding: .6rem 1rem; background: var(--pen); color: var(--white);
   font-family: var(--font-mono); font-size: .8rem;
   transform: translateY(-200%); transition: transform .2s;
 }
