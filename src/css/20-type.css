@@ -4,14 +4,14 @@
 
 .display {
   font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(2.8rem, 6.8vw, 7.2rem);
-  line-height: .96;
+  font-weight: 500;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.04;
   letter-spacing: -.02em;
   text-wrap: balance;
-  max-width: 14ch;
+  max-width: 20ch;
 }
-.display em { font-style: italic; color: var(--red); }
+.display em { font-style: normal; color: var(--fg); }
 
 .kicker { color: var(--muted); display: flex; gap: .6em; align-items: center; }
 .kicker__sep { opacity: .5; }
@@ -24,16 +24,16 @@
   letter-spacing: -.005em;
 }
 .prose + .prose { margin-top: 1em; }
-.prose--em { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.2vw, 2.3rem); line-height: 1.2; }
-.prose--em em { color: var(--red); }
+.prose--em { font-family: var(--font-serif); font-weight: 500; font-size: clamp(1.4rem, 2vw, 2rem); line-height: 1.22; }
+.prose--em em { font-style: normal; color: var(--fg); }
 
-.note { color: var(--red); text-transform: none; letter-spacing: 0; }
+.note { color: var(--muted); text-transform: none; letter-spacing: 0; }
 
-.dot { color: var(--red); }
+.dot { color: var(--fg); }
 
 /* strike-through drawn with the red pen — animatable, multi-line safe */
 .strike {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FF3B30'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23FFFFFF'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 0% .085em;
   background-position: 0 58%;

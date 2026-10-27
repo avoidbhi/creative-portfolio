@@ -10,19 +10,19 @@
 
 .card { max-width: 30rem; justify-self: start; transform: rotate(-1.5deg); }
 .card__inner {
-  background: var(--surface); color: var(--ink);
-  padding: 1.6rem 1.8rem 1.4rem; border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 24px 50px -22px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06);
+  background: var(--white); color: var(--ink);
+  padding: 1.6rem 1.8rem 1.4rem; border-radius: 0;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.14);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect y='3' width='4' height='1' fill='%23000000' fill-opacity='.08'/%3E%3C/svg%3E"); background-size: 4px 1.85rem; background-repeat: repeat; background-position: 0 1.2rem;   /* ruled lines */
   display: grid; gap: .55rem;
 }
 .card__head { color: rgba(0,0,0,.5); margin-bottom: var(--s2); }
 .card__line { font-family: var(--font-serif); font-size: 1.35rem; line-height: 1.37; position: relative; }
 .card__target { position: relative; display: inline-block; }
-.card__circle { position: absolute; left: -.55em; top: -.42em; width: calc(100% + 1.1em); height: calc(100% + .85em); color: var(--red); pointer-events: none; overflow: visible; }
+.card__circle { position: absolute; left: -.55em; top: -.42em; width: calc(100% + 1.1em); height: calc(100% + .85em); color: var(--ink); pointer-events: none; overflow: visible; }
 .card__circle path { stroke-dasharray: 900; stroke-dashoffset: 900; transition: stroke-dashoffset 1.6s var(--ease-inout) .5s; }
 .is-in .card__circle path, .no-js .card__circle path { stroke-dashoffset: 0; }
-.card__foot { color: var(--red); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
+.card__foot { color: rgba(0,0,0,.6); margin-top: var(--s3); text-transform: none; letter-spacing: 0; }
 
 /* ───────────── case chapters — single-column editorial ─────────────
    One centred column per chapter: kicker, headline, a compact meta line, then the body.
@@ -50,7 +50,7 @@
 
 .edit { display: grid; gap: var(--s2); padding: var(--s4) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .edit__label { color: var(--muted); }
-.edit__arrow { color: var(--red); margin: 0 .3em; }
+.edit__arrow { color: var(--fg); margin: 0 .3em; }
 .edit__before { font-size: clamp(1.1rem, 1.5vw, 1.5rem); line-height: 1.35; max-width: 42ch; color: var(--muted); }
 .edit__after { font-family: var(--font-serif); font-size: clamp(2.4rem, 5.4vw, 5.4rem); line-height: .98; letter-spacing: -.02em; margin-top: .4rem; max-width: 16ch; }
 .js .edit__after { opacity: 0; transform: translateY(.18em) scale(.985); transform-origin: left bottom; transition: opacity 1s var(--ease-out) .55s, transform 1s var(--ease-out) .55s; }   /* transform + opacity only — no filter */
@@ -61,7 +61,7 @@
 
 .results { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); }
 .results li { border-top: 1px solid var(--line); padding-top: var(--s3); display: grid; gap: var(--s1); align-content: start; }
-.results strong { font-family: var(--font-serif); font-weight: 400; font-size: clamp(2.6rem, 5vw, 4.8rem); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.results strong { font-family: var(--font-serif); font-weight: 500; font-size: clamp(2.1rem, 4vw, 3.8rem); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
 .results .mono { color: var(--muted); text-transform: none; letter-spacing: 0; line-height: 1.4; }
 
 .artifact figcaption { margin-top: var(--s3); color: var(--muted); text-transform: none; letter-spacing: 0; }
@@ -103,27 +103,27 @@
 /* poster */
 .artifact--poster { max-width: 24rem; min-width: 0; }   /* a grid item's min-width:auto would let the 3:4 poster's content height widen the column (overflow at 320 px) */
 .poster {
-  aspect-ratio: 3 / 4; background: var(--surface); color: var(--ink);   /* one paper stock, page-wide: the same cream as the notecard */
+  aspect-ratio: 3 / 4; background: var(--white); color: var(--ink);   /* one paper stock, page-wide: white stock on the black desk */
   padding: 1.4rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
-  box-shadow: 0 30px 60px -28px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.14);
 }
 .poster__top, .poster__foot { display: flex; justify-content: space-between; color: rgba(0,0,0,.55); }
 .poster__line { font-family: var(--font-serif); font-size: clamp(2.6rem, 4.6vw, 4rem); line-height: .95; letter-spacing: -.02em; }
 
 /* departure board */
-.board { background: #EBE6D9; color: var(--fg); padding: 1.2rem 1.3rem 1.4rem; border-radius: 6px; display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; box-shadow: 0 0 0 1px rgba(18,18,20,.1), 0 30px 60px -30px rgba(0,0,0,.8); max-width: 44rem; overflow: hidden; }
-.board__label { display: flex; justify-content: space-between; color: rgba(18,18,20,.5); margin-bottom: .4rem; }
+.board { background: #0D0D0D; color: var(--fg); padding: 1.2rem 1.3rem 1.4rem; border-radius: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; box-shadow: 0 0 0 1px rgba(255,255,255,.12); max-width: 44rem; overflow: hidden; }
+.board__label { display: flex; justify-content: space-between; color: rgba(255,255,255,.4); margin-bottom: .4rem; }
 .board__row { display: flex; gap: 3px; flex-wrap: nowrap; min-width: 0; }
 .board__row--dim { opacity: .45; }
 .flap {
   flex: 0 1 auto; width: clamp(.85rem, 1.85vw, 1.35rem); height: clamp(1.4rem, 2.8vw, 2.1rem);
   display: grid; place-items: center;
-  background: #DFD7C3; border-radius: 3px; position: relative;
+  background: #1A1A1A; border-radius: 0; position: relative;
   font-family: var(--font-mono); font-size: clamp(.8rem, 1.6vw, 1.15rem); text-transform: uppercase;
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,.6);
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.8);
 }
-.flap::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.65); }
-.flap.is-blank { background: #E4DDCB; }
+.flap::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(255,255,255,.25); }
+.flap.is-blank { background: #121212; }
 
 
 /* ───────────── process ───────────── */

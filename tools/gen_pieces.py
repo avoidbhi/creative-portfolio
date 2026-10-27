@@ -34,7 +34,7 @@ PIECE_CSS = """
   .piece .kicker{margin:0 0 1rem}
   .piece__title{font-family:var(--font-serif);font-weight:500;font-size:clamp(2.4rem,5.2vw,3.6rem);line-height:1.04;letter-spacing:-.02em;margin:0 0 2.2rem;max-width:22ch}
   .piece__art{margin:0 0 2.8rem}
-  .piece__art img,.piece__art video{display:block;width:100%;height:auto;border-radius:3px;background:var(--graphite)}
+  .piece__art img,.piece__art video{display:block;width:100%;height:auto;border-radius:0;background:var(--graphite)}
   .piece__art--tall{max-width:24rem}
   .piece__art--wide{max-width:52rem}
   .piece__copy{font-size:1.05rem;line-height:1.7}
@@ -114,7 +114,7 @@ def render(p, css, favicon_tag):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{cap}">
-<meta name="theme-color" content="#F3F1EA">
+<meta name="theme-color" content="#000000">
 <title>{title} \u2014 Abhijeet Kanase</title>
 {favicon_tag}
 <style>
