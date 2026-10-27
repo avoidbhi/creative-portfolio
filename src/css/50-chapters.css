@@ -154,7 +154,7 @@
 .results--proof strong { font-size: clamp(2.4rem, 4vw, 3.8rem); }
 .edit__after--long { font-size: clamp(1.9rem, 3.6vw, 3.6rem); max-width: 22ch; line-height: 1.04; }
 
-/* manifesto (GoBoult anthem) */
+/* manifesto */
 .artifact--manifesto { max-width: 48rem; }
 .manifesto { border-left: 2px solid var(--red); padding: .4rem 0 .4rem clamp(1.2rem, 3vw, 2.2rem); display: grid; gap: .55rem; }
 .manifesto__head { display: flex; justify-content: space-between; color: var(--muted); margin-bottom: .8rem; }

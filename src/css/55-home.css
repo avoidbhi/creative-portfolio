@@ -66,7 +66,7 @@
     radial-gradient(55% 240% at 18% -20%, rgba(255, 59, 48, .13), transparent 60%),
     radial-gradient(45% 220% at 68% -30%, rgba(96, 124, 255, .09), transparent 58%);
 }
-/* the desk line — mono metadata, live IST clock */
+/* the desk line — mono metadata, live EST clock */
 .home__herohead { display: flex; align-items: center; gap: .9rem; margin: 0 0 var(--group); font-size: .64rem; letter-spacing: .18em; color: var(--muted); }
 .home__herosep { opacity: .4; }
 .home__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); animation: pulse 2.4s infinite; }

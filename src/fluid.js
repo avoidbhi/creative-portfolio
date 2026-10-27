@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   ABHIJEET KANASE — the fluid (v8 · background)
+   SHIVAM SINHA — the fluid (v8 · background)
 
    A real-time fluid simulation (Navier–Stokes on a 128² velocity grid, dye at
    512) painted on a transparent WebGL canvas inside the one background layer

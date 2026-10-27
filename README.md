@@ -1,9 +1,9 @@
-# Abhijeet Kanase — Portfolio
+# Shivam Sinha — Portfolio
 
-A single-page, story-format portfolio for **Abhijeet Kanase** — copywriter & creative strategist,
-Mumbai. It opens on **the orbit**: every piece of work (pitch pages, statics, films, scripts, web
-and email) turning on two rings around the first line. Below it, eight short chapters tell the
-work, line by line — and a red pen closes the page. No frameworks, no dependencies.
+A single-page, story-format portfolio for **Shivam Sinha** — designer & creative coder, New York.
+It opens on **the orbit**: every project (branding, print, motion, interaction, thesis) turning on
+two rings around the first line. Below it, five short chapters tell the work, piece by piece — and
+a red pen closes the page. No frameworks, no dependencies.
 
 ## What's in this repo
 
@@ -12,7 +12,7 @@ work, line by line — and a red pen closes the page. No frameworks, no dependen
 | `src/index.html` | **The page** — all the copy. The only file you edit for content. |
 | `src/css/` | One stylesheet in ten files, concatenated in `<link>` order. |
 | `src/main.js` · `motion.js` · `fluid.js` · `palettes.js` | Plain JS, no dependencies: page behaviour, the 3D orbit, the fluid background, the type-picker. |
-| `assets/` | The fonts and the work — Bajaj statics & films, pitch-deck plates, script pages. |
+| `assets/` | The fonts and the local art — index-card plates for the image-less projects. (Project artwork is hotlinked from the datocms CDN, configured in `src/data/pieces.json`.) |
 | `index.dev.html` | **Generated.** The page in one readable file (styles + scripts inlined, assets external). |
 | `index.html` | **Generated.** The standalone build — every font, image and film inlined as data URIs. Opens from a USB stick; hosts anywhere. |
 | `tools/build.py` | Assembles the two published files from `src/` + `assets/` (Python stdlib only). |

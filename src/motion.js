@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   ABHIJEET KANASE — THE SCENE (v7)
+   SHIVAM SINHA — THE SCENE (v7)
    One continuous 3D environment for every piece of work, three arrangements:
 
      ORBIT   a flat ring turning in the screen plane (two counter-turning rings here)

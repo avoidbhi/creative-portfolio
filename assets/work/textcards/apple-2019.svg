@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <rect width="1200" height="750" fill="#E8E2D3"/>
+  <rect x="28" y="28" width="1144" height="694" fill="none" stroke="#121214" stroke-opacity="0.28" stroke-width="2"/>
+  <line x1="96" y1="372" x2="256" y2="372" stroke="#E8442E" stroke-width="6"/>
+  <text x="96" y="330" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="84" fill="#121214">Apple 2019</text>
+  <text x="96" y="430" font-family="'Courier New', monospace" font-size="30" letter-spacing="6" fill="#121214" fill-opacity="0.62">Interaction · 2019 · NDA</text>
+</svg>

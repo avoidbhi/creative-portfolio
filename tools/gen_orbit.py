@@ -52,16 +52,21 @@ def card_href(p: dict) -> str:
     return p['href']
 
 
+def asset(path: str) -> str:
+    """Local assets get the ../ prefix; remote (CDN) URLs pass through untouched."""
+    return path if path.startswith('http') else '../' + path
+
+
 def render_card(p: dict) -> str:
     if p['kind'] == 'film':
         return (f'      <figure class="stage__card stage__card--film" data-stage-card '
                 f'data-card-id="{p["id"]}" data-k="{p["k"]}" data-href="{card_href(p)}">'
-                f'<video muted loop playsinline preload="none" poster="../{p["poster"]}" '
+                f'<video muted loop playsinline preload="none" poster="{asset(p["poster"])}" '
                 f'width="432" height="768" aria-label="{p["aria"]}">'
-                f'<source src="../{p["src"]}" type="video/mp4"></video>'
+                f'<source src="{asset(p["src"])}" type="video/mp4"></video>'
                 f'<figcaption class="mono">{p["cap"]}</figcaption></figure>')
     return (f'      <figure class="stage__card" data-stage-card data-card-id="{p["id"]}" '
-            f'data-k="{p["k"]}" data-href="{card_href(p)}"><img src="../{p["src"]}" alt="{p["alt"]}" '
+            f'data-k="{p["k"]}" data-href="{card_href(p)}"><img src="{asset(p["src"])}" alt="{p["alt"]}" '
             f'width="{p["w"]}" height="{p["h"]}" loading="lazy" decoding="async" draggable="false">'
             f'<figcaption class="mono">{p["cap"]}</figcaption></figure>')
 
