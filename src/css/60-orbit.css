@@ -1,10 +1,10 @@
 /* ───────────── 00 · the orbit — the opening screen ─────────────
-   Andrianjaka Tony's card system (recent.design/i/75uqgzu): every slide, static, script and film
-   on two counter-turning rings. Default markup = headline + captioned grid (no JS, GSAP blocked,
+   Every slide, static, script and film on two counter-turning rings.
+   Default markup = headline + captioned grid (no JS, GSAP blocked,
    reduced motion). motion.js §8 adds .is-3d → a 100svh room with perspective; the rings and cards
    are absolutely centred and motion.js's scene loop is the ONLY writer of their transforms. */
 .stage {
-  position: relative; background: transparent; color: var(--paper);
+  position: relative; background: transparent; color: var(--fg);
   padding: calc(var(--hud-h) + 1.5rem) var(--gutter) 3rem;
 }
 .stage__hud { position: relative; z-index: 3; display: flex; justify-content: center; margin-top: var(--s4); }   /* the arrangement switch sits BELOW the animation */
@@ -18,8 +18,8 @@
   background: none; border: 1px solid transparent; border-radius: 999px; padding: .45rem .85rem; cursor: pointer;
   transition: color .25s, border-color .25s, background-color .25s;
 }
-.stage__mode:hover { color: var(--paper); }
-.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); }
+.stage__mode:hover { color: var(--fg); }
+.stage__mode.is-active { color: var(--fg); border-color: rgba(18,18,20,.32); background: rgba(var(--fg-rgb), .08); }
 .stage__mode:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .stage__title {
   position: relative; z-index: 2; margin: 0 auto clamp(2rem, 5vw, 4rem); max-width: 14ch; text-align: center;
@@ -31,20 +31,21 @@
 .stage__ring { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
 .stage__ring + .stage__ring { margin-top: 1rem; }
 .stage__card { margin: 0; display: grid; gap: .6rem; align-content: start; }
-.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #101013; }
+.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #E8E2D3; }
 .stage__card figcaption { color: var(--muted); text-transform: none; letter-spacing: 0; line-height: 1.4; }
 .stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: var(--s4); align-items: end; margin-top: var(--s5); color: var(--muted); }
 .stage__foot p { margin: 0; }
 .stage__role { line-height: 1.6; max-width: 30ch; }
+.stage__role .serif-i { display: block; font-size: 1.05rem; line-height: 1.4; color: var(--fg); margin-bottom: .35rem; }
 .stage__line { text-align: center; display: grid; gap: .35rem; justify-items: center; text-transform: none; letter-spacing: 0; }
-.stage__k { text-transform: uppercase; letter-spacing: .02em; }
-.stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--paper); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
+.stage__k { text-transform: uppercase; letter-spacing: .08em; }
+.stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--fg); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
 .stage__q:empty { display: none; }
 .stage__more { color: var(--red); text-transform: uppercase; letter-spacing: .02em; border-bottom: 1px solid transparent; }
 .stage__more:hover { border-color: currentColor; }
 .stage__links { display: flex; gap: var(--s4); justify-content: end; }
 .stage__links a { border-bottom: 1px solid transparent; transition: color .25s, border-color .25s; }
-.stage__links a:hover { color: var(--paper); border-color: var(--paper); }
+.stage__links a:hover { color: var(--fg); border-color: var(--fg); }
 .stage:not(.is-3d) .stage__modes, .stage:not(.is-3d) .stage__k, .stage:not(.is-3d) .stage__line { display: none; }
 html.js:not(.no-scene) .stage:not(.is-3d) .stage__space { visibility: hidden; }   /* main.js adds .no-scene at load if the scene never booted; html.reveal-all also uncovers it */
 /* while the scripts are still streaming in (the standalone file is 4.6 MB; they sit at its end), a JS page must not flash the

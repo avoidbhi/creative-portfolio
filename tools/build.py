@@ -9,13 +9,19 @@ src/index.html is the only file you edit for copy; src/css/*.css and src/*.js ar
 the four scripts. Cascade and execution order come from the order of the <link> / <script src>
 tags in src/index.html, so the markup is the single source of truth for both.
 
-Two artifacts, one pipeline:
+Artifacts, one pipeline:
 
   index.dev.html   the readable single file — sheet and scripts inlined, assets left as
                    files under assets/ (so it is diffable and reviewable, ~245 KB)
   index.html       the standalone build — the same document with every asset replaced by its
                    base64 data URI; ~4.7 MB, opens from a USB stick, hosts anywhere, no
                    requests at all
+  pieces/*.html    one standalone page per piece (tools/gen_pieces.py) — the work's full copy,
+                   linked from the orbit cards and the case logs; the build keeps them current
+
+The orbit, the "N pieces of work" counts, the chapter case logs and the piece pages are all
+generated from src/data/pieces.json — the single content config. Next drop of work = edit the
+JSON (and add a src/pieces/<id>.html fragment), then run the tools. --check verifies all of it.
 
 Rules the standalone build applies, in order:
   1. <link> tags  → one <style> block, files concatenated in document order
@@ -108,8 +114,16 @@ def main():
     out.append(f'  {inlined} assets inlined into the standalone build; {kb:.0f} KB readable build')
     if leftover:
         out.append('  !! external refs left in index.html: ' + ', '.join(leftover))
+
+    # the generated companions: orbit + counts (gen_orbit), case logs (gen_log), piece pages (gen_pieces)
+    import gen_log, gen_orbit, gen_pieces
+    if check:
+        ok = gen_orbit.check() and gen_log.check() and gen_pieces.check()
+    else:
+        gen_log.generate()     # idempotent: fills the marker blocks from src/data/pieces.json
+        gen_pieces.generate()  # idempotent: renders pieces/*.html from src/pieces/*.html fragments
     print('\n'.join(out))
-    if check and any('DRIFT' in l or 'missing' in l for l in out):
+    if check and (any('DRIFT' in l or 'missing' in l for l in out) or not ok):
         sys.exit(1)
 
 
