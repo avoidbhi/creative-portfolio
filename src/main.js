@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   SHIVAM SINHA — page behaviour (v7 · one loop)
+   ABHIJEET KANASE — page behaviour (v7 · one loop)
 
    ONE requestAnimationFrame loop drives everything continuous on the page:
      · smoothed scroll + scroll velocity  (the page never scroll-jacks — native
@@ -63,10 +63,10 @@
   }
   $$('[data-split]').forEach(splitWords);
 
-  /* ───────────── clocks (EST) ───────────── */
+  /* ───────────── clocks (IST) ───────────── */
   const clocks = $$('[data-clock]');
   const tickClock = () => {
-    const t = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York' });
+    const t = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' });
     clocks.forEach((c) => (c.textContent = t));
   };
   tickClock(); setInterval(tickClock, 15000);                    // a clock, not an animation

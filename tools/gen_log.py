@@ -3,7 +3,7 @@
 
 Fills the marker pairs in src/index.html:
     <!-- caselog:{key}:begin --> … <!-- caselog:{key}:end -->
-where key ∈ {ch2, ch3, ch4, ch5, ch6}. A chapter with no pieces gets an empty
+where key ∈ {ch3, ch4, ch7, ch8, side}. A chapter with no pieces gets an empty
 log (markers stay, content clears) — re-runs are idempotent by construction.
 """
 import json, os, re, sys
@@ -13,18 +13,18 @@ PIECES_JSON = os.path.join(ROOT, 'src', 'data', 'pieces.json')
 SRC_HTML = os.path.join(ROOT, 'src', 'index.html')
 
 KEY_FOR_HREF = {
-    '#ch2': 'ch2',
     '#ch3': 'ch3',
     '#ch4': 'ch4',
-    '#ch5': 'ch5',
-    '#ch6': 'ch6',
+    '#ch7': 'ch7',
+    '#ch8': 'ch8',
+    '#side': 'side',
 }
 HEADS = {
-    'ch2': 'The work, logged',
     'ch3': 'The work, logged',
     'ch4': 'The work, logged',
-    'ch5': 'The work, logged',
-    'ch6': 'The work, logged',
+    'ch7': 'The work, logged',
+    'ch8': 'The work, logged',
+    'side': 'Side quests, logged',
 }
 
 
@@ -75,7 +75,7 @@ def generate():
     with open(SRC_HTML, encoding='utf8') as f:
         html = f.read()
 
-    for key in ('ch2', 'ch3', 'ch4', 'ch5', 'ch6'):
+    for key in ('ch3', 'ch4', 'ch7', 'ch8', 'side'):
         pat = re.compile(
             r'(<!-- caselog:' + key + r':begin [^>]*-->)(.*?)(?: *)(<!-- caselog:' + key + r':end -->)',
             re.DOTALL,
@@ -103,7 +103,7 @@ def check():
             by_key[key].append(p)
     html = open(SRC_HTML, encoding='utf8').read()
     drift = []
-    for key in ('ch2', 'ch3', 'ch4', 'ch5', 'ch6'):
+    for key in ('ch3', 'ch4', 'ch7', 'ch8', 'side'):
         pat = re.compile(
             r'(<!-- caselog:' + key + r':begin [^>]*-->)(.*?)(?: *)(<!-- caselog:' + key + r':end -->)',
             re.DOTALL,
