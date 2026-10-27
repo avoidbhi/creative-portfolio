@@ -114,7 +114,7 @@ def render(p, css, favicon_tag):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{cap}">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#F3F1EA">
 <title>{title} \u2014 Abhijeet Kanase</title>
 {favicon_tag}
 <style>

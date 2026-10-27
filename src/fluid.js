@@ -39,7 +39,14 @@
   'use strict';
   try {
   const AK = window.AK, host = document.querySelector('.bg');
-  if (!AK || !host || AK.reduce) return;                         // no loop, no layer, or reduced motion → plain black
+  if (!AK || !host || AK.reduce) return;                         // no loop, no layer, or reduced motion → plain paper
+  /* the dye is additive light, tuned for a dark room. On a light page the same splats would be an
+     invisible smudge, so the trail only runs when the painted background is dark. */
+  const _bgHex = getComputedStyle(document.documentElement).getPropertyValue('--bg-gradient').trim().replace('#', '');
+  if (_bgHex) {
+    const _v = _bgHex.length === 3 ? _bgHex.split('').map(c => c + c).join('') : _bgHex;
+    if (parseInt(_v.slice(0,2),16)*.2126 + parseInt(_v.slice(2,4),16)*.7152 + parseInt(_v.slice(4,6),16)*.0722 > 255*.5) return;
+  }
 
   const C = Object.assign({
     SIM_RESOLUTION: 128, DYE_RESOLUTION: 512,

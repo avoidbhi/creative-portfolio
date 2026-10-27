@@ -91,7 +91,7 @@
   font: 600 .92rem/1 var(--font-sans);
   transition: transform .2s var(--ease-out), background-color .25s, color .25s, border-color .25s;
 }
-.home__btn:hover { background: var(--paper); color: var(--ink); transform: translateY(-1px); }
+.home__btn:hover { background: var(--white); color: var(--ink); transform: translateY(-1px); }
 .home__btn--ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
 .home__btn--ghost:hover { background: rgba(var(--fg-rgb), .06); border-color: rgba(var(--fg-rgb), .35); color: var(--fg); }
 

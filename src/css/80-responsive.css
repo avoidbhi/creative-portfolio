@@ -1,6 +1,6 @@
 /* ───────────── responsive ───────────── */
 /* back to the first line (Jopecuro's back-to-top, as a sentence) */
-.epilogue__top { display: inline-block; margin-top: .4rem; color: var(--paper) !important; border-bottom: 1px solid var(--line); padding-bottom: .15rem; transition: color .25s, border-color .25s; }
+.epilogue__top { display: inline-block; margin-top: .4rem; color: var(--fg) !important; border-bottom: 1px solid var(--line); padding-bottom: .15rem; transition: color .25s, border-color .25s; }
 .epilogue__top:hover { color: var(--red) !important; border-color: var(--red); }
 
 @media (max-width: 1100px) {

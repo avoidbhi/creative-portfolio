@@ -1,7 +1,7 @@
 /* ───────────── base ───────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html {
-  background: var(--ink);                /* solid fallback + overscroll colour; the black lives on .bg */
+  background: var(--bg);                 /* solid fallback + overscroll colour; the paper lives on .bg */
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: 100%;

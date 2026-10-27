@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="“This is a 2.5 kg dumbbell.” — the fitness script">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#F3F1EA">
 <title>“This is a 2.5 kg dumbbell.” — Abhijeet Kanase</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ccircle cx='16' cy='22' r='5' fill='%23FF3B30'/%3E%3Crect x='13' y='5' width='6' height='11' rx='1' fill='%23F6F6F4'/%3E%3C/svg%3E">
 <style>
@@ -21,16 +21,16 @@
 
 :root {
   /* palette — named, deliberate, small */
-  --ink: #000000;        /* pure black — the only surface on the page */
-  --graphite: #0B0B0D;   /* a slightly lifted black — fills, placeholders */
-  --paper: #F6F6F4;      /* clean near-white — reads clean on pure black (was warm cream) */
-  --red: #FF3B30;        /* the red pen — brighter so it holds against pure black */
+  --ink: #121214;        /* near-black ink — the type */
+  --graphite: #E7E2D4;   /* a step deeper than the page — fills, placeholders */
+  --paper: #F3F1EA;      /* warm paper — the only surface on the page */
+  --red: #E8442E;        /* the red pen, deepened for paper — the single accent */
   --white: #FFFFFF;
 
   /* THE background — plain black, painted once on a fixed layer (.bg) so every screen is
      lit the same way. No gradient (it banded), no grain overlay. The fluid sim still paints
      over it, cursor-only, and sleeps when the pointer is clear. */
-  --bg-gradient: #000000;   /* plain black — no gradient, no bloom, no banding */
+  --bg-gradient: #F3F1EA;   /* plain paper — no gradient, no bloom, no banding */
 
   --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
   --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -57,13 +57,13 @@
 }
 
 /* one surface, one set of tokens — data-theme on the chapters now only labels them */
-html, html[data-theme] { --bg: var(--ink); --bg-rgb: 0,0,0; --fg: var(--paper); --fg-rgb: 246,246,244; --muted: rgba(246,246,244,.72); --line: rgba(246,246,244,.2); --surface: #FFFDF8; }
+html, html[data-theme] { --bg: var(--paper); --bg-rgb: 243,241,234; --fg: var(--ink); --fg-rgb: 18,18,20; --muted: rgba(18,18,20,.72); --line: rgba(18,18,20,.18); --surface: #FFFDF8; }
 
 
 /* ───────────── base ───────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html {
-  background: var(--ink);                /* solid fallback + overscroll colour; the black lives on .bg */
+  background: var(--bg);                 /* solid fallback + overscroll colour; the paper lives on .bg */
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: 100%;
@@ -376,19 +376,19 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .poster__line { font-family: var(--font-serif); font-size: clamp(2.6rem, 4.6vw, 4rem); line-height: .95; letter-spacing: -.02em; }
 
 /* departure board */
-.board { background: #0C0C0F; color: var(--paper); padding: 1.2rem 1.3rem 1.4rem; border-radius: 6px; display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; box-shadow: 0 0 0 1px rgba(246,246,244,.1), 0 30px 60px -30px rgba(0,0,0,.8); max-width: 44rem; overflow: hidden; }
-.board__label { display: flex; justify-content: space-between; color: rgba(246,246,244,.5); margin-bottom: .4rem; }
+.board { background: #EBE6D9; color: var(--fg); padding: 1.2rem 1.3rem 1.4rem; border-radius: 6px; display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; box-shadow: 0 0 0 1px rgba(18,18,20,.1), 0 30px 60px -30px rgba(0,0,0,.8); max-width: 44rem; overflow: hidden; }
+.board__label { display: flex; justify-content: space-between; color: rgba(18,18,20,.5); margin-bottom: .4rem; }
 .board__row { display: flex; gap: 3px; flex-wrap: nowrap; min-width: 0; }
 .board__row--dim { opacity: .45; }
 .flap {
   flex: 0 1 auto; width: clamp(.85rem, 1.85vw, 1.35rem); height: clamp(1.4rem, 2.8vw, 2.1rem);
   display: grid; place-items: center;
-  background: #1A1A1F; border-radius: 3px; position: relative;
+  background: #DFD7C3; border-radius: 3px; position: relative;
   font-family: var(--font-mono); font-size: clamp(.8rem, 1.6vw, 1.15rem); text-transform: uppercase;
   box-shadow: inset 0 -1px 0 rgba(0,0,0,.6);
 }
 .flap::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.65); }
-.flap.is-blank { background: #131317; }
+.flap.is-blank { background: #E4DDCB; }
 
 
 /* ───────────── process ───────────── */
@@ -567,7 +567,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
   font: 600 .92rem/1 var(--font-sans);
   transition: transform .2s var(--ease-out), background-color .25s, color .25s, border-color .25s;
 }
-.home__btn:hover { background: var(--paper); color: var(--ink); transform: translateY(-1px); }
+.home__btn:hover { background: var(--white); color: var(--ink); transform: translateY(-1px); }
 .home__btn--ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
 .home__btn--ghost:hover { background: rgba(var(--fg-rgb), .06); border-color: rgba(var(--fg-rgb), .35); color: var(--fg); }
 
@@ -696,7 +696,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
    reduced motion). motion.js §8 adds .is-3d → a 100svh room with perspective; the rings and cards
    are absolutely centred and motion.js's scene loop is the ONLY writer of their transforms. */
 .stage {
-  position: relative; background: transparent; color: var(--paper);
+  position: relative; background: transparent; color: var(--fg);
   padding: calc(var(--hud-h) + 1.5rem) var(--gutter) 3rem;
 }
 .stage__hud { position: relative; z-index: 3; display: flex; justify-content: center; margin-top: var(--s4); }   /* the arrangement switch sits BELOW the animation */
@@ -710,8 +710,8 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
   background: none; border: 1px solid transparent; border-radius: 999px; padding: .45rem .85rem; cursor: pointer;
   transition: color .25s, border-color .25s, background-color .25s;
 }
-.stage__mode:hover { color: var(--paper); }
-.stage__mode.is-active { color: var(--paper); border-color: rgba(246,246,244,.32); background: rgba(var(--fg-rgb), .08); }
+.stage__mode:hover { color: var(--fg); }
+.stage__mode.is-active { color: var(--fg); border-color: rgba(18,18,20,.32); background: rgba(var(--fg-rgb), .08); }
 .stage__mode:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .stage__title {
   position: relative; z-index: 2; margin: 0 auto clamp(2rem, 5vw, 4rem); max-width: 14ch; text-align: center;
@@ -723,7 +723,7 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__ring { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
 .stage__ring + .stage__ring { margin-top: 1rem; }
 .stage__card { margin: 0; display: grid; gap: .6rem; align-content: start; }
-.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #101013; }
+.stage__card img, .stage__card video { width: 100%; height: auto; display: block; border-radius: 3px; background: #E8E2D3; }
 .stage__card figcaption { color: var(--muted); text-transform: none; letter-spacing: 0; line-height: 1.4; }
 .stage__foot { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr minmax(0, 2fr) 1fr; gap: var(--s4); align-items: end; margin-top: var(--s5); color: var(--muted); }
 .stage__foot p { margin: 0; }
@@ -731,13 +731,13 @@ html.index-open .hud .hud__btn--solid .mono { color: var(--red); }
 .stage__role .serif-i { display: block; font-size: 1.05rem; line-height: 1.4; color: var(--fg); margin-bottom: .35rem; }
 .stage__line { text-align: center; display: grid; gap: .35rem; justify-items: center; text-transform: none; letter-spacing: 0; }
 .stage__k { text-transform: uppercase; letter-spacing: .08em; }
-.stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--paper); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
+.stage__q { font-size: clamp(1.05rem, 1.5vw, 1.4rem); line-height: 1.2; color: var(--fg); max-width: 40ch; text-wrap: balance; min-height: 1.2em; }
 .stage__q:empty { display: none; }
 .stage__more { color: var(--red); text-transform: uppercase; letter-spacing: .02em; border-bottom: 1px solid transparent; }
 .stage__more:hover { border-color: currentColor; }
 .stage__links { display: flex; gap: var(--s4); justify-content: end; }
 .stage__links a { border-bottom: 1px solid transparent; transition: color .25s, border-color .25s; }
-.stage__links a:hover { color: var(--paper); border-color: var(--paper); }
+.stage__links a:hover { color: var(--fg); border-color: var(--fg); }
 .stage:not(.is-3d) .stage__modes, .stage:not(.is-3d) .stage__k, .stage:not(.is-3d) .stage__line { display: none; }
 html.js:not(.no-scene) .stage:not(.is-3d) .stage__space { visibility: hidden; }   /* main.js adds .no-scene at load if the scene never booted; html.reveal-all also uncovers it */
 /* while the scripts are still streaming in (the standalone file is 4.6 MB; they sit at its end), a JS page must not flash the
@@ -791,7 +791,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 
 /* ───────────── epilogue (reveals from beneath) ───────────── */
 .epilogue {
-  position: relative; min-height: 100svh; background: transparent; color: var(--paper); display: grid; align-items: end;
+  position: relative; min-height: 100svh; background: transparent; color: var(--fg); display: grid; align-items: end;
 }
 .epilogue__inner::before {   /* the rule runs edge to edge, like every chapter's */
   content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
@@ -819,12 +819,12 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .redpen__label { color: var(--muted); }
 .redpen__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; align-items: end; }
 .redpen__input {
-  width: 100%; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--paper);
+  width: 100%; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--fg);
   font: 400 clamp(1.1rem, 1.6vw, 1.5rem)/1.3 var(--font-sans); padding: .5rem 0; border-radius: 0;
   transition: border-color .3s;
 }
-.redpen__input::placeholder { color: rgba(246,246,244,.35); }
-.redpen__input:focus { outline: none; border-color: var(--paper); }
+.redpen__input::placeholder { color: rgba(18,18,20,.35); }
+.redpen__input:focus { outline: none; border-color: var(--fg); }
 .redpen__btn { height: 2.6rem; padding: 0 1.2rem; border-radius: 999px; background: var(--red); color: var(--white); transition: transform .25s var(--ease-out), background-color .25s; }
 .redpen__btn:hover { background: var(--white); color: var(--red); }
 .redpen__btn:active { transform: scale(.97); }
@@ -841,7 +841,7 @@ html.js:not(.no-scene):not(.reveal-all) .stage:not(.is-3d) .stage__title { opaci
 .epilogue__meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4); border-top: 1px solid var(--line); padding-top: var(--s4); align-self: end; margin-top: var(--group); }
 .epilogue__meta .mono { color: var(--muted); line-height: 1.7; }
 .epilogue__meta a { transition: color .25s; }
-.epilogue__meta a:hover { color: var(--paper); }
+.epilogue__meta a:hover { color: var(--fg); }
 .epilogue__disclaimer { text-transform: none; letter-spacing: 0; opacity: .7; }
 
 /* ───────────── decor ───────────── */
@@ -863,7 +863,7 @@ html.index-open .cursor-ring { border-color: rgba(255,255,255,.6); }
 
 /* ───────────── responsive ───────────── */
 /* back to the first line (Jopecuro's back-to-top, as a sentence) */
-.epilogue__top { display: inline-block; margin-top: .4rem; color: var(--paper) !important; border-bottom: 1px solid var(--line); padding-bottom: .15rem; transition: color .25s, border-color .25s; }
+.epilogue__top { display: inline-block; margin-top: .4rem; color: var(--fg) !important; border-bottom: 1px solid var(--line); padding-bottom: .15rem; transition: color .25s, border-color .25s; }
 .epilogue__top:hover { color: var(--red) !important; border-color: var(--red); }
 
 @media (max-width: 1100px) {

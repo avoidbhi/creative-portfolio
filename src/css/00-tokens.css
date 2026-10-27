@@ -11,16 +11,16 @@
 
 :root {
   /* palette — named, deliberate, small */
-  --ink: #000000;        /* pure black — the only surface on the page */
-  --graphite: #0B0B0D;   /* a slightly lifted black — fills, placeholders */
-  --paper: #F6F6F4;      /* clean near-white — reads clean on pure black (was warm cream) */
-  --red: #FF3B30;        /* the red pen — brighter so it holds against pure black */
+  --ink: #121214;        /* near-black ink — the type */
+  --graphite: #E7E2D4;   /* a step deeper than the page — fills, placeholders */
+  --paper: #F3F1EA;      /* warm paper — the only surface on the page */
+  --red: #E8442E;        /* the red pen, deepened for paper — the single accent */
   --white: #FFFFFF;
 
   /* THE background — plain black, painted once on a fixed layer (.bg) so every screen is
      lit the same way. No gradient (it banded), no grain overlay. The fluid sim still paints
      over it, cursor-only, and sleeps when the pointer is clear. */
-  --bg-gradient: #000000;   /* plain black — no gradient, no bloom, no banding */
+  --bg-gradient: #F3F1EA;   /* plain paper — no gradient, no bloom, no banding */
 
   --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
   --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -47,5 +47,5 @@
 }
 
 /* one surface, one set of tokens — data-theme on the chapters now only labels them */
-html, html[data-theme] { --bg: var(--ink); --bg-rgb: 0,0,0; --fg: var(--paper); --fg-rgb: 246,246,244; --muted: rgba(246,246,244,.72); --line: rgba(246,246,244,.2); --surface: #FFFDF8; }
+html, html[data-theme] { --bg: var(--paper); --bg-rgb: 243,241,234; --fg: var(--ink); --fg-rgb: 18,18,20; --muted: rgba(18,18,20,.72); --line: rgba(18,18,20,.18); --surface: #FFFDF8; }
 
